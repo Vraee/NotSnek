@@ -65,6 +65,7 @@ public class CharacterController : MonoBehaviour {
 		}
 
 		GameObject newBodyPart = Instantiate(bodyPartType, previousBodyPart.transform.position - (previousBodyPart.transform.up / 2), previousBodyPart.transform.rotation) as GameObject;
+		newBodyPart.transform.parent = GameObject.Find ("Player").transform;
 
 		GameObject tempTail = bodyParts [bodyParts.Count - 1];
 		bodyParts [bodyParts.Count - 1] = newBodyPart;
