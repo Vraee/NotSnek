@@ -40,8 +40,7 @@ public class CharacterController : MonoBehaviour {
 		head.transform.eulerAngles = new Vector3 (0, 0, head.transform.eulerAngles.z);
 		head.GetComponent<Rigidbody2D>().angularVelocity = 0;
 
-		float input = Input.GetAxis ("Vertical");
-		head.GetComponent<Rigidbody2D>().AddForce (head.transform.up * speed * input);
+		head.GetComponent<Rigidbody2D>().AddForce (head.transform.up * speed);
 
 		for (int i = 1; i < bodyParts.Count; i++) {
 			distance = Vector3.Distance (bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
