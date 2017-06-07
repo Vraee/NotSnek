@@ -15,26 +15,13 @@ public class CharacterController : MonoBehaviour {
 	private float distance;
 	public float minDistance = 0.05f;
 
-	private bool idle = false;
-	/*public float unit = 0.1f;
-	public float freq = 0.1f;*/
-
-	/*float circleSpeed = 1f;
-	float forwardSpeed = -1f; // Assuming negative Z is towards the camera
-	float circleSize = 1f;
-	float circleGrowSpeed = 0.1f;
-	float zPos = 1f;*/
-
-
-
-
 	// Use this for initialization
 	void Start () {
 		bodyParts = new List<GameObject> ();
 		bodyParts.Add (head);
 		bodyParts.Add (tail);
 
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 50; i++) {
 			AddBodyPart ();
 		}
 	}
@@ -46,28 +33,7 @@ public class CharacterController : MonoBehaviour {
 
 	void FixedUpdate() {
 		Vector3 currentMousePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-
-		if (!(currentMousePosition == destinationPoint)) {
-			idle = false;
-			destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-		} else {
-			/*idle = true;
-			destinationPoint.x = unit * Mathf.Cos (Time.time * 10 * freq);
-			destinationPoint.y = unit * Mathf.Sin (Time.time * 10 * freq);
-			unit += Time.deltaTime;
-			destinationPoint.z = 0;*/
-
-			/*float xPos = Mathf.Sin(Time.time * circleSpeed) * circleSize;
-			float yPos = Mathf.Cos(Time.time * circleSpeed) * circleSize;
-			zPos += forwardSpeed * Time.deltaTime;
-
-			circleSize += circleGrowSpeed;
-
-			destinationPoint.x = xPos;
-			destinationPoint.y = yPos;
-			destinationPoint.z = zPos;*/
-
-		}
+		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 
 		Move ();
 	}
@@ -77,31 +43,47 @@ public class CharacterController : MonoBehaviour {
 
 		head.transform.rotation = rotation;
 		head.transform.eulerAngles = new Vector3 (0, 0, head.transform.eulerAngles.z);
-		head.GetComponent<Rigidbody2D>().angularVelocity = 0;
-		float input = Input.GetAxis ("Vertical");
 
+		/*head.GetComponent<Rigidbody2D>().angularVelocity = 0;
+		float input = Input.GetAxis ("Vertical");*/
 
-		if (!idle) {
-			//head.GetComponent<Rigidbody2D> ().AddForce (head.transform.up * speed * input);
-			head.gameObject.transform.Translate(head.transform.up * speed * input * Time.smoothDeltaTime, Space.World);
-		} else {
-			//destinationPoint.z = 0;
-			//head.GetComponent<Rigidbody2D> ().transform.position = destinationPoint;
-		}
+		//head.GetComponent<Rigidbody2D> ().AddForce (head.transform.up * speed * input);
+
+		//head.transform.Translate(head.transform.up * speed * Time.smoothDeltaTime, Space.World);
+
 
 		//Vector3 position = new Vector3 (mousePosition.x, mousePosition.y, 0f);
 		//head.GetComponent<Rigidbody2D> ().transform.position = position;
 
-		for (int i = 1; i < bodyParts.Count; i++) {
-			distance = Vector3.Distance (bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
-			Vector3 newPosition = bodyParts[i - 1].transform.position;
-			float T = Time.deltaTime * distance * minDistance * speed;
+		if (Input.GetMouseButton (1)) {
 
-			if (T > 0.5f)//
+
+			//Get the Screen positions of the object
+			Vector3 _target = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+			//revert z to 0
+			_target.z = head.transform.position.z;
+			//distance between mouse and player
+			var mouseDistance = Vector3.Distance (head.transform.position, _target);
+			//Debug.Log(mouseDistance);
+			//MoveThisPieceOfTrash if distance is long enough
+			if (mouseDistance > 0.1) {
+				// BodyParts[0].position = Vector3.MoveTowards(transform.position, _target, Time.smoothDeltaTime * speed);
+				//BodyParts[0].Translate(BodyParts[0].position = Vector3.MoveTowards(transform.position, _target, Time.smoothDeltaTime * speed));
+				head.transform.Translate (head.transform.up * speed * Time.smoothDeltaTime, Space.World);
+				//transform.position = Vector3.MoveTowards(transform.position, _target, Time.deltaTime * speed);
+			}
+
+			for (int i = 1; i < bodyParts.Count; i++) {
+				distance = Vector3.Distance (bodyParts [i - 1].transform.position, bodyParts [i].transform.position);
+				Vector3 newPosition = bodyParts [i - 1].transform.position;
+				float T = Time.deltaTime * distance * minDistance * speed;
+
+				if (T > 0.5f)//
 				T = 0.5f;//
 
-			bodyParts [i].transform.position = Vector3.Slerp (bodyParts [i].transform.position, newPosition, T);
-			bodyParts[i].transform.rotation= Quaternion.Slerp (bodyParts[i].transform.rotation, bodyParts[i - 1].transform.rotation, T);
+				bodyParts [i].transform.position = Vector3.Slerp (bodyParts [i].transform.position, newPosition, T);
+				bodyParts [i].transform.rotation = Quaternion.Slerp (bodyParts [i].transform.rotation, bodyParts [i - 1].transform.rotation, T);
+			}
 		}
 	}
 
