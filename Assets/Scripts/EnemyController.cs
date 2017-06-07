@@ -12,7 +12,6 @@ public class EnemyController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {       
-        //Invoke("CreateEnemy", 1f);
 	}
 	
 	// Update is called once per frame
@@ -43,9 +42,5 @@ public class EnemyController : MonoBehaviour {
             }
         }
 
-    }
-    void CreateEnemy()
-    {
-        //Instantiate(enemyPrefab, new Vector2(-11f, Random.Range(-5f,5f)), Quaternion.identity);
     }
 }
