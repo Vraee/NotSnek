@@ -39,11 +39,12 @@ public class CharacterController : MonoBehaviour {
 		head.transform.rotation = rotation;
 		head.transform.eulerAngles = new Vector3 (0, 0, head.transform.eulerAngles.z);
 		head.GetComponent<Rigidbody2D>().angularVelocity = 0;
-
+        
 		head.GetComponent<Rigidbody2D>().AddForce (head.transform.up * speed);
-
-		for (int i = 1; i < bodyParts.Count; i++) {
+        
+            for (int i = 1; i < bodyParts.Count; i++) {
 			distance = Vector3.Distance (bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
+            Debug.Log(distance);
 			Vector3 newPosition = bodyParts[i - 1].transform.position;
 			float T = Time.deltaTime * distance * minDistance * speed;
 
