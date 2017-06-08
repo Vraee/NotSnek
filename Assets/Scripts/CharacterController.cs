@@ -8,6 +8,7 @@ public class CharacterController : MonoBehaviour {
 	public GameObject bodyPrefab;
 	public GameObject legPrefab;
 	public float speed;
+	public float bodyPartSpeed;
 
 	private List<GameObject> bodyParts;
 	private Vector3 destinationPoint;
@@ -21,43 +22,29 @@ public class CharacterController : MonoBehaviour {
 		bodyParts.Add (head);
 		bodyParts.Add (tail);
 
-		for (int i = 0; i < 50; i++) {
+		/*for (int i = 0; i < 500; i++) {
 			AddBodyPart ();
-		}
+		}*/
 	}
 
-	// Update is called once per frame
-	void Update () {
-
-	}
-
-	void FixedUpdate() {
+	void Update() {
 		Vector3 currentMousePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 
+		RotateToMouse ();
 		Move ();
 	}
 
-	public void Move() {
+	private void RotateToMouse()
+	{
 		Quaternion rotation = Quaternion.LookRotation (head.transform.position - destinationPoint, Vector3.forward);
 
 		head.transform.rotation = rotation;
 		head.transform.eulerAngles = new Vector3 (0, 0, head.transform.eulerAngles.z);
-
-		/*head.GetComponent<Rigidbody2D>().angularVelocity = 0;
-		float input = Input.GetAxis ("Vertical");*/
-
-		//head.GetComponent<Rigidbody2D> ().AddForce (head.transform.up * speed * input);
-
-		//head.transform.Translate(head.transform.up * speed * Time.smoothDeltaTime, Space.World);
-
-
-		//Vector3 position = new Vector3 (mousePosition.x, mousePosition.y, 0f);
-		//head.GetComponent<Rigidbody2D> ().transform.position = position;
-
+	}
+		
+	public void Move() {
 		if (Input.GetMouseButton (1)) {
-
-
 			//Get the Screen positions of the object
 			Vector3 _target = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 			//revert z to 0
@@ -66,17 +53,17 @@ public class CharacterController : MonoBehaviour {
 			var mouseDistance = Vector3.Distance (head.transform.position, _target);
 			//Debug.Log(mouseDistance);
 			//MoveThisPieceOfTrash if distance is long enough
-			if (mouseDistance > 0.1) {
+			if (mouseDistance > 1f) {
 				// BodyParts[0].position = Vector3.MoveTowards(transform.position, _target, Time.smoothDeltaTime * speed);
 				//BodyParts[0].Translate(BodyParts[0].position = Vector3.MoveTowards(transform.position, _target, Time.smoothDeltaTime * speed));
-				head.transform.Translate (head.transform.up * speed * Time.smoothDeltaTime, Space.World);
+				head.transform.Translate (head.transform.up * speed * Time.deltaTime, Space.World);
 				//transform.position = Vector3.MoveTowards(transform.position, _target, Time.deltaTime * speed);
 			}
 
 			for (int i = 1; i < bodyParts.Count; i++) {
 				distance = Vector3.Distance (bodyParts [i - 1].transform.position, bodyParts [i].transform.position);
 				Vector3 newPosition = bodyParts [i - 1].transform.position;
-				float T = Time.deltaTime * distance * minDistance * speed;
+				float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
 
 				if (T > 0.5f)//
 				T = 0.5f;//
