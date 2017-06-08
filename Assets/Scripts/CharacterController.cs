@@ -67,10 +67,11 @@ public class CharacterController : MonoBehaviour {
 
 				if (T > 0.5f)//
 				T = 0.5f;//
-
-				bodyParts [i].transform.position = Vector3.Slerp (bodyParts [i].transform.position, newPosition, T);
-				bodyParts [i].transform.rotation = Quaternion.Slerp (bodyParts [i].transform.rotation, bodyParts [i - 1].transform.rotation, T);
-			}
+                if(distance > 0.5) {
+                bodyParts [i].transform.position = Vector3.Lerp (bodyParts [i].transform.position, newPosition, T);
+				bodyParts [i].transform.rotation = Quaternion.Lerp (bodyParts [i].transform.rotation, bodyParts [i - 1].transform.rotation, T);
+                }
+            }
 		}
 	}
 
