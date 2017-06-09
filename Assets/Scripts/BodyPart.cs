@@ -2,38 +2,40 @@
 using System.Collections;
 
 public class BodyPart : MonoBehaviour {
-	public int bodyPartHP = 10;
-
 	private CharacterController parentScript;
+	private int bodyPartHP;
 
 	void Start () {
 		parentScript = GameObject.Find ("Player").GetComponent<CharacterController> ();
-        StartCoroutine(Scale());
+		bodyPartHP = parentScript.GetBodyPartHP ();
+		StartCoroutine (Scale ());
 	}
 
 	public void OnTriggerEnter2D(Collider2D collider) {
 		if (this.gameObject.tag == "Head" && collider.gameObject.tag == "PowerUp") {
-			collider.gameObject.GetComponent<PowerUp> ().SetCollectibleSum(collider.gameObject.GetComponent<PowerUp> ().GetCollectibleSum() + collider.gameObject.GetComponent<PowerUp> ().collectibleValue);
+			int newCollectibleSum = parentScript.GetCollectibleSum () + collider.gameObject.GetComponent<PowerUp> ().collectibleValue;
+			int powerUpLimit = parentScript.GetPowerUpLimit ();
+			parentScript.SetCollectibleSum(newCollectibleSum);
 
-			if (collider.gameObject.GetComponent<PowerUp> ().GetCollectibleSum () >= collider.gameObject.GetComponent<PowerUp> ().GetPowerUpLimit ()) {
-				collider.gameObject.GetComponent<PowerUp> ().SetCollectibleSum (collider.gameObject.GetComponent<PowerUp> ().GetCollectibleSum() - collider.gameObject.GetComponent<PowerUp> ().GetPowerUpLimit());
+			if (newCollectibleSum >= powerUpLimit) {
+				int resetCollectibleSum = parentScript.GetCollectibleSum () - parentScript.GetPowerUpLimit ();
+				parentScript.SetCollectibleSum (resetCollectibleSum);
 				parentScript.AddBodyPart ();
 			}
+
             Destroy(collider.gameObject);
         } else if (!(this.gameObject.tag == "Head") && !(this.gameObject.tag == "Tail") && collider.gameObject.tag == "Enemy") {
 			int enemyDamage = 1;
-			bodyPartHP -= enemyDamage;
+			//bodyPartHP -= enemyDamage;
 			parentScript.SetHP(parentScript.GetHP() - enemyDamage);
 
-			if (bodyPartHP <= 0) {
-				parentScript.RemoveBodyPart (this.gameObject);
+			if (parentScript.GetHP() <= parentScript.GetComparableHP()) {
+				parentScript.SetComparableHP(parentScript.GetComparableHP() - bodyPartHP);
+				parentScript.RemoveBodyPart (parentScript.GetTailLength());
 			}
 		}
 	}
-
-	public int GetBodyPartHP()  {
-		return bodyPartHP;
-	}
+		
 
     IEnumerator Scale()
     {

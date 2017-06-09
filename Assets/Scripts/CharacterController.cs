@@ -14,13 +14,16 @@ public class CharacterController : MonoBehaviour {
 	public float bodyPartSpeed; 
 	public float minDistance;
 	public float bodyPartDistance;
-	//public int HPPerBodypart;
+	public int bodyPartHP;
 
 	private List<GameObject> bodyParts;
 	private Vector3 destinationPoint;
 	private float distance;
 	private int tailLength;
 	private int HP;
+	private int comparableHP;
+	private int powerUpLimit = 5;
+	private int collectibleSum;
 
 	// Use this for initialization
 	void Start () {
@@ -29,12 +32,15 @@ public class CharacterController : MonoBehaviour {
 		bodyParts.Add (tail);
 
 		fireParticles = head.GetComponent<ParticleSystem> ();
-		fireParticles.Stop ();
 		fire.SetActive (false);
 
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 5; i++) {
 			AddBodyPart ();
 		}
+
+		Debug.Log ("HP: " + HP);
+
+		comparableHP = HP - bodyPartHP;
 	}
 
 	void Update() {
@@ -45,13 +51,27 @@ public class CharacterController : MonoBehaviour {
 
 		if (Input.GetMouseButton (0)) {
 			Fire ();
-            Debug.Log("moi");
         }
         else
         {
             StopFire();
-            Debug.Log("nope");
         }
+	}
+
+	public int GetTailLength() {
+		return tailLength;
+	}
+
+	public void SetTailLength(int newTailLength) {
+		tailLength = newTailLength;
+	}
+
+	public int GetComparableHP() {
+		return comparableHP;
+	}
+
+	public void SetComparableHP(int newComparableHP) {
+		comparableHP = newComparableHP;
 	}
 
 	public int GetHP() {
@@ -60,6 +80,32 @@ public class CharacterController : MonoBehaviour {
 
 	public void SetHP(int newHP) {
 		HP = newHP;
+	}
+
+	public int GetBodyPartHP() {
+		return bodyPartHP;
+	}
+
+	public void SetBodyPartHP(int newBodyPartHP) {
+		bodyPartHP = newBodyPartHP;
+	}
+
+	public int GetPowerUpLimit() {
+		return powerUpLimit;
+	}
+
+	public void SetPowerUpLimit(int newPowerUpLimit) {
+		powerUpLimit = newPowerUpLimit;
+	}
+
+	public int GetCollectibleSum() {
+		Debug.Log ("GetCollectibleSum: " + collectibleSum);
+		return collectibleSum;
+	}
+
+	public void SetCollectibleSum(int newCollectibleSum) {
+		Debug.Log ("SetCollectibleSum: " + collectibleSum);
+		collectibleSum = newCollectibleSum;
 	}
 
 	private void RotateToMouse()
@@ -117,10 +163,13 @@ public class CharacterController : MonoBehaviour {
 		bodyParts.Add (tempTail);
 
 		tailLength++;
-		HP += newBodyPart.GetComponent<BodyPart> ().bodyPartHP;
+		HP += bodyPartHP;
+		comparableHP += bodyPartHP;
+		Debug.Log ("HP: " + HP);
 	}
 
-	public void RemoveBodyPart(GameObject removablePart) {
+	public void RemoveBodyPart(int removableIndex) {
+		GameObject removablePart = bodyParts [removableIndex];
 		bodyParts.Remove (removablePart);
 		Destroy(removablePart);
 
