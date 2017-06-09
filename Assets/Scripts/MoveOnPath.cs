@@ -10,8 +10,10 @@ public class MoveOnPath : MonoBehaviour {
     public int currentWayPointID;
     public float speed;
     //how far from the next point should the enemy stop
-    private float reachDistance = 0.0f;
+    public float reachDistance = 0.0f;
     public float rotationSpeed = 5.0f;
+    //true to slerp between points
+    public bool Slerp;
     //Maybe change to enum
     public string pathName;
     private Vector3 lastPosition;
@@ -34,8 +36,13 @@ public class MoveOnPath : MonoBehaviour {
         var rotation = Quaternion.LookRotation(pathToFollow.pathObjects[currentWayPointID].position, transform.position);
         rotation.y = 0;
         rotation.x = 0;
-        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-
+        if (Slerp) {
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+        }
         if (distance <= reachDistance)
         {
             currentWayPointID++;
