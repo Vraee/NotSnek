@@ -62,6 +62,7 @@ public class EnemyController : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collider)
     {
+		Debug.Log ("mo");
         if(collider.gameObject.tag == "Fire")
         {
             inflictDamage = true;
@@ -79,6 +80,7 @@ public class EnemyController : MonoBehaviour
     private void InflictDamage()
     {
         stamina = stamina - Time.deltaTime;
+		Debug.Log (stamina);
         sprite.color = hitColor;
         if (stamina <= 0)
         {

@@ -34,7 +34,7 @@ public class CharacterController : MonoBehaviour {
 		fireParticles = head.GetComponent<ParticleSystem> ();
 		fire.SetActive (false);
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 50; i++) {
 			AddBodyPart ();
 		}
 
