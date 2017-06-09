@@ -45,12 +45,10 @@ public class CharacterController : MonoBehaviour {
 
 		if (Input.GetMouseButton (0)) {
 			Fire ();
-            Debug.Log("moi");
         }
         else
         {
             StopFire();
-            Debug.Log("nope");
         }
 	}
 

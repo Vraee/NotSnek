@@ -6,7 +6,7 @@ public class PowerUp : MonoBehaviour {
 	public int collectibleValue = 1;
 
 	//Probably should eventually move these to game controller class. Also create that class
-	private int powerUpLimit = 5;
+	public int powerUpLimit = 5;
 	private int collectibleSum;
 
 	// Use this for initialization

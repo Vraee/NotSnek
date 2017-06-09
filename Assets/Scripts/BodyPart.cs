@@ -19,7 +19,6 @@ public class BodyPart : MonoBehaviour {
 				collider.gameObject.GetComponent<PowerUp> ().SetCollectibleSum (collider.gameObject.GetComponent<PowerUp> ().GetCollectibleSum() - collider.gameObject.GetComponent<PowerUp> ().GetPowerUpLimit());
 				parentScript.AddBodyPart ();
 			}
-            Destroy(collider.gameObject);
         } else if (!(this.gameObject.tag == "Head") && !(this.gameObject.tag == "Tail") && collider.gameObject.tag == "Enemy") {
 			int enemyDamage = 1;
 			bodyPartHP -= enemyDamage;
