@@ -43,12 +43,13 @@ public class CharacterController : MonoBehaviour {
 		RotateToMouse ();
 		Move ();
 
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButton (0)) {
 			Fire ();
-		}
-		if (Input.GetMouseButtonUp (0)) {
-			StopFire ();
-		}
+        }
+        else
+        {
+            StopFire();
+        }
 
 		Debug.Log (HP);
 	}
