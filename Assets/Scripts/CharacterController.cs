@@ -14,7 +14,7 @@ public class CharacterController : MonoBehaviour {
 	public float bodyPartSpeed; 
 	public float minDistance;
 	public float bodyPartDistance;
-	public int HPPerBodypart;
+	//public int HPPerBodypart;
 
 	private List<GameObject> bodyParts;
 	private Vector3 destinationPoint;
@@ -32,7 +32,7 @@ public class CharacterController : MonoBehaviour {
 		fireParticles.Stop ();
 		fire.SetActive (false);
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 2; i++) {
 			AddBodyPart ();
 		}
 	}
@@ -45,13 +45,13 @@ public class CharacterController : MonoBehaviour {
 
 		if (Input.GetMouseButton (0)) {
 			Fire ();
+            Debug.Log("moi");
         }
         else
         {
             StopFire();
+            Debug.Log("nope");
         }
-
-		Debug.Log (HP);
 	}
 
 	public int GetHP() {
@@ -117,7 +117,7 @@ public class CharacterController : MonoBehaviour {
 		bodyParts.Add (tempTail);
 
 		tailLength++;
-		HP += HPPerBodypart;
+		HP += newBodyPart.GetComponent<BodyPart> ().bodyPartHP;
 	}
 
 	public void RemoveBodyPart(GameObject removablePart) {
@@ -130,14 +130,13 @@ public class CharacterController : MonoBehaviour {
 	public void Fire() {
 		fire.SetActive(true);
 
-		if (!fireParticles.isPlaying)
-		fireParticles.Play ();
-		//Invoke("StopFire", 0.4f);
+		if (!fireParticles.isPlaying) {
+			fireParticles.Play ();
+		}
 	}
 
 	public void StopFire() {
 		fireParticles.Stop ();
 		fire.SetActive(false);
 	}
-
 }
