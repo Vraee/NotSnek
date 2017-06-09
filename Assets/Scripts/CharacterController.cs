@@ -7,6 +7,7 @@ public class CharacterController : MonoBehaviour {
 	public GameObject tail;
 	public GameObject bodyPrefab;
 	public GameObject legPrefab;
+    public int startSize;
 	public GameObject fire;
 	public ParticleSystem fireParticles;
 	//Needed only if translate is used to move the character; not in use currently
@@ -19,7 +20,9 @@ public class CharacterController : MonoBehaviour {
 	private List<GameObject> bodyParts;
 	private Vector3 destinationPoint;
 	private float distance;
+    private int orderInLayer = -1;
 	private int tailLength;
+    private int baseHP;
 	private int HP;
 	private int comparableHP;
 	private int powerUpLimit = 5;
@@ -34,12 +37,12 @@ public class CharacterController : MonoBehaviour {
 		fireParticles = head.GetComponent<ParticleSystem> ();
 		fire.SetActive (false);
 
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < startSize; i++) {
 			AddBodyPart ();
 		}
 
-		Debug.Log ("HP: " + HP);
-
+        baseHP = bodyPartHP;
+        HP = HP + baseHP;
 		comparableHP = HP - bodyPartHP;
 	}
 
@@ -99,12 +102,10 @@ public class CharacterController : MonoBehaviour {
 	}
 
 	public int GetCollectibleSum() {
-		Debug.Log ("GetCollectibleSum: " + collectibleSum);
 		return collectibleSum;
 	}
 
 	public void SetCollectibleSum(int newCollectibleSum) {
-		Debug.Log ("SetCollectibleSum: " + collectibleSum);
 		collectibleSum = newCollectibleSum;
 	}
 
@@ -155,25 +156,31 @@ public class CharacterController : MonoBehaviour {
 			bodyPartType = bodyPrefab;
 		}
 
-		GameObject newBodyPart = Instantiate(bodyPartType, previousBodyPart.transform.position - (previousBodyPart.transform.up / 2), previousBodyPart.transform.rotation) as GameObject;
+        GameObject newBodyPart = Instantiate(bodyPartType, previousBodyPart.transform.position - (previousBodyPart.transform.up / 2), previousBodyPart.transform.rotation) as GameObject;
 		newBodyPart.transform.parent = GameObject.Find ("Player").transform;
+
+        newBodyPart.GetComponent<SpriteRenderer>().sortingOrder = orderInLayer;
+        orderInLayer--;
 
 		GameObject tempTail = bodyParts [bodyParts.Count - 1];
 		bodyParts [bodyParts.Count - 1] = newBodyPart;
 		bodyParts.Add (tempTail);
+        tempTail.GetComponent<SpriteRenderer>().sortingOrder = orderInLayer;
 
 		tailLength++;
 		HP += bodyPartHP;
 		comparableHP += bodyPartHP;
-		Debug.Log ("HP: " + HP);
 	}
 
 	public void RemoveBodyPart(int removableIndex) {
 		GameObject removablePart = bodyParts [removableIndex];
-		bodyParts.Remove (removablePart);
-		Destroy(removablePart);
 
-		tailLength--;
+        if (HP > 0) {
+            bodyParts.Remove(removablePart);
+            Destroy(removablePart);
+
+            tailLength--;
+        }
 	}
 
 	public void Fire() {

@@ -24,7 +24,7 @@ public class BodyPart : MonoBehaviour {
 			}
 
             Destroy(collider.gameObject);
-        } else if (!(this.gameObject.tag == "Head") && !(this.gameObject.tag == "Tail") && collider.gameObject.tag == "Enemy") {
+        } else if (collider.gameObject.tag == "Enemy") {
 			int enemyDamage = 1;
 			//bodyPartHP -= enemyDamage;
 			parentScript.SetHP(parentScript.GetHP() - enemyDamage);
