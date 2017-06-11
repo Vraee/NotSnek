@@ -3,6 +3,7 @@ using System.Collections;
 
 public class BodyPart : MonoBehaviour {
 	private CharacterController parentScript;
+    private int listIndex;
 	private int bodyPartHP;
 
 	void Start () {
@@ -10,6 +11,15 @@ public class BodyPart : MonoBehaviour {
 		bodyPartHP = parentScript.GetBodyPartHP ();
 		StartCoroutine (Scale ());
 	}
+
+    public int GetListIndex()
+    {
+        return listIndex;
+    }
+
+    public void SetListIndex(int newListIndex) {
+        listIndex = newListIndex;
+    }
 
 	public void OnTriggerEnter2D(Collider2D collider) {
 		if (this.gameObject.tag == "Head" && collider.gameObject.tag == "PowerUp") {
@@ -25,6 +35,8 @@ public class BodyPart : MonoBehaviour {
 
             Destroy(collider.gameObject);
         } else if (collider.gameObject.tag == "Enemy") {
+            //parentScript.KnockBack(this, collider.transform, listIndex);
+
 			int enemyDamage = 1;
 			//bodyPartHP -= enemyDamage;
 			parentScript.SetHP(parentScript.GetHP() - enemyDamage);
