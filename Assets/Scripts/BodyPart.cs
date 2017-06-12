@@ -26,14 +26,14 @@ public class BodyPart : MonoBehaviour {
 			int newCollectibleSum = parentScript.GetCollectibleSum () + collider.gameObject.GetComponent<PowerUp> ().collectibleValue;
 			int powerUpLimit = parentScript.GetPowerUpLimit ();
 			parentScript.SetCollectibleSum(newCollectibleSum);
-
+            Debug.Log("mo");
 			if (newCollectibleSum >= powerUpLimit) {
 				int resetCollectibleSum = parentScript.GetCollectibleSum () - parentScript.GetPowerUpLimit ();
 				parentScript.SetCollectibleSum (resetCollectibleSum);
 				parentScript.AddBodyPart ();
 			}
-
             Destroy(collider.gameObject);
+
         } else if (collider.gameObject.tag == "Enemy") {
 			if (!(gameObject.tag == "Fire")) {
 				parentScript.StartCoroutine ("TakeDamage");
@@ -49,7 +49,6 @@ public class BodyPart : MonoBehaviour {
 		}
 	}
 		
-
     IEnumerator Scale()
     {
         float progress = 0;
