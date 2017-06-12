@@ -139,8 +139,6 @@ public class CharacterController : MonoBehaviour {
                     speedMultiplier = 4;
                 }
 
-                Debug.Log(speedMultiplier);
-
 				head.transform.Translate (head.transform.up * speed * speedMultiplier * Time.deltaTime, Space.World);
 				//head.transform.position = Vector3.Lerp (head.transform.position, _target, 0.1f);
 			}
