@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class PowerUp : MonoBehaviour {
 	public int collectibleValue = 2;
-    public GameObject target;
+	private GameObject target;
     public float fallSpeed;
     public float dragSpeed;
     private bool pulling;
+
+	void Start()
+	{
+		target = GameObject.Find ("Head");
+	}
 
     void Update()
     {
