@@ -35,15 +35,16 @@ public class BodyPart : MonoBehaviour {
 
             Destroy(collider.gameObject);
         } else if (collider.gameObject.tag == "Enemy") {
-            //parentScript.KnockBack(this, collider.transform, listIndex);
+			if (!(gameObject.tag == "Fire")) {
+				parentScript.StartCoroutine ("TakeDamage");
 
-			int enemyDamage = 1;
-			//bodyPartHP -= enemyDamage;
-			parentScript.SetHP(parentScript.GetHP() - enemyDamage);
+				int enemyDamage = 1;
+				parentScript.SetHP (parentScript.GetHP () - enemyDamage);
 
-			if (parentScript.GetHP() <= parentScript.GetComparableHP()) {
-				parentScript.SetComparableHP(parentScript.GetComparableHP() - bodyPartHP);
-				parentScript.RemoveBodyPart (parentScript.GetTailLength());
+				if (parentScript.GetHP () <= parentScript.GetComparableHP ()) {
+					parentScript.SetComparableHP (parentScript.GetComparableHP () - bodyPartHP);
+					parentScript.RemoveBodyPart (parentScript.GetTailLength ());
+				}
 			}
 		}
 	}
@@ -59,6 +60,5 @@ public class BodyPart : MonoBehaviour {
             progress += Time.deltaTime;
             yield return null;
         }
-
     }
 }

@@ -9,7 +9,6 @@ public class CharacterController : MonoBehaviour {
 	public GameObject legPrefab;
     public int startSize;
 	public GameObject fire;
-	public ParticleSystem fireParticles;
 	//Needed only if translate is used to move the character; not in use currently
 	public float speed;
 	public float bodyPartSpeed; 
@@ -21,10 +20,12 @@ public class CharacterController : MonoBehaviour {
 	private Vector3 destinationPoint;
 	private float distance;
     private int orderInLayer = -1;
+	private ParticleSystem fireParticles;
 	private int tailLength;
     private int baseHP;
 	private int HP;
 	private int comparableHP;
+	private bool takingDamage;
 	private int powerUpLimit = 5;
 	private int collectibleSum;
 
@@ -44,6 +45,7 @@ public class CharacterController : MonoBehaviour {
         baseHP = bodyPartHP;
         HP = HP + baseHP;
 		comparableHP = HP - bodyPartHP;
+		takingDamage = false;
 	}
 
 	void Update() {
@@ -138,9 +140,7 @@ public class CharacterController : MonoBehaviour {
                 {
                     speedMultiplier = 4;
                 }
-
-                Debug.Log(speedMultiplier);
-
+					
 				head.transform.Translate (head.transform.up * speed * speedMultiplier * Time.deltaTime, Space.World);
 				//head.transform.position = Vector3.Lerp (head.transform.position, _target, 0.1f);
 			}
@@ -213,51 +213,22 @@ public class CharacterController : MonoBehaviour {
 		fire.SetActive(false);
 	}
 
-    public void KnockBack(BodyPart hitPart, Transform enemy, int index)
-    {
-        Debug.Log(LayerMask.LayerToName(hitPart.gameObject.layer));
-        if (!(LayerMask.LayerToName(hitPart.gameObject.layer) == "Fire"))
-        {
-            Vector3 knockBackDir = (enemy.transform.position - hitPart.transform.position).normalized;
-            hitPart.transform.Translate(-knockBackDir * 100 * Time.deltaTime, Space.World);
-            //hitPart.GetComponent<Rigidbody2D>().AddForce(-knockBackDir * 10, ForceMode2D.Impulse);
-
-
-            for (int i = index; i > 0; i--)
-            {
-                distance = Vector3.Distance(bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
-                Vector3 newPosition = bodyParts[i - 1].transform.position;
-                float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
-
-                if (T > 0.5f)
-                {
-                    T = 0.5f;
-                }
-
-                if (distance > bodyPartDistance)
-                {
-                    bodyParts[i].transform.position = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
-                    bodyParts[i].transform.rotation = Quaternion.Lerp(bodyParts[i].transform.rotation, bodyParts[i - 1].transform.rotation, T);
-                }
-            }
-
-            for (int i = index; i < bodyParts.Count; i++)
-            {
-                distance = Vector3.Distance(bodyParts[i + 1].transform.position, bodyParts[i].transform.position);
-                Vector3 newPosition = bodyParts[i + 1].transform.position;
-                float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
-
-                if (T > 0.5f)
-                {
-                    T = 0.5f;
-                }
-
-                if (distance > bodyPartDistance)
-                {
-                    bodyParts[i].transform.position = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
-                    bodyParts[i].transform.rotation = Quaternion.Lerp(bodyParts[i].transform.rotation, bodyParts[i + 1].transform.rotation, T);
-                }
-            }
-        }
-    }
+	IEnumerator TakeDamage()
+	{
+		Debug.Log ("TakeDamage");
+		if (!takingDamage) {
+			takingDamage = true;
+			for (int i = 0; i < 2; i++) {
+				foreach (GameObject bodyPart in bodyParts) {
+					bodyPart.GetComponent<SpriteRenderer> ().color = Color.red;     
+				}
+				yield return new WaitForSeconds (0.1f);
+				foreach (GameObject bodyPart in bodyParts) {
+					bodyPart.GetComponent<SpriteRenderer> ().color = Color.white;     
+				}
+				yield return new WaitForSeconds (0.1f);
+			}
+			takingDamage = false;
+		}
+	}
 }
