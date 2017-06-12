@@ -134,12 +134,15 @@ public class CharacterController : MonoBehaviour {
                 //If distance between mouse and player is below certain limit, use this to calculate the multiplier, else use preset value
                 if (mouseDistance <= 5)
                 {
-                    speedMultiplier = mouseDistance * 0.6f;
+                    speedMultiplier = mouseDistance;
                 }
                 else
                 {
-                    speedMultiplier = 4;
+                    speedMultiplier = 5;
                 }
+
+				if (speedMultiplier > 5)
+				Debug.Log("5 is too small for speedmultiplier " + speedMultiplier);
 					
 				head.transform.Translate (head.transform.up * speed * speedMultiplier * Time.deltaTime, Space.World);
 				//head.transform.position = Vector3.Lerp (head.transform.position, _target, 0.1f);
@@ -215,7 +218,6 @@ public class CharacterController : MonoBehaviour {
 
 	IEnumerator TakeDamage()
 	{
-		Debug.Log ("TakeDamage");
 		if (!takingDamage) {
 			takingDamage = true;
 			for (int i = 0; i < 2; i++) {

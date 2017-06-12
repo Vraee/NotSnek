@@ -15,8 +15,10 @@ public class EnemyController : MonoBehaviour
     private int dir = 0;
     private bool inflictDamage;
 	private bool attacking;
-
+    private bool retreating;
 	private Vector3 destinationPoint;
+    private Vector3 attackTarget;
+    private Vector3 enemyStartPos;
 
 
     // Use this for initialization
@@ -24,14 +26,13 @@ public class EnemyController : MonoBehaviour
     {
         sprite = GetComponent<SpriteRenderer>();
 		attacking = false;
+        retreating = false;
+        enemyStartPos = gameObject.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-		destinationPoint = player.transform.position;
-		RotateToPlayer ();
-
         MoveEnemy();
         if (inflictDamage)
         {
@@ -47,8 +48,6 @@ public class EnemyController : MonoBehaviour
     void MoveEnemy()
     {
         //gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.right*speed*Time.deltaTime);
-		MoveEarlyBird();
-
         if (EnemyType == 0)
         {
             if (dir == 0)
@@ -68,32 +67,65 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
+
+        if (EnemyType == 1)
+        {
+            MoveEarlyBird();
+        }
     }
 
 	private void RotateToPlayer()
 	{
-		Quaternion rotation = Quaternion.LookRotation (gameObject.transform.position - destinationPoint, Vector3.forward);
-		gameObject.transform.rotation = rotation;
-		gameObject.transform.eulerAngles = new Vector3 (0, 0, gameObject.transform.eulerAngles.z);
+        destinationPoint = player.transform.position;
+        //Quaternion rotation = Quaternion.LookRotation(gameObject.transform.position - destinationPoint, Vector3.forward);
+        //gameObject.transform.rotation = rotation;
+        //gameObject.transform.eulerAngles = new Vector3(0, 0, gameObject.transform.eulerAngles.z);
+
+        Vector3 target = destinationPoint - transform.position;
+        float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
+        Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 30);
 	}
 
 	IEnumerator AttackPlayer (float delay, float attackSpeed) {
-		if (!attacking) {
-			attacking = true;
-			yield return new WaitForSeconds (delay);
-			gameObject.transform.position = Vector3.MoveTowards (gameObject.transform.position, player.transform.position, attackSpeed * Time.deltaTime);
-			attacking = false;
-		}
-	}
+        Vector3 tempAttackTarget = attackTarget;
+        Vector3 retreatPosition = new Vector3(-enemyStartPos.x, enemyStartPos.y, enemyStartPos.z);
 
+		if (!attacking && !retreating) {
+            attackTarget = player.transform.position;
+            enemyStartPos = gameObject.transform.position;
+			attacking = true;
+        } else if (retreating) {
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, enemyStartPos, attackSpeed / 4 * Time.deltaTime);
+
+            if (gameObject.transform.position == enemyStartPos) {
+                retreating = false;
+            }
+
+        } else if (attacking) {
+            yield return new WaitForSeconds(delay);
+            attackTarget = tempAttackTarget;
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, attackTarget, attackSpeed * Time.deltaTime);
+
+            if (gameObject.transform.position == attackTarget)
+            {
+                attacking = false;
+                retreating = true;
+                enemyStartPos = retreatPosition;
+            }
+        }
+	}
 
 	public void MoveEye() {
 
 	}
 
 	public void MoveEarlyBird() {
-		RotateToPlayer ();
-		StartCoroutine (AttackPlayer (1f, 50f));
+		if (!attacking)
+		{
+			RotateToPlayer();
+		}
+		StartCoroutine (AttackPlayer (1f, 40f));
 	}
 
 	public void MoveGriffin() {
