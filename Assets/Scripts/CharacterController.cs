@@ -17,6 +17,7 @@ public class CharacterController : MonoBehaviour {
 	public int bodyPartHP;
 
 	private List<GameObject> bodyParts;
+	private List<string> bodyPartTags;
 	private Vector3 destinationPoint;
 	private float distance;
     private int orderInLayer = -1;
@@ -28,10 +29,13 @@ public class CharacterController : MonoBehaviour {
 	private bool takingDamage;
 	private int powerUpLimit = 5;
 	private int collectibleSum;
+	private bool berserk;
+	private int berserkTime;
 
 	// Use this for initialization
 	void Start () {
 		bodyParts = new List<GameObject> ();
+		bodyPartTags = new List<string>();
 		bodyParts.Add (head);
 		bodyParts.Add (tail);
 
@@ -46,6 +50,7 @@ public class CharacterController : MonoBehaviour {
         HP = HP + baseHP;
 		comparableHP = HP - bodyPartHP;
 		takingDamage = false;
+		berserk = false;
 	}
 
 	void Update() {
@@ -61,6 +66,11 @@ public class CharacterController : MonoBehaviour {
         {
             StopFire();
         }
+
+		if (Input.GetKey(KeyCode.Space))
+		{
+			StartCoroutine(Berserk());
+		}
 
 	}
 
@@ -188,6 +198,7 @@ public class CharacterController : MonoBehaviour {
         tempTail.GetComponent<SpriteRenderer>().sortingOrder = orderInLayer;
 
 		tailLength++;
+		berserkTime = tailLength;
 		HP += bodyPartHP;
 		comparableHP += bodyPartHP;
 	}
@@ -195,7 +206,7 @@ public class CharacterController : MonoBehaviour {
 	public void RemoveBodyPart(int removableIndex) {
 		GameObject removablePart = bodyParts [removableIndex];
 
-        if (HP > 0) {
+        if (HP > 0 && removableIndex != 0 && removableIndex != bodyParts.Count - 1) {
             bodyParts.Remove(removablePart);
             Destroy(removablePart);
 
@@ -214,6 +225,33 @@ public class CharacterController : MonoBehaviour {
 	public void StopFire() {
 		fireParticles.Stop ();
 		fire.SetActive(false);
+	}
+
+	IEnumerator Berserk()
+	{
+		for (int i = 1; i < bodyParts.Count - 1; i++)
+		{
+			RemoveBodyPart(i);
+		}
+
+		foreach (GameObject bodyPart in bodyParts)
+		{
+			bodyPartTags.Add(bodyPart.tag);
+			bodyPart.GetComponent<SpriteRenderer>().color = Color.blue;
+			bodyPart.tag = "Fire";
+		}
+
+		yield return new WaitForSeconds(berserkTime);
+		//berserk = false;
+
+		for (int i = 0; i < bodyParts.Count; i++ )
+		{
+			bodyParts[i].GetComponent<SpriteRenderer>().color = Color.white; 
+			bodyParts[i].tag = bodyPartTags[i];
+		}
+
+		HP = baseHP;
+
 	}
 
 	IEnumerator TakeDamage()

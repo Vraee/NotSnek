@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     public int EnemyType;
     public float speed;
     public float stamina;
+	public float attackDelay = 2;
     public GameObject powerUpPrefab;
 	public GameObject player;
 
@@ -87,7 +88,7 @@ public class EnemyController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 30);
 	}
 
-	IEnumerator AttackPlayer (float delay, float attackSpeed) {
+	IEnumerator AttackPlayer (float attackSpeed) {
         Vector3 tempAttackTarget = attackTarget;
         Vector3 retreatPosition = new Vector3(-enemyStartPos.x, enemyStartPos.y, enemyStartPos.z);
 
@@ -103,7 +104,7 @@ public class EnemyController : MonoBehaviour
             }
 
         } else if (attacking) {
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(attackDelay);
             attackTarget = tempAttackTarget;
             gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, attackTarget, attackSpeed * Time.deltaTime);
 
@@ -125,7 +126,7 @@ public class EnemyController : MonoBehaviour
 		{
 			RotateToPlayer();
 		}
-		StartCoroutine (AttackPlayer (1f, 40f));
+		StartCoroutine (AttackPlayer (40f));
 	}
 
 	public void MoveGriffin() {
