@@ -20,6 +20,8 @@ public class EnemyController : MonoBehaviour
 	private Vector3 destinationPoint;
     private Vector3 attackTarget;
     private Vector3 enemyStartPos;
+	private float timer;
+	private bool moving;
 
 
     // Use this for initialization
@@ -29,6 +31,9 @@ public class EnemyController : MonoBehaviour
 		attacking = false;
         retreating = false;
         enemyStartPos = gameObject.transform.position;
+
+		timer = Time.time + attackDelay;
+		moving = false;
     }
 
     // Update is called once per frame
@@ -88,9 +93,9 @@ public class EnemyController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 30);
 	}
 
-	IEnumerator AttackPlayer (float attackSpeed) {
+	public void AttackPlayer (float attackSpeed) {
         Vector3 tempAttackTarget = attackTarget;
-        Vector3 retreatPosition = new Vector3(-enemyStartPos.x, enemyStartPos.y, enemyStartPos.z);
+		Vector3 retreatPosition = enemyStartPos;
 
 		if (!attacking && !retreating) {
             attackTarget = player.transform.position;
@@ -101,14 +106,15 @@ public class EnemyController : MonoBehaviour
 
             if (gameObject.transform.position == enemyStartPos) {
                 retreating = false;
+				moving = false;
+				timer = Time.time + attackDelay;
             }
 
         } else if (attacking) {
-            yield return new WaitForSeconds(attackDelay);
             attackTarget = tempAttackTarget;
             gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, attackTarget, attackSpeed * Time.deltaTime);
 
-            if (gameObject.transform.position == attackTarget)
+           if (gameObject.transform.position == attackTarget)
             {
                 attacking = false;
                 retreating = true;
@@ -122,11 +128,18 @@ public class EnemyController : MonoBehaviour
 	}
 
 	public void MoveEarlyBird() {
-		if (!attacking)
-		{
-			RotateToPlayer();
+		if (!attacking) {
+			RotateToPlayer ();
 		}
-		StartCoroutine (AttackPlayer (40f));
+
+		if (Time.time >= timer) {
+			moving = true;
+		}
+
+		if (moving) {
+			AttackPlayer (20f);
+		}
+
 	}
 
 	public void MoveGriffin() {
