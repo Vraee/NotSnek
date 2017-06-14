@@ -145,13 +145,19 @@ public class EnemyController : MonoBehaviour
 	public void MoveGriffin() {
 
 	}
-
     public void OnTriggerEnter2D(Collider2D collider)
     {
-		//Debug.Log ("mo");
-        if(collider.gameObject.tag == "Fire")
+        if (collider.gameObject.tag == "Fire")
         {
             inflictDamage = true;
+        }
+        if (collider.gameObject.tag == "Fireball")
+        {
+            stamina = stamina - collider.GetComponent<Fireball>().damage;
+            if (stamina <= 0)
+            {
+                Die();
+            }
         }
     }
 
@@ -173,5 +179,12 @@ public class EnemyController : MonoBehaviour
             Instantiate(powerUpPrefab,transform.position, transform.rotation);
             Destroy(gameObject);
         }
-    }  
+    }
+    private void Die()
+    {
+        Instantiate(powerUpPrefab, transform.position, transform.rotation);
+        Destroy(gameObject);
+    }
 }
+
+
