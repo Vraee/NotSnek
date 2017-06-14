@@ -24,6 +24,7 @@ public class CharacterController : MonoBehaviour {
     public float fireballDamage;
 
     private List<GameObject> bodyParts;
+	private List<GameObject> tailParts;
 	private List<string> bodyPartTags;
 	private Vector3 destinationPoint;
 	private float distance;
@@ -42,16 +43,21 @@ public class CharacterController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		bodyParts = new List<GameObject> ();
+		tailParts = new List<GameObject>();
 		bodyPartTags = new List<string>();
 		bodyParts.Add (head);
-		bodyParts.Add (tail);
-        
-       
-		fireParticles = head.GetComponent<ParticleSystem> ();
+
+		for (int i = 0; i < tail.transform.childCount; i++)
+		{
+			bodyParts.Add(tail.transform.GetChild(i).gameObject);
+			tailParts.Add(tail.transform.GetChild(i).gameObject);
+		}
+
+		fireParticles = head.GetComponent<ParticleSystem>();
 		fire.SetActive (false);
         fireParticles.Stop();
 
-        for (int i = 0; i < startSize; i++) {
+        for (int i = 0; i < 10; i++) {
 			AddBodyPart ();
 		}
 
@@ -190,18 +196,31 @@ public class CharacterController : MonoBehaviour {
 		}
 
         GameObject newBodyPart = Instantiate(bodyPartType, previousBodyPart.transform.position - (previousBodyPart.transform.up / 2), previousBodyPart.transform.rotation) as GameObject;
-		newBodyPart.transform.parent = GameObject.Find ("Player").transform;
+		newBodyPart.transform.parent = this.transform;
 
         newBodyPart.GetComponent<SpriteRenderer>().sortingOrder = orderInLayer;
-        orderInLayer--;
 
-		GameObject tempTail = bodyParts [bodyParts.Count - 1];
-		bodyParts [bodyParts.Count - 1] = newBodyPart;
-        newBodyPart.gameObject.GetComponent<BodyPart>().SetListIndex(bodyParts.Count - 1);
+		bodyParts [bodyParts.Count - 3] = newBodyPart;
+        newBodyPart.gameObject.GetComponent<BodyPart>().SetListIndex(bodyParts.Count - 3);
 
-		bodyParts.Add (tempTail);
-        tempTail.GetComponent<SpriteRenderer>().sortingOrder = orderInLayer;
+		int j = 0;
+		for (int i = bodyParts.Count - 2; i <= bodyParts.Count; i++)
+		{
+			if (i == bodyParts.Count)
+			{
+				bodyParts.Add(tailParts[j]);
+				tailParts[j].GetComponent<SpriteRenderer>().sortingOrder = orderInLayer - tailParts.Count + j;
+				break;
+			}
+			else
+			{
+				bodyParts[i] = tailParts[j];
+				tailParts[j].GetComponent<SpriteRenderer>().sortingOrder = orderInLayer - tailParts.Count + j;
+			}
+			j++;
+		}
 
+		orderInLayer--;
 		tailLength++;
 		berserkTime = tailLength;
 		HP += bodyPartHP;
