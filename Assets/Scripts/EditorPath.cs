@@ -7,8 +7,8 @@ public class EditorPath : MonoBehaviour {
     public Color rayColor = Color.white;
     //List of positions to move between
     public List<Transform> pathObjects = new List<Transform>();
-    Transform[] transformArray;
-
+    public Transform[] transformArray;
+	public int listLenght;
     
     private void OnDrawGizmos()
     {
@@ -33,5 +33,7 @@ public class EditorPath : MonoBehaviour {
                 Gizmos.DrawSphere(position, 0.05f);
             }
         }
+
+		listLenght = pathObjects.Count;
     }
 }

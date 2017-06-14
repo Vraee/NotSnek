@@ -10,6 +10,9 @@ public class CirclePathCreator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		if (endAngle == 0) {
+			endAngle = 360;
+		}
 		
 		for (var i = 0; i <= pathObjectsAmount; i++) {
 			//.~.*~*majig*~*.~.
@@ -19,7 +22,7 @@ public class CirclePathCreator : MonoBehaviour {
 			if (angle * (180 / Mathf.PI) >= startAngle && angle * (180 / Mathf.PI) <= endAngle) {
 				GameObject pathObject = new GameObject ();
 				pathObject.transform.position = position;
-				pathObject.transform.parent = GameObject.Find ("PathHolder").transform;
+				pathObject.transform.parent = this.transform;
 			}
 		}
 	}
