@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour
 	private Vector3 destinationPoint;
     private Vector3 attackTarget;
     private Vector3 enemyStartPos;
-
+    private float fireballDamage;
 
     // Use this for initialization
     void Start()
@@ -130,15 +130,22 @@ public class EnemyController : MonoBehaviour
 	}
 
 	public void MoveGriffin() {
-
+        
 	}
 
     public void OnTriggerEnter2D(Collider2D collider)
     {
-		//Debug.Log ("mo");
         if(collider.gameObject.tag == "Fire")
         {
             inflictDamage = true;
+        }
+        if(collider.gameObject.tag == "Fireball")
+        {
+            stamina = stamina - collider.GetComponent<Fireball>().damage;
+            if (stamina <= 0)
+            {
+                Die();
+            }
         }
     }
 
@@ -157,8 +164,12 @@ public class EnemyController : MonoBehaviour
         sprite.color = hitColor;
         if (stamina <= 0)
         {
-            Instantiate(powerUpPrefab,transform.position, transform.rotation);
-            Destroy(gameObject);
+            Die();
         }
     }  
+    private void Die()
+    {
+            Instantiate(powerUpPrefab, transform.position, transform.rotation);
+            Destroy(gameObject);
+    }
 }

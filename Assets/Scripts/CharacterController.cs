@@ -9,14 +9,21 @@ public class CharacterController : MonoBehaviour {
 	public GameObject legPrefab;
     public int startSize;
 	public GameObject fire;
-	//Needed only if translate is used to move the character; not in use currently
-	public float speed;
+    public GameObject fireBall;
+    //Needed only if translate is used to move the character; not in use currently
+    public float speed;
 	public float bodyPartSpeed; 
 	public float minDistance;
 	public float bodyPartDistance;
 	public int bodyPartHP;
+    
+    //Holds the fireball gameobject during buildup
+    private GameObject temp;
+    //how much damage is added to the fireball per sec
+    public float damageIncrease;
+    public float fireballDamage;
 
-	private List<GameObject> bodyParts;
+    private List<GameObject> bodyParts;
 	private List<string> bodyPartTags;
 	private Vector3 destinationPoint;
 	private float distance;
@@ -38,11 +45,13 @@ public class CharacterController : MonoBehaviour {
 		bodyPartTags = new List<string>();
 		bodyParts.Add (head);
 		bodyParts.Add (tail);
-
+        
+       
 		fireParticles = head.GetComponent<ParticleSystem> ();
 		fire.SetActive (false);
+        fireParticles.Stop();
 
-		for (int i = 0; i < startSize; i++) {
+        for (int i = 0; i < startSize; i++) {
 			AddBodyPart ();
 		}
 
@@ -58,16 +67,12 @@ public class CharacterController : MonoBehaviour {
 
 		RotateToMouse ();
 		Move ();
+       // Fire();
+        Fire3();
+		
 
-		if (Input.GetMouseButton (0)) {
-			Fire ();
-        }
-        else
-        {
-            StopFire();
-        }
 
-		if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
 		{
 			StartCoroutine(Berserk());
 		}
@@ -153,7 +158,7 @@ public class CharacterController : MonoBehaviour {
 
 				if (speedMultiplier > 5)
 				Debug.Log("5 is too small for speedmultiplier " + speedMultiplier);
-					
+				
 				head.transform.Translate (head.transform.up * speed * speedMultiplier * Time.deltaTime, Space.World);
 				//head.transform.position = Vector3.Lerp (head.transform.position, _target, 0.1f);
 			}
@@ -215,17 +220,52 @@ public class CharacterController : MonoBehaviour {
 	}
 
 	public void Fire() {
-		fire.SetActive(true);
 
-		if (!fireParticles.isPlaying) {
-			fireParticles.Play ();
-		}
-	}
+        if (Input.GetMouseButton(0))
+        {
+            fire.SetActive(true);
 
-	public void StopFire() {
-		fireParticles.Stop ();
-		fire.SetActive(false);
+            if (!fireParticles.isPlaying)
+            {
+                fireParticles.Play();
+            }
+        }
+        else
+        {
+            fireParticles.Stop();
+            fire.SetActive(false);
+        }   
 	}
+    
+
+    private void Fire3()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 playerPos = head.transform.position;
+            Vector3 playerDirection = head.transform.up;
+            Quaternion playerRotation = head.transform.rotation;
+            float spawnDistance = 1;
+            Vector3 spawnPos = playerPos + playerDirection * spawnDistance;
+            temp = Instantiate(fireBall, spawnPos, head.transform.rotation);
+        }
+
+        if (Input.GetMouseButton(0) && temp != null) {
+            temp.transform.position = head.transform.position + (head.transform.up * 1);
+            temp.transform.rotation = head.transform.rotation;
+
+            //Increase fireball size and damage when mouse is held
+            if (temp.transform.localScale.x <= 1) {
+                temp.transform.localScale += new Vector3(0.25F * Time.deltaTime, 0.25F * Time.deltaTime, 0);
+                //fireballDamage = fireballDamage + damageIncrease * Time.deltaTime;
+                temp.GetComponent<Fireball>().IncreaseDamage(damageIncrease * Time.deltaTime);
+            }
+        }
+        if (Input.GetMouseButtonUp(0) && temp != null)
+        {
+            temp.GetComponent<Fireball>().Shoot();
+        }
+    }
 
 	IEnumerator Berserk()
 	{
