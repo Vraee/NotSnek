@@ -255,8 +255,8 @@ public class CharacterController : MonoBehaviour {
             temp.transform.rotation = head.transform.rotation;
 
             //Increase fireball size and damage when mouse is held
-            if (temp.transform.localScale.x <= 1) {
-                temp.transform.localScale += new Vector3(0.25F * Time.deltaTime, 0.25F * Time.deltaTime, 0);
+            if (temp.transform.localScale.x <= 10) {
+                temp.transform.localScale += new Vector3(0.25f * Time.deltaTime, 0.25f * Time.deltaTime, 0.25f * Time.deltaTime);
                 //fireballDamage = fireballDamage + damageIncrease * Time.deltaTime;
                 temp.GetComponent<Fireball>().IncreaseDamage(damageIncrease * Time.deltaTime);
             }
