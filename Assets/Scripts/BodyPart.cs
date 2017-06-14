@@ -60,4 +60,14 @@ public class BodyPart : MonoBehaviour {
             yield return null;
         }
     }
+
+	public void BerserkTimer()
+	{
+		parentScript.RemoveBodyPart(listIndex);
+		if (listIndex == 1)
+		{
+			parentScript.SetBerserk(false);
+			parentScript.Berserk();
+		}
+	}
 }
