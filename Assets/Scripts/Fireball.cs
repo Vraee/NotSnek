@@ -11,7 +11,6 @@ public class Fireball : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
         damage = GameObject.Find("Player").GetComponent<CharacterController>().fireballDamage;
     }
 
@@ -20,6 +19,11 @@ public class Fireball : MonoBehaviour
     {
         if (shoot) {
             gameObject.transform.Translate(gameObject.transform.up * speed * Time.deltaTime, Space.World);
+        }
+
+        if (gameObject.transform.position.x > 20 || gameObject.transform.position.y > 20 || gameObject.transform.position.x < -20 || gameObject.transform.position.y < -20)
+        {
+            Destroy(gameObject);
         }
     }
 
