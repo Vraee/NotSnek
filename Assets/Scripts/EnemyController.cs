@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     public int EnemyType;
     public float speed;
     public float stamina;
+	public float damageOutput;
 	public float attackDelay = 2;
     public GameObject powerUpPrefab;
 	public GameObject player;
@@ -50,6 +51,14 @@ public class EnemyController : MonoBehaviour
         }
         
     }
+
+	public float GetDamageOutput() {
+		return damageOutput;
+	}
+
+	public void SetDamageOutput(int newDamageOutput) {
+		damageOutput = newDamageOutput;
+	}
 
     void MoveEnemy()
     {
@@ -137,7 +146,7 @@ public class EnemyController : MonoBehaviour
 		}
 
 		if (moving) {
-			AttackPlayer (20f);
+			AttackPlayer (speed);
 		}
 
 	}
@@ -147,7 +156,7 @@ public class EnemyController : MonoBehaviour
 	}
     public void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag == "Fire")
+		if (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11)
         {
             inflictDamage = true;
         }
@@ -163,7 +172,7 @@ public class EnemyController : MonoBehaviour
 
     public void OnTriggerExit2D(Collider2D collider)
     {
-        if (collider.gameObject.tag == "Fire")
+		if (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11)
         {
             inflictDamage = false;
         }

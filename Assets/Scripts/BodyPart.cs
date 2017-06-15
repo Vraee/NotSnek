@@ -4,11 +4,14 @@ using System.Collections;
 public class BodyPart : MonoBehaviour {
 	private CharacterController parentScript;
     private int listIndex;
-	private int bodyPartHP;
+	private float bodyPartHP;
+	private bool isHit;
+	private GameObject enemy;
 
 	void Start () {
 		parentScript = GameObject.Find ("Player").GetComponent<CharacterController> ();
 		bodyPartHP = parentScript.GetBodyPartHP ();
+		isHit = false;
 		StartCoroutine (Scale ());
 	}
 
@@ -20,6 +23,22 @@ public class BodyPart : MonoBehaviour {
     public void SetListIndex(int newListIndex) {
         listIndex = newListIndex;
     }
+
+	public bool GetIsHit () {
+		return isHit;
+	}
+
+	public void SetIsHit (bool newIsHit) {
+		isHit = newIsHit;
+	}
+
+	public GameObject GetEnemy () {
+		return enemy;
+	}
+
+	public void SetEnemy(GameObject newEnemy) {
+		enemy = newEnemy;
+	}
 
 	public void OnTriggerEnter2D(Collider2D collider) {
 		if (this.gameObject.tag == "Head" && collider.gameObject.tag == "PowerUp") {
@@ -36,15 +55,8 @@ public class BodyPart : MonoBehaviour {
 
         } else if (collider.gameObject.tag == "Enemy") {
 			if (!(gameObject.tag == "Fire")) {
-				parentScript.StartCoroutine ("TakeDamage");
-
-				int enemyDamage = 1;
-				parentScript.SetHP (parentScript.GetHP () - enemyDamage);
-
-				if (parentScript.GetHP () <= parentScript.GetComparableHP ()) {
-					parentScript.SetComparableHP (parentScript.GetComparableHP () - bodyPartHP);
-					parentScript.RemoveBodyPart (parentScript.GetTailLength ());
-				}
+				parentScript.StartCoroutine ("EnemyDamage", this);
+				Debug.Log (parentScript.GetDamageSum());
 			}
 		}
 	}
@@ -60,14 +72,4 @@ public class BodyPart : MonoBehaviour {
             yield return null;
         }
     }
-
-	public void BerserkTimer()
-	{
-		parentScript.RemoveBodyPart(listIndex);
-		if (listIndex == 1)
-		{
-			parentScript.SetBerserk(false);
-			parentScript.Berserk();
-		}
-	}
 }
