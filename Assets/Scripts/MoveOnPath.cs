@@ -41,47 +41,46 @@ public class MoveOnPath : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (startClockwise) {
-			if (pathToFollow.GetComponent<EditorPath> ().listLenght - 1 != startIndex) {
-				startIndex = pathToFollow.GetComponent<EditorPath> ().listLenght - 1;
+		if (pathToFollow.pathObjects.Count > 0) {
+			if (startClockwise) {
+				if (pathToFollow.GetComponent<EditorPath> ().listLenght - 1 != startIndex) {
+					startIndex = pathToFollow.GetComponent<EditorPath> ().listLenght - 1;
+					currentWayPointID = startIndex;
+				}
+			} else {
+				if (pathToFollow.GetComponent<EditorPath> ().listLenght - 1 != endIndex) {
+					endIndex = pathToFollow.GetComponent<EditorPath> ().listLenght - 1;
+				}
+			}
+
+			//Gets the distance between pathObject (in EditorPath script) and current gameobject position
+			float distance = Vector3.Distance (pathToFollow.pathObjects [currentWayPointID].position, transform.position);
+			//move to the next waypoint
+			transform.position = Vector3.MoveTowards (transform.position, pathToFollow.pathObjects [currentWayPointID].position, Time.deltaTime * speed);
+
+			//rotate towards the next waypoint
+			var rotation = Quaternion.LookRotation (pathToFollow.pathObjects [currentWayPointID].position, transform.position);
+			rotation.y = 0;
+			rotation.x = 0;
+			if (Slerp) {
+				transform.rotation = Quaternion.Slerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+			} else {
+				transform.rotation = Quaternion.Lerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+			}
+
+			if (distance <= reachDistance) {
+				if (!goingBack)
+					currentWayPointID++;
+				else {
+					currentWayPointID--;
+				}
+			}
+
+			if (looping && currentWayPointID == endIndex) {
 				currentWayPointID = startIndex;
+			} else if (!looping && distance <= reachDistance && (currentWayPointID == endIndex || currentWayPointID == startIndex)) {
+				goingBack = !goingBack;
 			}
-		} else {
-			if (pathToFollow.GetComponent<EditorPath> ().listLenght - 1 != endIndex) {
-				endIndex = pathToFollow.GetComponent<EditorPath> ().listLenght - 1;
-			}
-		}
-
-        //Gets the distance between pathObject (in EditorPath script) and current gameobject position
-
-        float distance = Vector3.Distance(pathToFollow.pathObjects[currentWayPointID].position, transform.position);
-        //move to the next waypoint
-        transform.position = Vector3.MoveTowards(transform.position, pathToFollow.pathObjects[currentWayPointID].position, Time.deltaTime * speed);
-
-        //rotate towards the next waypoint
-        var rotation = Quaternion.LookRotation(pathToFollow.pathObjects[currentWayPointID].position, transform.position);
-        rotation.y = 0;
-        rotation.x = 0;
-        if (Slerp) {
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-        }
-        else
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-        }
-
-		if (distance <= reachDistance) {
-			if (!goingBack)
-				currentWayPointID++;
-			else {
-				currentWayPointID--;
-			}
-		}
-
-		if (looping && currentWayPointID == endIndex) {
-			currentWayPointID = startIndex;
-		} else if (!looping && distance <= reachDistance && (currentWayPointID == endIndex || currentWayPointID == startIndex)) {
-			goingBack = !goingBack;
 		}
 	}
 

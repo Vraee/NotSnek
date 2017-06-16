@@ -10,18 +10,28 @@ public class EditorPath : MonoBehaviour {
     public Transform[] transformArray;
 	public int listLenght;
     
+	void Start() {
+		CreatePathObjectList ();
+	}
+
+	void Update() {
+	}
+
+	public void CreatePathObjectList() {
+		transformArray = GetComponentsInChildren<Transform>();
+		pathObjects.Clear();
+		foreach (Transform pathObject in transformArray) {
+			if (pathObject != this.transform) {
+				pathObjects.Add (pathObject);
+			}
+		}
+		listLenght = pathObjects.Count;
+	}
+
     private void OnDrawGizmos()
-    {
+    {		
+		Debug.Log ("..........");
         Gizmos.color = rayColor;
-        transformArray = GetComponentsInChildren<Transform>();
-        pathObjects.Clear();
-        foreach(Transform pathObject in transformArray)
-        {
-            if(pathObject != this.transform)
-            {
-                pathObjects.Add(pathObject);
-            }
-        }
         for(int i = 0; i < pathObjects.Count; i++)
         {
             Vector3 position = pathObjects[i].position;
@@ -33,7 +43,5 @@ public class EditorPath : MonoBehaviour {
                 Gizmos.DrawSphere(position, 0.05f);
             }
         }
-
-		listLenght = pathObjects.Count;
     }
 }
