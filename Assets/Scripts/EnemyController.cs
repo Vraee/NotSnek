@@ -24,10 +24,10 @@ public class EnemyController : MonoBehaviour
 	private float timer;
 	private bool moving;
 
-
     // Use this for initialization
     void Start()
     {
+		targetPlayerPart = GameObject.Find ("Head");
         sprite = GetComponent<SpriteRenderer>();
 		attacking = false;
         retreating = false;
@@ -145,10 +145,11 @@ public class EnemyController : MonoBehaviour
 			moving = true;
 		}
 
-		if (moving) {
+		if (moving && gameObject.GetComponent<MoveOnPath>().GetPathReached()) {
 			AttackPlayer (speed);
 		}
 
+		Debug.Log (gameObject.GetComponent<MoveOnPath>().GetPathReached());
 	}
 
 	public void MoveGriffin() {

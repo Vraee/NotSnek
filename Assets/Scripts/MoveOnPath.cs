@@ -23,6 +23,11 @@ public class MoveOnPath : MonoBehaviour {
 	private bool goingBack;
 	private int startIndex;
 	private int endIndex;
+	private bool pathReached;
+
+	public bool GetPathReached() {
+		return pathReached;
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -37,11 +42,16 @@ public class MoveOnPath : MonoBehaviour {
 		}
 
 		currentWayPointID = startIndex;
+		pathReached = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (pathToFollow.pathObjects.Count > 0) {
+			if (currentWayPointID != startIndex && pathReached == false) {
+				pathReached = true;
+			}
+
 			if (startClockwise) {
 				if (pathToFollow.GetComponent<EditorPath> ().listLenght - 1 != startIndex) {
 					startIndex = pathToFollow.GetComponent<EditorPath> ().listLenght - 1;
