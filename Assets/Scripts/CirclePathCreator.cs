@@ -21,8 +21,8 @@ public class CirclePathCreator : MonoBehaviour {
 
 			if (angle * (180 / Mathf.PI) >= startAngle && angle * (180 / Mathf.PI) <= endAngle) {
 				GameObject pathObject = new GameObject ();
-				pathObject.transform.position = position;
 				pathObject.transform.parent = this.transform;
+				pathObject.transform.localPosition = position;
 			}
 		}
 	}

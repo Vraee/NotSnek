@@ -56,7 +56,6 @@ public class BodyPart : MonoBehaviour {
         } else if (collider.gameObject.tag == "Enemy") {
 			if (!(gameObject.tag == "Fire")) {
 				parentScript.StartCoroutine ("EnemyDamage", this);
-				Debug.Log (parentScript.GetDamageSum());
 			}
 		}
 	}

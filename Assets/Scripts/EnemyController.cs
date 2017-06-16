@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour
 	public float damageOutput;
 	public float attackDelay = 2;
     public GameObject powerUpPrefab;
-	public GameObject player;
+	public GameObject targetPlayerPart;
 
     private SpriteRenderer sprite;
     private Color hitColor = Color.red;
@@ -91,7 +91,7 @@ public class EnemyController : MonoBehaviour
 
 	private void RotateToPlayer()
 	{
-        destinationPoint = player.transform.position;
+        destinationPoint = targetPlayerPart.transform.position;
         //Quaternion rotation = Quaternion.LookRotation(gameObject.transform.position - destinationPoint, Vector3.forward);
         //gameObject.transform.rotation = rotation;
         //gameObject.transform.eulerAngles = new Vector3(0, 0, gameObject.transform.eulerAngles.z);
@@ -107,7 +107,7 @@ public class EnemyController : MonoBehaviour
 		Vector3 retreatPosition = enemyStartPos;
 
 		if (!attacking && !retreating) {
-            attackTarget = player.transform.position;
+            attackTarget = targetPlayerPart.transform.position;
             enemyStartPos = gameObject.transform.position;
 			attacking = true;
         } else if (retreating) {

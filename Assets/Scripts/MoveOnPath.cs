@@ -53,6 +53,7 @@ public class MoveOnPath : MonoBehaviour {
 		}
 
         //Gets the distance between pathObject (in EditorPath script) and current gameobject position
+
         float distance = Vector3.Distance(pathToFollow.pathObjects[currentWayPointID].position, transform.position);
         //move to the next waypoint
         transform.position = Vector3.MoveTowards(transform.position, pathToFollow.pathObjects[currentWayPointID].position, Time.deltaTime * speed);

@@ -357,8 +357,8 @@ public class CharacterController : MonoBehaviour {
 			SceneManager.LoadScene (SceneManager.GetActiveScene().name); //Probably should reaload the scene from the start in finished versiom
 		}*/
 
-		Debug.Log ("ReduceHP: HP " + HP);
-		Debug.Log ("ReduceHP: comparableHP" + comparableHP);
+		/*Debug.Log ("ReduceHP: HP " + HP);
+		Debug.Log ("ReduceHP: comparableHP" + comparableHP);*/
 	}
 
 	IEnumerator EnemyDamage(BodyPart hitPart) //USED TO BE "TakeDamage"
