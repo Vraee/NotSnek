@@ -53,9 +53,12 @@ public class CharacterController : MonoBehaviour {
 			tailParts.Add(tail.transform.GetChild(i).gameObject);
 		}
 
+		//pisa shit
 		fireParticles = head.GetComponent<ParticleSystem>();
 		fire.SetActive (false);
-        fireParticles.Stop();
+		//fireParticles.Play();
+		var em = fireParticles.emission;
+		em.enabled = false;
 
 		for (int i = 0; i < startSize; i++) {
 			AddBodyPart ();
@@ -74,7 +77,7 @@ public class CharacterController : MonoBehaviour {
 
 		RotateToMouse ();
 		Move ();
-       // Fire();
+       	//Fire();
         Fire3();
 
 		if (Input.GetKey(KeyCode.Space) && !berserk && bodyParts.Count > 1 + tailParts.Count)
@@ -264,8 +267,7 @@ public class CharacterController : MonoBehaviour {
         if (Input.GetMouseButton(0))
         {
             fire.SetActive(true);
-
-            if (!fireParticles.isPlaying)
+			if (!fireParticles.isPlaying)
             {
                 fireParticles.Play();
             }
@@ -317,6 +319,9 @@ public class CharacterController : MonoBehaviour {
 				bodyPart.layer = 11;
 				yield return new WaitForSeconds (0.1f);
 				bodyPart.GetComponent<SpriteRenderer>().color = Color.blue;
+				var emni = bodyPart.GetComponent<ParticleSystem>().emission;
+				emni.enabled = true;
+
 			}
 
 			for (int i = bodyParts.Count - tailParts.Count - 1; i > 0; i--)
@@ -336,6 +341,8 @@ public class CharacterController : MonoBehaviour {
 					{
 						bodyParts[j].GetComponent<SpriteRenderer>().color = Color.white;
 						bodyParts [j].layer = 8;
+						var emni = bodyParts[j].GetComponent<ParticleSystem>().emission;
+						emni.enabled = false;
 					}
 				}
 			}
