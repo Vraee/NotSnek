@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour {
     public int id;
     public float gameTime;
 
+    public float timer;
+
     public float score;
     public Text scoreText;
     
@@ -22,6 +24,7 @@ public class GameManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        timer += Time.deltaTime;
         gameTime -= Time.deltaTime;
         if(gameTime <= 0 && id != spawnObjects.Length)
         {
@@ -29,9 +32,19 @@ public class GameManager : MonoBehaviour {
             gameTime = timeToNextSpawn[id];
             id++;
 
+
         }
     }
 
+    void OnGUI()
+    {
+        int minutes = Mathf.FloorToInt(timer / 60F);
+        int seconds = Mathf.FloorToInt(timer - minutes * 60);
+        string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
+
+        GUI.Label(new Rect(10, 10, 250, 100), niceTime);
+        Debug.Log(niceTime);
+    }
 
     public void IncreaseScore(float amount)
     {
