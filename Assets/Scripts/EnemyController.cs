@@ -28,6 +28,7 @@ public class EnemyController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        targetPlayerPart = GameObject.Find("Head");
         sprite = GetComponent<SpriteRenderer>();
 		attacking = false;
         retreating = false;

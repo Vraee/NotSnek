@@ -30,7 +30,6 @@ public class EditorPath : MonoBehaviour {
 
     private void OnDrawGizmos()
     {		
-		Debug.Log ("..........");
         Gizmos.color = rayColor;
         for(int i = 0; i < pathObjects.Count; i++)
         {
