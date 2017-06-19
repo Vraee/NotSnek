@@ -5,19 +5,45 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
-    private float gameTime;
+    public float[] timeToNextSpawn;
+    public GameObject[] spawnObjects;
+    public int id;
+    public float gameTime;
+
+    public float timer;
+
+    public float score;
     public Text scoreText;
-    private float score;
+    
 
 	// Use this for initialization
 	void Start () {
+        gameTime = timeToNextSpawn[0];
     }
-	
-	// Update is called once per frame
-	void Update () {
-        gameTime += Time.deltaTime;
-        
-        //Debug.Log(gameTime);
+
+    // Update is called once per frame
+    void Update()
+    {
+        timer += Time.deltaTime;
+        gameTime -= Time.deltaTime;
+        if(gameTime <= 0 && id != spawnObjects.Length)
+        {
+            Instantiate(spawnObjects[id], new Vector3(0,0,0), Quaternion.identity);
+            gameTime = timeToNextSpawn[id];
+            id++;
+
+
+        }
+    }
+
+    void OnGUI()
+    {
+        int minutes = Mathf.FloorToInt(timer / 60F);
+        int seconds = Mathf.FloorToInt(timer - minutes * 60);
+        string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
+
+        GUI.Label(new Rect(10, 10, 250, 100), niceTime);
+        Debug.Log(niceTime);
     }
 
     public void IncreaseScore(float amount)
@@ -30,4 +56,5 @@ public class GameManager : MonoBehaviour {
     {
         scoreText.text = "super duper highscore: " + score;
     }
+
 }

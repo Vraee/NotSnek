@@ -7,6 +7,7 @@ public class Fireball : MonoBehaviour
     public float speed;
     public bool shoot;
     public float damage;
+    public GameObject explosion;
 
     // Use this for initialization
     void Start()
@@ -31,6 +32,7 @@ public class Fireball : MonoBehaviour
     {
         if(collider.tag == "Enemy")
         {
+            Instantiate(explosion, gameObject.transform.position, gameObject.transform.rotation);
             Destroy(gameObject);
         }
     }
@@ -44,4 +46,6 @@ public class Fireball : MonoBehaviour
     {
         shoot = true;
     }
+
+
 }
