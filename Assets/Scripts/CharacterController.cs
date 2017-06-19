@@ -41,49 +41,6 @@ public class CharacterController : MonoBehaviour {
 	private bool berserk;
 	private float damageSum;
 
-	// Use this for initialization
-	void Start () {
-		bodyParts = new List<GameObject> ();
-		tailParts = new List<GameObject>();
-		bodyParts.Add (head);
-
-		for (int i = 0; i < tail.transform.childCount; i++)
-		{
-			bodyParts.Add(tail.transform.GetChild(i).gameObject);
-			tailParts.Add(tail.transform.GetChild(i).gameObject);
-		}
-
-		fireParticles = head.GetComponent<ParticleSystem>();
-		fire.SetActive (false);
-        fireParticles.Stop();
-
-		for (int i = 0; i < startSize; i++) {
-			AddBodyPart ();
-		}
-
-        baseHP = bodyPartHP;
-        HP = HP + baseHP;
-		comparableHP = HP - bodyPartHP;
-		takingDamage = false;
-
-		berserk = false;
-	}
-
-	void Update() {
-		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-
-		RotateToMouse ();
-		Move ();
-       // Fire();
-        Fire3();
-
-		if (Input.GetKey(KeyCode.Space) && !berserk && bodyParts.Count > 1 + tailParts.Count)
-		{
-			berserk = true;
-			StartCoroutine("Berserk");
-		}
-	}
-
 	public int GetbBodyPartsAmount() {
 		return bodyPartsAmount;
 	}
@@ -150,6 +107,49 @@ public class CharacterController : MonoBehaviour {
 	public void SetDamageSum(float newDamageSum)
 	{
 		damageSum = newDamageSum;
+	}
+
+	// Use this for initialization
+	void Start () {
+		bodyParts = new List<GameObject> ();
+		tailParts = new List<GameObject>();
+		bodyParts.Add (head);
+
+		for (int i = 0; i < tail.transform.childCount; i++)
+		{
+			bodyParts.Add(tail.transform.GetChild(i).gameObject);
+			tailParts.Add(tail.transform.GetChild(i).gameObject);
+		}
+
+		fireParticles = head.GetComponent<ParticleSystem>();
+		fire.SetActive (false);
+        fireParticles.Stop();
+
+		for (int i = 0; i < startSize; i++) {
+			AddBodyPart ();
+		}
+
+        baseHP = bodyPartHP;
+        HP = HP + baseHP;
+		comparableHP = HP - bodyPartHP;
+		takingDamage = false;
+
+		berserk = false;
+	}
+
+	void Update() {
+		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+
+		RotateToMouse ();
+		Move ();
+       // Fire();
+        Fire3();
+
+		if (Input.GetKey(KeyCode.Space) && !berserk && bodyParts.Count > 1 + tailParts.Count)
+		{
+			berserk = true;
+			StartCoroutine("Berserk");
+		}
 	}
 
 	private void RotateToMouse()
@@ -256,7 +256,7 @@ public class CharacterController : MonoBehaviour {
             bodyPartsAmount--;
         }
 
-		Debug.Log ("bodyparts left " + bodyPartsAmount + " " + (bodyParts.Count - 1 - tailParts.Count));
+		//Debug.Log ("bodyparts left " + bodyPartsAmount + " " + (bodyParts.Count - 1 - tailParts.Count));
 	}
 
 	public void Fire() {
@@ -315,8 +315,12 @@ public class CharacterController : MonoBehaviour {
 			foreach (GameObject bodyPart in bodyParts)
 			{
 				bodyPart.layer = 11;
+			}
+
+			foreach (GameObject bodyPart in bodyParts)
+			{
 				yield return new WaitForSeconds (0.1f);
-				bodyPart.GetComponent<SpriteRenderer>().color = Color.blue;
+				bodyPart.GetComponent<SpriteRenderer>().color = Color.blue; //Replace this with particle effects or something
 			}
 
 			for (int i = bodyParts.Count - tailParts.Count - 1; i > 0; i--)
@@ -364,16 +368,7 @@ public class CharacterController : MonoBehaviour {
 	IEnumerator EnemyDamage(BodyPart hitPart) //USED TO BE "TakeDamage"
 	{
 		if (!berserk) {
-			float enemyDamage = 1;//hitPart.GetEnemy ().GetComponent<EnemyController> ().damageOutput;
-
-			/*while (hitPart.GetIsHit()) {
-				//ReduceHP (enemyDamage * Time.deltaTime);
-				//Debug.Log ("rtegj");
-
-				yield return new WaitForSeconds (takeDamageDelay);
-				Debug.Log (hitPart.GetIsHit());
-			}*/
-
+			float enemyDamage = hitPart.GetEnemy ().GetComponent<EnemyController> ().damageOutput;
 			ReduceHP (enemyDamage);
 
 			if (!takingDamage && !berserk) {
