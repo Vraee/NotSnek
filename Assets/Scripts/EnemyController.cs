@@ -27,7 +27,7 @@ public class EnemyController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-		targetPlayerPart = GameObject.Find ("Head");
+        targetPlayerPart = GameObject.Find("Player/Head");
         sprite = GetComponent<SpriteRenderer>();
 		attacking = false;
         retreating = false;
@@ -149,7 +149,6 @@ public class EnemyController : MonoBehaviour
 			AttackPlayer (speed);
 		}
 
-		Debug.Log (gameObject.GetComponent<MoveOnPath>().GetPathReached());
 	}
 
 	public void MoveGriffin() {

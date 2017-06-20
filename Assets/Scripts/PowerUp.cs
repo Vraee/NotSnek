@@ -7,6 +7,7 @@ public class PowerUp : MonoBehaviour {
 	private GameObject target;
     public float fallSpeed;
     public float dragSpeed;
+    public float acceleration;
     private bool pulling;
 
 	void Start()
@@ -47,7 +48,9 @@ public class PowerUp : MonoBehaviour {
 
         if (distance >= 0.25)
         {
-            transform.position = Vector3.MoveTowards(gameObject.transform.position, target.transform.position, dragSpeed * Time.deltaTime);
+            dragSpeed = dragSpeed + acceleration * Time.deltaTime;
+            float step = dragSpeed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(gameObject.transform.position, target.transform.position, step);
         }
 
     }
