@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyGryphon : EnemyController {
-	public Sprite normal;
-	public Sprite stone;
-	private bool vulnerable;
-	
+public class EnemyEarlyBird : EnemyController {
+
 	public override void MoveEnemy() {
 		if (!GetAttacking()) {
 			RotateToPlayer ();
@@ -19,7 +16,5 @@ public class EnemyGryphon : EnemyController {
 		if (GetMoving() && gameObject.GetComponent<MoveOnPath>().GetPathReached()) {
 			AttackPlayer (speed, this.gameObject);
 		}
-
-		Debug.Log (gameObject.GetComponent<MoveOnPath>().GetOnPath());
 	}
 }

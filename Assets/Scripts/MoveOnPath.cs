@@ -8,7 +8,7 @@ public class MoveOnPath : MonoBehaviour {
     public EditorPath pathToFollow;
     //Starting point on the path
     public int currentWayPointID = 0;
-    public float speed;
+    public float speedOnPath;
     //how far from the next point should the enemy stop
     public float reachDistance = 0.0f;
     public float rotationSpeed = 5.0f;
@@ -23,7 +23,18 @@ public class MoveOnPath : MonoBehaviour {
 	private bool goingBack;
 	private int startIndex;
 	private int endIndex;
+	private bool onPath;
 	private bool pathReached;
+	private int prevWayPointID;
+	private float distance;
+
+	public bool GetOnPath() {
+		return onPath;
+	}
+
+	public void SetOnPath(bool onPath) {
+		this.onPath = onPath;
+	}
 
 	public bool GetPathReached() {
 		return pathReached;
@@ -42,55 +53,76 @@ public class MoveOnPath : MonoBehaviour {
 		}
 
 		currentWayPointID = startIndex;
+		prevWayPointID = currentWayPointID;
+		onPath = false;
 		pathReached = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (pathToFollow.pathObjects.Count > 0) {
-			if (currentWayPointID != startIndex && pathReached == false) {
-				pathReached = true;
-			}
-
-			if (startClockwise) {
-				if (pathToFollow.GetComponent<EditorPath> ().listLenght - 1 != startIndex) {
-					startIndex = pathToFollow.GetComponent<EditorPath> ().listLenght - 1;
-					currentWayPointID = startIndex;
-				}
+			if (pathReached) {
+				MoveAlongPath ();
 			} else {
-				if (pathToFollow.GetComponent<EditorPath> ().listLenght - 1 != endIndex) {
-					endIndex = pathToFollow.GetComponent<EditorPath> ().listLenght - 1;
-				}
+				ReachPath ();
 			}
+		}
+	}
 
-			//Gets the distance between pathObject (in EditorPath script) and current gameobject position
-			float distance = Vector3.Distance (pathToFollow.pathObjects [currentWayPointID].position, transform.position);
-			//move to the next waypoint
-			transform.position = Vector3.MoveTowards (transform.position, pathToFollow.pathObjects [currentWayPointID].position, Time.deltaTime * speed);
-
-			//rotate towards the next waypoint
-			var rotation = Quaternion.LookRotation (pathToFollow.pathObjects [currentWayPointID].position, transform.position);
-			rotation.y = 0;
-			rotation.x = 0;
-			if (Slerp) {
-				transform.rotation = Quaternion.Slerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-			} else {
-				transform.rotation = Quaternion.Lerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+	public void ReachPath() {
+		if (startClockwise) {
+			if (pathToFollow.GetComponent<EditorPath> ().listLenght - 1 != startIndex) {
+				startIndex = pathToFollow.GetComponent<EditorPath> ().listLenght - 1;
+				currentWayPointID = startIndex;
 			}
+		} else {
+			if (pathToFollow.GetComponent<EditorPath> ().listLenght - 1 != endIndex) {
+				endIndex = pathToFollow.GetComponent<EditorPath> ().listLenght - 1;
+			}
+		}
 
+		MoveTowardsNext ();
+
+		if (distance <= reachDistance) {
+			onPath = true;
+			pathReached = true;
+		}
+	}
+
+	public void MoveAlongPath() {
+		if (onPath) {
+			MoveTowardsNext ();
+			
 			if (distance <= reachDistance) {
-				if (!goingBack)
+				if (!goingBack) {
 					currentWayPointID++;
-				else {
+				} else {
 					currentWayPointID--;
 				}
 			}
-
+				
 			if (looping && currentWayPointID == endIndex) {
 				currentWayPointID = startIndex;
 			} else if (!looping && distance <= reachDistance && (currentWayPointID == endIndex || currentWayPointID == startIndex)) {
 				goingBack = !goingBack;
 			}
+		}
+	}
+
+	public void MoveTowardsNext() {
+		//Gets the distance between pathObject (in EditorPath script) and current gameobject position
+		distance = Vector3.Distance (pathToFollow.pathObjects [currentWayPointID].position, transform.position);
+		//move to the next waypoint
+		transform.position = Vector3.MoveTowards (transform.position, pathToFollow.pathObjects [currentWayPointID].position, Time.deltaTime * speedOnPath);
+
+		//rotate towards the next waypoint
+		var rotation = Quaternion.LookRotation (pathToFollow.pathObjects [currentWayPointID].position, transform.position);
+		rotation.y = 0;
+		rotation.x = 0;
+		if (Slerp) {
+			transform.rotation = Quaternion.Slerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+		} else {
+			transform.rotation = Quaternion.Lerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
 		}
 	}
 

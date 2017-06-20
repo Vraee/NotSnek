@@ -41,55 +41,6 @@ public class CharacterController : MonoBehaviour {
 	private bool berserk;
 	private float damageSum;
 
-<<<<<<< HEAD
-	// Use this for initialization
-	void Start () {
-		bodyParts = new List<GameObject> ();
-		tailParts = new List<GameObject>();
-		bodyParts.Add (head);
-
-		for (int i = 0; i < tail.transform.childCount; i++)
-		{
-			bodyParts.Add(tail.transform.GetChild(i).gameObject);
-			tailParts.Add(tail.transform.GetChild(i).gameObject);
-		}
-
-		//pisa shit
-		fireParticles = head.GetComponent<ParticleSystem>();
-		fire.SetActive (false);
-		//fireParticles.Play();
-		var em = fireParticles.emission;
-		em.enabled = false;
-
-		for (int i = 0; i < startSize; i++) {
-			AddBodyPart ();
-		}
-
-        baseHP = bodyPartHP;
-        HP = HP + baseHP;
-		comparableHP = HP - bodyPartHP;
-		takingDamage = false;
-
-		berserk = false;
-	}
-
-	void Update() {
-		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-
-		RotateToMouse ();
-		Move ();
-       	//Fire();
-        Fire3();
-
-		if (Input.GetKey(KeyCode.Space) && !berserk && bodyParts.Count > 1 + tailParts.Count)
-		{
-			berserk = true;
-			StartCoroutine("Berserk");
-		}
-	}
-
-=======
->>>>>>> 310a77832ae4ed9d3669fa8bc50c1447626d5ca8
 	public int GetbBodyPartsAmount() {
 		return bodyPartsAmount;
 	}
@@ -170,16 +121,19 @@ public class CharacterController : MonoBehaviour {
 			tailParts.Add(tail.transform.GetChild(i).gameObject);
 		}
 
+		//pisa shit
 		fireParticles = head.GetComponent<ParticleSystem>();
 		fire.SetActive (false);
-        fireParticles.Stop();
+		//fireParticles.Play();
+		var em = fireParticles.emission;
+		em.enabled = false;
 
 		for (int i = 0; i < startSize; i++) {
 			AddBodyPart ();
 		}
 
-        baseHP = bodyPartHP;
-        HP = HP + baseHP;
+		baseHP = bodyPartHP;
+		HP = HP + baseHP;
 		comparableHP = HP - bodyPartHP;
 		takingDamage = false;
 
@@ -191,8 +145,8 @@ public class CharacterController : MonoBehaviour {
 
 		RotateToMouse ();
 		Move ();
-       // Fire();
-        Fire3();
+		//Fire();
+		Fire3();
 
 		if (Input.GetKey(KeyCode.Space) && !berserk && bodyParts.Count > 1 + tailParts.Count)
 		{
@@ -368,14 +322,10 @@ public class CharacterController : MonoBehaviour {
 			foreach (GameObject bodyPart in bodyParts)
 			{
 				yield return new WaitForSeconds (0.1f);
-<<<<<<< HEAD
 				bodyPart.GetComponent<SpriteRenderer>().color = Color.blue;
 				var emni = bodyPart.GetComponent<ParticleSystem>().emission;
 				emni.enabled = true;
-
-=======
 				bodyPart.GetComponent<SpriteRenderer>().color = Color.blue; //Replace this with particle effects or something
->>>>>>> 310a77832ae4ed9d3669fa8bc50c1447626d5ca8
 			}
 
 			for (int i = bodyParts.Count - tailParts.Count - 1; i > 0; i--)

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public int EnemyType;
     public float speed;
+	public float retreatSpeed;
     public float stamina;
 	public float damageOutput;
 	public float attackDelay = 2;
@@ -24,85 +24,88 @@ public class EnemyController : MonoBehaviour
 	private float timer;
 	private bool moving;
 
-    // Use this for initialization
-    void Start()
-    {
-		targetPlayerPart = GameObject.Find ("Head");
-        sprite = GetComponent<SpriteRenderer>();
-		attacking = false;
-        retreating = false;
-        enemyStartPos = gameObject.transform.position;
-
-		timer = Time.time + attackDelay;
-		moving = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        MoveEnemy();
-        if (inflictDamage)
-        {
-            InflictDamage();
-        }
-        else
-        {
-            sprite.color = new Color(1, 1, 1);
-        }
-        
-    }
-
 	public float GetDamageOutput() {
 		return damageOutput;
 	}
 
-	public void SetDamageOutput(int newDamageOutput) {
-		damageOutput = newDamageOutput;
+	public void SetDamageOutput(int damageOutput) {
+		this.damageOutput = damageOutput;
 	}
 
-    void MoveEnemy()
-    {
-        //gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.right*speed*Time.deltaTime);
-        if (EnemyType == 0)
-        {
-            if (dir == 0)
-            {
-                gameObject.GetComponent<Transform>().Translate(Vector2.right * speed * Time.deltaTime);
-                if (gameObject.transform.position.x > 11)
-                {
-                    dir = 1;
-                }
-            }
-            if (dir == 1)
-            {
-                gameObject.GetComponent<Transform>().Translate(Vector2.left * speed * Time.deltaTime);
-                if (gameObject.transform.position.x < -11)
-                {
-                    dir = 0;
-                }
-            }
-        }
+	public bool GetAttacking() {
+		return attacking;
+	}
 
-        if (EnemyType == 1)
-        {
-            MoveEarlyBird();
-        }
+	public void SetAttacking(bool attacking) {
+		this.attacking = attacking;
+	}
+
+	public bool SetRetreating() {
+		return retreating;
+	}
+
+	public void SetRetreating(bool retreating) {
+		this.retreating = retreating;
+	}
+
+	public float GetTimer() {
+		return timer;
+	}
+
+	public void SetTimer(float timer) {
+		this.timer = timer;
+	}
+
+	public bool GetMoving() {
+		return moving;
+	}
+
+	public void SetMoving(bool moving) {
+		this.moving = moving;
+	}
+
+	// Use this for initialization
+	void Start()
+	{
+		targetPlayerPart = GameObject.Find ("Head");
+		sprite = GetComponent<SpriteRenderer>();
+		attacking = false;
+		retreating = false;
+		enemyStartPos = gameObject.transform.position;
+
+		timer = Time.time + attackDelay;
+		moving = false;
+	}
+
+	// Update is called once per frame
+	void Update()
+	{
+		MoveEnemy();
+		if (inflictDamage)
+		{
+			InflictDamage();
+		}
+		else
+		{
+			sprite.color = new Color(1, 1, 1);
+		}
+
+	}
+
+    public virtual void MoveEnemy()
+    {
     }
 
-	private void RotateToPlayer()
+	public void RotateToPlayer()
 	{
         destinationPoint = targetPlayerPart.transform.position;
-        //Quaternion rotation = Quaternion.LookRotation(gameObject.transform.position - destinationPoint, Vector3.forward);
-        //gameObject.transform.rotation = rotation;
-        //gameObject.transform.eulerAngles = new Vector3(0, 0, gameObject.transform.eulerAngles.z);
-
         Vector3 target = destinationPoint - transform.position;
         float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
         Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
         transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 30);
 	}
 
-	public void AttackPlayer (float attackSpeed) {
+	public void AttackPlayer (float attackSpeed, GameObject enemy) {
         Vector3 tempAttackTarget = attackTarget;
 		Vector3 retreatPosition = enemyStartPos;
 
@@ -110,12 +113,14 @@ public class EnemyController : MonoBehaviour
             attackTarget = targetPlayerPart.transform.position;
             enemyStartPos = gameObject.transform.position;
 			attacking = true;
+			gameObject.GetComponent<MoveOnPath> ().SetOnPath (false);
         } else if (retreating) {
-            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, enemyStartPos, attackSpeed / 4 * Time.deltaTime);
+			gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, enemyStartPos, retreatSpeed * Time.deltaTime);
 
             if (gameObject.transform.position == enemyStartPos) {
                 retreating = false;
 				moving = false;
+				gameObject.GetComponent<MoveOnPath> ().SetOnPath (true);
 				timer = Time.time + attackDelay;
             }
 
@@ -132,29 +137,6 @@ public class EnemyController : MonoBehaviour
         }
 	}
 
-	public void MoveEye() {
-
-	}
-
-	public void MoveEarlyBird() {
-		if (!attacking) {
-			RotateToPlayer ();
-		}
-
-		if (Time.time >= timer) {
-			moving = true;
-		}
-
-		if (moving && gameObject.GetComponent<MoveOnPath>().GetPathReached()) {
-			AttackPlayer (speed);
-		}
-
-		Debug.Log (gameObject.GetComponent<MoveOnPath>().GetPathReached());
-	}
-
-	public void MoveGriffin() {
-
-	}
     public void OnTriggerEnter2D(Collider2D collider)
     {
 		if (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11)
