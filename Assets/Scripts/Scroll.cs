@@ -24,8 +24,6 @@ public class Scroll : MonoBehaviour {
         Camera cam = Camera.main;
         float height = 2f * cam.orthographicSize;
         float width = height * cam.aspect;
-        Debug.Log(height);
-        Debug.Log(width);
         transform.localScale = new Vector3(width, height, 1);
         transform.position = new Vector3(0, 0, 1);
     }

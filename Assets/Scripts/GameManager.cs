@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour {
     {
         timer += Time.deltaTime;
         gameTime -= Time.deltaTime;
-        if(gameTime <= 0 && id != spawnObjects.Length)
+        if(gameTime <= 0 && id != spawnObjects.Length )
         {
             Instantiate(spawnObjects[id], new Vector3(0,0,0), Quaternion.identity);
             gameTime = timeToNextSpawn[id];
@@ -43,7 +43,6 @@ public class GameManager : MonoBehaviour {
         string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
 
         GUI.Label(new Rect(10, 10, 250, 100), niceTime);
-        Debug.Log(niceTime);
     }
 
     public void IncreaseScore(float amount)

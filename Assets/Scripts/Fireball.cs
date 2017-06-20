@@ -12,6 +12,7 @@ public class Fireball : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Debug.Log("Ya'll need some jeesus");
         damage = GameObject.Find("Player").GetComponent<CharacterController>().fireballDamage;
     }
 
@@ -32,7 +33,9 @@ public class Fireball : MonoBehaviour
     {
         if(collider.tag == "Enemy")
         {
-            Instantiate(explosion, gameObject.transform.position, gameObject.transform.rotation);
+            GameObject expl = Instantiate(explosion, gameObject.transform.position, gameObject.transform.rotation);
+            expl.GetComponent<Explosion>().ChangeParameters(gameObject.transform);
+            //Instantiate(explosion, gameObject.transform.position, gameObject.transform.rotation);
             Destroy(gameObject);
         }
     }

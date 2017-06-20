@@ -14,6 +14,13 @@ public class Explosion : MonoBehaviour {
 		
 	}
 
+    public void ChangeParameters(Transform trans)
+    {
+        gameObject.transform.localScale = trans.localScale;
+        gameObject.transform.rotation = trans.rotation;
+
+    }
+
     private void Die()
     {
         Destroy(gameObject);
