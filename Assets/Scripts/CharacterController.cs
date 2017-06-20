@@ -41,6 +41,54 @@ public class CharacterController : MonoBehaviour {
 	private bool berserk;
 	private float damageSum;
 
+
+
+	// Use this for initialization
+	void Start () {
+		bodyParts = new List<GameObject> ();
+		tailParts = new List<GameObject>();
+		bodyParts.Add (head);
+
+		for (int i = 0; i < tail.transform.childCount; i++)
+		{
+			bodyParts.Add(tail.transform.GetChild(i).gameObject);
+			tailParts.Add(tail.transform.GetChild(i).gameObject);
+		}
+
+		//pisa shit
+		fireParticles = head.GetComponent<ParticleSystem>();
+		fire.SetActive (false);
+		//fireParticles.Play();
+		var em = fireParticles.emission;
+		em.enabled = false;
+
+		for (int i = 0; i < startSize; i++) {
+			AddBodyPart ();
+		}
+
+        baseHP = bodyPartHP;
+        HP = HP + baseHP;
+		comparableHP = HP - bodyPartHP;
+		takingDamage = false;
+
+		berserk = false;
+	}
+
+	void Update() {
+		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+
+		RotateToMouse ();
+		Move ();
+       	//Fire();
+        Fire3();
+
+		if (Input.GetKey(KeyCode.Space) && !berserk && bodyParts.Count > 1 + tailParts.Count)
+		{
+			berserk = true;
+			StartCoroutine("Berserk");
+		}
+	}
+		
 	public int GetbBodyPartsAmount() {
 		return bodyPartsAmount;
 	}
@@ -108,53 +156,7 @@ public class CharacterController : MonoBehaviour {
 	{
 		damageSum = newDamageSum;
 	}
-
-	// Use this for initialization
-	void Start () {
-		bodyParts = new List<GameObject> ();
-		tailParts = new List<GameObject>();
-		bodyParts.Add (head);
-
-		for (int i = 0; i < tail.transform.childCount; i++)
-		{
-			bodyParts.Add(tail.transform.GetChild(i).gameObject);
-			tailParts.Add(tail.transform.GetChild(i).gameObject);
-		}
-
-		//pisa shit
-		fireParticles = head.GetComponent<ParticleSystem>();
-		fire.SetActive (false);
-		//fireParticles.Play();
-		var em = fireParticles.emission;
-		em.enabled = false;
-
-		for (int i = 0; i < startSize; i++) {
-			AddBodyPart ();
-		}
-
-		baseHP = bodyPartHP;
-		HP = HP + baseHP;
-		comparableHP = HP - bodyPartHP;
-		takingDamage = false;
-
-		berserk = false;
-	}
-
-	void Update() {
-		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-
-		RotateToMouse ();
-		Move ();
-		//Fire();
-		Fire3();
-
-		if (Input.GetKey(KeyCode.Space) && !berserk && bodyParts.Count > 1 + tailParts.Count)
-		{
-			berserk = true;
-			StartCoroutine("Berserk");
-		}
-	}
-
+		
 	private void RotateToMouse()
 	{
 		Quaternion rotation = Quaternion.LookRotation (head.transform.position - destinationPoint, Vector3.forward);
@@ -325,6 +327,7 @@ public class CharacterController : MonoBehaviour {
 				bodyPart.GetComponent<SpriteRenderer>().color = Color.blue;
 				var emni = bodyPart.GetComponent<ParticleSystem>().emission;
 				emni.enabled = true;
+
 				bodyPart.GetComponent<SpriteRenderer>().color = Color.blue; //Replace this with particle effects or something
 			}
 
