@@ -324,11 +324,10 @@ public class CharacterController : MonoBehaviour {
 			foreach (GameObject bodyPart in bodyParts)
 			{
 				yield return new WaitForSeconds (0.1f);
-				bodyPart.GetComponent<SpriteRenderer>().color = Color.blue;
 				var emni = bodyPart.GetComponent<ParticleSystem>().emission;
 				emni.enabled = true;
 
-				bodyPart.GetComponent<SpriteRenderer>().color = Color.blue; //Replace this with particle effects or something
+				bodyPart.GetComponent<SpriteRenderer>().color = new Vector4 (0.9f,0.9f,0.9f,0.9f);
 			}
 
 			for (int i = bodyParts.Count - tailParts.Count - 1; i > 0; i--)
