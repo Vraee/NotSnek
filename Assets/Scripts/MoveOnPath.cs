@@ -25,7 +25,6 @@ public class MoveOnPath : MonoBehaviour {
 	private int endIndex;
 	private bool onPath;
 	private bool pathReached;
-	private int prevWayPointID;
 	private float distance;
 
 	public bool GetOnPath() {
@@ -53,7 +52,6 @@ public class MoveOnPath : MonoBehaviour {
 		}
 
 		currentWayPointID = startIndex;
-		prevWayPointID = currentWayPointID;
 		onPath = false;
 		pathReached = false;
 	}

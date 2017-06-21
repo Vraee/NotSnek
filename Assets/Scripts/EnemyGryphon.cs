@@ -5,8 +5,7 @@ using UnityEngine;
 public class EnemyGryphon : EnemyController {
 	public Sprite normal;
 	public Sprite stone;
-	private bool vulnerable;
-	
+
 	public override void MoveEnemy() {
 		if (!GetAttacking()) {
 			RotateToPlayer ();
@@ -20,6 +19,18 @@ public class EnemyGryphon : EnemyController {
 			AttackPlayer (speed, this.gameObject);
 		}
 
-		Debug.Log (gameObject.GetComponent<MoveOnPath>().GetOnPath());
+		if (gameObject.GetComponent<MoveOnPath>().GetOnPath()) {
+			SetVulnerable (false);
+			ChangeSprite (stone);
+		} else {
+			SetVulnerable (true);
+			ChangeSprite (normal);
+		}
+	}
+
+	public void ChangeSprite(Sprite newSprite) {
+		if (newSprite != gameObject.GetComponent<SpriteRenderer> ().sprite) {
+			gameObject.GetComponent<SpriteRenderer> ().sprite = newSprite;
+		}
 	}
 }
