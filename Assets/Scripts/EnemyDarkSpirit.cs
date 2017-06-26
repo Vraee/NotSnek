@@ -7,4 +7,8 @@ public class EnemyDarkSpirit : EnemyController {
 	public override void MoveEnemy() {
 		//SSSOOOOON
 	}
+
+	public void Divide() {
+
+	}
 }
