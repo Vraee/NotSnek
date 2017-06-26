@@ -17,14 +17,15 @@ public class CharacterController : MonoBehaviour {
 	public float bodyPartDistance;
 	public float bodyPartHP;
 	public int takeDamageDelay = 1;
-
-    public bool controllerInput;
-
+	public int powerUpLimit = 5;
+    
     //Holds the fireball gameobject during buildup
     private GameObject temp;
     //how much damage is added to the fireball per sec
     public float damageIncrease;
     public float fireballDamage;
+
+    public bool controllerInput;
 
     private List<GameObject> bodyParts;
 	private List<GameObject> tailParts;
@@ -38,67 +39,9 @@ public class CharacterController : MonoBehaviour {
 	//If HP reaches this, a body part is removed, the amount of body parts * bodyPartHP - bodyPartHP
 	private float comparableHP;
 	private bool takingDamage;
-	private int powerUpLimit = 5;
 	private int collectibleSum;
 	private bool berserk;
 	private float damageSum;
-
-
-
-	// Use this for initialization
-	void Start () {
-		bodyParts = new List<GameObject> ();
-		tailParts = new List<GameObject>();
-		bodyParts.Add (head);
-
-		for (int i = 0; i < tail.transform.childCount; i++)
-		{
-			bodyParts.Add(tail.transform.GetChild(i).gameObject);
-			tailParts.Add(tail.transform.GetChild(i).gameObject);
-		}
-
-		//pisa shit
-		fireParticles = head.GetComponent<ParticleSystem>();
-		fire.SetActive (false);
-		//fireParticles.Play();
-		var em = fireParticles.emission;
-		em.enabled = false;
-
-		for (int i = 0; i < startSize; i++) {
-			AddBodyPart ();
-		}
-
-        baseHP = bodyPartHP;
-        HP = HP + baseHP;
-		comparableHP = HP - bodyPartHP;
-		takingDamage = false;
-
-		berserk = false;
-	}
-
-	void Update() {
-		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-
-        if (!controllerInput)
-        {
-            RotateToMouse ();
-            Move ();
-        }
-        else
-        {
-            ControllerMovement();
-        }
-
-
-        //Fire();
-        Fire3();
-
-		if (Input.GetKey(KeyCode.Space) && !berserk && bodyParts.Count > 1 + tailParts.Count)
-		{
-			berserk = true;
-			StartCoroutine("Berserk");
-		}
-	}
 		
 	public int GetbBodyPartsAmount() {
 		return bodyPartsAmount;
@@ -167,6 +110,58 @@ public class CharacterController : MonoBehaviour {
 	{
 		damageSum = newDamageSum;
 	}
+
+	// Use this for initialization
+	void Start () {
+		bodyParts = new List<GameObject> ();
+		tailParts = new List<GameObject>();
+		bodyParts.Add (head);
+
+		for (int i = 0; i < tail.transform.childCount; i++)
+		{
+			bodyParts.Add(tail.transform.GetChild(i).gameObject);
+			tailParts.Add(tail.transform.GetChild(i).gameObject);
+		}
+
+		//pisa shit
+		fireParticles = head.GetComponent<ParticleSystem>();
+		fire.SetActive (false);
+		//fireParticles.Play();
+		var em = fireParticles.emission;
+		em.enabled = false;
+
+		for (int i = 0; i < startSize; i++) {
+			AddBodyPart ();
+		}
+
+		baseHP = bodyPartHP;
+		HP = HP + baseHP;
+		comparableHP = HP - bodyPartHP;
+		takingDamage = false;
+
+		berserk = false;
+	}
+
+	void Update() {
+		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+        if (!controllerInput)
+        {
+            RotateToMouse();
+            Move();
+        }
+        else
+        {
+            ControllerMovement();
+        }
+		//Fire();
+		Fire3();
+
+		if (Input.GetKey(KeyCode.Space) && !berserk && bodyParts.Count > 1 + tailParts.Count)
+		{
+			berserk = true;
+			StartCoroutine("Berserk");
+		}
+	}
 		
 	private void RotateToMouse()
 	{
@@ -174,40 +169,6 @@ public class CharacterController : MonoBehaviour {
 		head.transform.rotation = rotation;
 		head.transform.eulerAngles = new Vector3 (0, 0, head.transform.eulerAngles.z);
 	}
-    
-    private void ControllerMovement()
-    {
-        float horizontal = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
-        float vertical = Input.GetAxis("Vertical") * Time.deltaTime * speed;
-        float angle = Mathf.Atan2(horizontal, vertical) * Mathf.Rad2Deg;
-      
-            head.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -angle));
-        
-        
-        if (Input.GetButton("Move"))
-        {
-            head.transform.Translate(head.transform.up * speed * Time.deltaTime, Space.World);
-        }
-
-        for (int i = 1; i < bodyParts.Count; i++)
-        {
-            distance = Vector3.Distance(bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
-            Vector3 newPosition = bodyParts[i - 1].transform.position;
-            float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
-
-            if (T > 0.5f)
-            {
-                T = 0.5f;
-            }
-
-            if (distance > bodyPartDistance)
-            {
-                bodyParts[i].transform.position = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
-                bodyParts[i].transform.rotation = Quaternion.Lerp(bodyParts[i].transform.rotation, bodyParts[i - 1].transform.rotation, T);
-            }
-        }
-
-    }
 		
 	public void Move() {
 		if (Input.GetMouseButton (1) || Input.GetKey(KeyCode.W)) {
@@ -238,9 +199,8 @@ public class CharacterController : MonoBehaviour {
 				//head.transform.position = Vector3.Lerp (head.transform.position, _target, 0.1f);
 			}
 		}
-
-
-        for (int i = 1; i < bodyParts.Count; i++) {
+				
+		for (int i = 1; i < bodyParts.Count; i++) {
 			distance = Vector3.Distance (bodyParts [i - 1].transform.position, bodyParts [i].transform.position);
 			Vector3 newPosition = bodyParts [i - 1].transform.position;
 			float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
@@ -256,6 +216,38 @@ public class CharacterController : MonoBehaviour {
 		}
 	}
 
+    private void ControllerMovement()
+    {
+        float horizontal = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
+        float vertical = Input.GetAxis("Vertical") * Time.deltaTime * speed;
+        float angle = Mathf.Atan2(horizontal, vertical) * Mathf.Rad2Deg;
+        
+        head.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -angle));
+
+        if (Input.GetButton("Move"))
+        {
+            head.transform.Translate(head.transform.up * speed * Time.deltaTime, Space.World);
+        }
+
+        for (int i = 1; i < bodyParts.Count; i++)
+        {
+            distance = Vector3.Distance(bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
+            Vector3 newPosition = bodyParts[i - 1].transform.position;
+            float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
+
+            if (T > 0.5f)
+            {
+                T = 0.5f;
+            }
+
+            if (distance > bodyPartDistance)
+            {
+                bodyParts[i].transform.position = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
+                bodyParts[i].transform.rotation = Quaternion.Lerp(bodyParts[i].transform.rotation, bodyParts[i - 1].transform.rotation, T);
+            }
+        }
+    }
+
 	public void AddBodyPart() {
 		GameObject previousBodyPart = bodyParts[bodyParts.Count - 1];
 		GameObject bodyPartType;
@@ -265,15 +257,20 @@ public class CharacterController : MonoBehaviour {
 			bodyPartType = bodyPrefab;
 		}
 
+		//Adds new part behind previous
         GameObject newBodyPart = Instantiate(bodyPartType, previousBodyPart.transform.position - (previousBodyPart.transform.up / 2), previousBodyPart.transform.rotation) as GameObject;
 		newBodyPart.transform.parent = this.transform;
 
         newBodyPart.GetComponent<SpriteRenderer>().sortingOrder = orderInLayer;
 
+		//Beacuse the tail is 3 parts long and the new part has to be added in front of it
 		bodyParts [bodyParts.Count - 3] = newBodyPart;
+		//Sets the body parts index on the bodyParts list (don't remember if there was point to this, can possibly be removed)
         newBodyPart.gameObject.GetComponent<BodyPart>().SetListIndex(bodyParts.Count - 3);
 			
-
+		/*Adds the tail parts behind all the other parts; first two parts are just moved one index forward, the last one is added as a new list item.
+		Also puts the parts in the right order on top of each other when rendering (the first one is below everything, the other body and tail parts, the last one
+		is above other tail parts but below the rest of the body parts).*/
 		int j = 0;
 		for (int i = bodyParts.Count - 2; i <= bodyParts.Count; i++)
 		{
@@ -295,6 +292,8 @@ public class CharacterController : MonoBehaviour {
 		bodyPartsAmount++;
 		HP += bodyPartHP;
 		comparableHP += bodyPartHP;
+
+		//Debug.Log (bodyPartsAmount);
 	}
 
 	public void RemoveBodyPart(int removableIndex) {
@@ -362,32 +361,36 @@ public class CharacterController : MonoBehaviour {
 		{
 			int bodyPartAmoutAtStart = bodyParts.Count;
 
+			//Changes the layer of each bodypart to 11, which is "Berserk"
 			foreach (GameObject bodyPart in bodyParts)
 			{
 				bodyPart.layer = 11;
 			}
 
+			//Add effects to each bodypart after a delay of 0,1 seconds
 			foreach (GameObject bodyPart in bodyParts)
 			{
 				yield return new WaitForSeconds (0.1f);
-				bodyPart.GetComponent<SpriteRenderer>().color = Color.blue;
 				var emni = bodyPart.GetComponent<ParticleSystem>().emission;
 				emni.enabled = true;
 
-				bodyPart.GetComponent<SpriteRenderer>().color = Color.blue; //Replace this with particle effects or something
+				bodyPart.GetComponent<SpriteRenderer>().color = new Vector4 (0.9f,0.9f,0.9f,0.9f);
 			}
 
+			//Removes each bodypart (excluding head and tail) starting from the last one after 1 second delay
 			for (int i = bodyParts.Count - tailParts.Count - 1; i > 0; i--)
 			{
 				yield return new WaitForSeconds(1);
 				RemoveBodyPart(i);
 
-				if (HP > bodyPartsAmount * bodyPartHP + baseHP) {
-					while (HP > bodyPartsAmount * bodyPartHP + baseHP) {
-						ReduceHP (1);
-					}
+				//Reduces HP if there is too much of it in relation to amount of bodyparts
+				//if (HP > bodyPartsAmount * bodyPartHP + baseHP) {
+				while (HP > bodyPartsAmount * bodyPartHP + baseHP) {
+					ReduceHP (1);
 				}
+				//}
 
+				//Once the last part is reached, changes remaining bodyparts back to normal (layer 8 = "Plyaer")
 				if (i == 1) {
 					berserk = false;
 					for (int j = 0; j < bodyParts.Count; j++)
@@ -424,9 +427,11 @@ public class CharacterController : MonoBehaviour {
 	IEnumerator EnemyDamage(BodyPart hitPart) //USED TO BE "TakeDamage"
 	{
 		if (!berserk) {
+			//Gets the enemy's damage output and subtracts it form player's HP
 			float enemyDamage = hitPart.GetEnemy ().GetComponent<EnemyController> ().damageOutput;
 			ReduceHP (enemyDamage);
 
+			//Changes player's color to red and back twice
 			if (!takingDamage && !berserk) {
 				takingDamage = true;
 				for (int i = 0; i < 2; i++) {

@@ -54,4 +54,16 @@ public class PowerUp : MonoBehaviour {
         }
 
     }
+
+	public void PickUp(CharacterController player) {
+		int newCollectibleSum = player.GetCollectibleSum () + collectibleValue;
+		int powerUpLimit = player.GetPowerUpLimit ();
+		player.SetCollectibleSum(newCollectibleSum);
+
+		while (player.GetCollectibleSum() >= powerUpLimit) {
+			int resetCollectibleSum = player.GetCollectibleSum () - player.GetPowerUpLimit ();
+			player.SetCollectibleSum (resetCollectibleSum);
+			player.AddBodyPart ();
+		}
+	}
 }

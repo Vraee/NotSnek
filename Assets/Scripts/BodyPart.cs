@@ -42,15 +42,7 @@ public class BodyPart : MonoBehaviour {
 
 	public void OnTriggerEnter2D(Collider2D collider) {
 		if (this.gameObject.tag == "Head" && collider.gameObject.tag == "PowerUp") {
-			int newCollectibleSum = parentScript.GetCollectibleSum () + collider.gameObject.GetComponent<PowerUp> ().collectibleValue;
-			int powerUpLimit = parentScript.GetPowerUpLimit ();
-			parentScript.SetCollectibleSum(newCollectibleSum);
-
-			if (newCollectibleSum >= powerUpLimit) {
-				int resetCollectibleSum = parentScript.GetCollectibleSum () - parentScript.GetPowerUpLimit ();
-				parentScript.SetCollectibleSum (resetCollectibleSum);
-				parentScript.AddBodyPart ();
-			}
+			collider.gameObject.GetComponent<PowerUp> ().PickUp (parentScript);
             Destroy(collider.gameObject);
 
         } else if (collider.gameObject.tag == "Enemy") {

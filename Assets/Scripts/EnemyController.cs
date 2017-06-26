@@ -23,6 +23,7 @@ public class EnemyController : MonoBehaviour
     private Vector3 enemyStartPos;
 	private float timer;
 	private bool moving;
+	private bool vulnerable;
 
 	public float GetDamageOutput() {
 		return damageOutput;
@@ -64,6 +65,14 @@ public class EnemyController : MonoBehaviour
 		this.moving = moving;
 	}
 
+	public bool GetVulnerable() {
+		return moving;
+	}
+
+	public void SetVulnerable(bool vulnerable) {
+		this.vulnerable = vulnerable;
+	}
+
 	// Use this for initialization
 	void Start()
 	{
@@ -75,13 +84,14 @@ public class EnemyController : MonoBehaviour
 
 		timer = Time.time + attackDelay;
 		moving = false;
+		vulnerable = true;
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
 		MoveEnemy();
-		if (inflictDamage)
+		if (inflictDamage && vulnerable)
 		{
 			InflictDamage();
 		}
@@ -89,7 +99,6 @@ public class EnemyController : MonoBehaviour
 		{
 			sprite.color = new Color(1, 1, 1);
 		}
-
 	}
 
     public virtual void MoveEnemy()
@@ -139,37 +148,45 @@ public class EnemyController : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collider)
     {
-		if (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11)
+		if (vulnerable && (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11 || collider.gameObject.tag == "Fireball"))
         {
-            inflictDamage = true;
-        }
-        if (collider.gameObject.tag == "Fireball")
-        {
-            stamina = stamina - collider.GetComponent<Fireball>().damage;
-            if (stamina <= 0)
-            {
-                Die();
-            }
+			inflictDamage = true;
+
+			if (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11) {
+				InflictDamage ();
+			} else {
+				InflictDamage (collider.GetComponent<Fireball>().damage);
+				collider.gameObject.GetComponent<Fireball> ().Explode ();
+			}
         }
     }
 
     public void OnTriggerExit2D(Collider2D collider)
     {
-		if (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11)
+		if (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11 || collider.gameObject.tag == "Fireball")
         {
+			if (collider.gameObject.tag == "Fireball") {
+				Destroy (collider.gameObject); //hope this is smart
+			}
+
             inflictDamage = false;
         }
     }
 
-    private void InflictDamage()
+	private void InflictDamage() {
+		InflictDamage (Time.deltaTime);
+	}
+
+	private void InflictDamage(float damage)
     {
-        stamina = stamina - Time.deltaTime;
-		//Debug.Log (stamina);
+		Debug.Log ("stamina: " + stamina + " damage: " + damage);
+		stamina = stamina - damage;
+		Debug.Log ("new stamina: " + stamina + " damage: " + damage);
+
         sprite.color = hitColor;
         if (stamina <= 0)
         {
-            Instantiate(powerUpPrefab,transform.position, transform.rotation);
-            Destroy(gameObject);
+			Die ();
         }
     }
     private void Die()

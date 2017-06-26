@@ -12,7 +12,7 @@ public class Fireball : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Debug.Log("Ya'll need some jeesus");
+        //Debug.Log("Ya'll need some jeesus");
         damage = GameObject.Find("Player").GetComponent<CharacterController>().fireballDamage;
     }
 
@@ -29,7 +29,7 @@ public class Fireball : MonoBehaviour
         }
     }
 
-    public void OnTriggerEnter2D(Collider2D collider)
+    /*public void OnTriggerEnter2D(Collider2D collider)
     {
         if(collider.tag == "Enemy")
         {
@@ -38,7 +38,13 @@ public class Fireball : MonoBehaviour
             //Instantiate(explosion, gameObject.transform.position, gameObject.transform.rotation);
             Destroy(gameObject);
         }
-    }
+    }*/
+
+	//This is called in the enemy's OnTriggerEnter2D; Destroy() is called in the enemy's OnTriggerExit2D
+	public void Explode() {
+		GameObject expl = Instantiate(explosion, gameObject.transform.position, gameObject.transform.rotation);
+		expl.GetComponent<Explosion>().ChangeParameters(gameObject.transform);
+	}
 
     public void IncreaseDamage(float damage)
     {
