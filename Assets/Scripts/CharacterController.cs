@@ -144,15 +144,8 @@ public class CharacterController : MonoBehaviour {
 
 	void Update() {
 		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-        if (!controllerInput)
-        {
-            RotateToMouse();
-            Move();
-        }
-        else
-        {
-            ControllerMovement();
-        }
+        RotateToMouse();
+        Movement();
 		//Fire();
 		Fire3();
 
@@ -227,6 +220,39 @@ public class CharacterController : MonoBehaviour {
         if (Input.GetButton("Move"))
         {
             head.transform.Translate(head.transform.up * speed * Time.deltaTime, Space.World);
+        }
+
+        for (int i = 1; i < bodyParts.Count; i++)
+        {
+            distance = Vector3.Distance(bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
+            Vector3 newPosition = bodyParts[i - 1].transform.position;
+            float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
+
+            if (T > 0.5f)
+            {
+                T = 0.5f;
+            }
+
+            if (distance > bodyPartDistance)
+            {
+                bodyParts[i].transform.position = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
+                bodyParts[i].transform.rotation = Quaternion.Lerp(bodyParts[i].transform.rotation, bodyParts[i - 1].transform.rotation, T);
+            }
+        }
+    }
+
+    private void Movement()
+    {
+        head.transform.Translate(Input.GetAxis("Horizontal") * Time.deltaTime * speed, Input.GetAxis("Vertical") * Time.deltaTime * speed, 0, Space.World);
+
+        Debug.Log(Input.GetAxis("VerticalStick2"));
+        Debug.Log(Input.GetAxis("HorizontalStick2"));
+
+        float _angle = Mathf.Atan2(-Input.GetAxis("HorizontalStick2"), -Input.GetAxis("VerticalStick2")) * Mathf.Rad2Deg;
+        
+        if (new Vector2(Input.GetAxis("HorizontalStick2"), Input.GetAxis("VerticalStick2")) != Vector2.zero) {
+            var rotation = Quaternion.AngleAxis(_angle, new Vector3(0, 0, 1));
+            head.transform.rotation = Quaternion.Lerp(head.transform.rotation, rotation, 10 * Time.deltaTime);
         }
 
         for (int i = 1; i < bodyParts.Count; i++)
