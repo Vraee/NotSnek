@@ -17,7 +17,9 @@ public class CharacterController : MonoBehaviour {
 	public float bodyPartDistance;
 	public float bodyPartHP;
 	public int takeDamageDelay = 1;
-    
+
+    public bool controllerInput;
+
     //Holds the fireball gameobject during buildup
     private GameObject temp;
     //how much damage is added to the fireball per sec
@@ -77,9 +79,18 @@ public class CharacterController : MonoBehaviour {
 	void Update() {
 		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 
-		RotateToMouse ();
-		Move ();
-       	//Fire();
+        if (!controllerInput)
+        {
+            RotateToMouse ();
+            Move ();
+        }
+        else
+        {
+            ControllerMovement();
+        }
+
+
+        //Fire();
         Fire3();
 
 		if (Input.GetKey(KeyCode.Space) && !berserk && bodyParts.Count > 1 + tailParts.Count)
@@ -163,6 +174,40 @@ public class CharacterController : MonoBehaviour {
 		head.transform.rotation = rotation;
 		head.transform.eulerAngles = new Vector3 (0, 0, head.transform.eulerAngles.z);
 	}
+    
+    private void ControllerMovement()
+    {
+        float horizontal = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
+        float vertical = Input.GetAxis("Vertical") * Time.deltaTime * speed;
+        float angle = Mathf.Atan2(horizontal, vertical) * Mathf.Rad2Deg;
+      
+            head.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -angle));
+        
+        
+        if (Input.GetButton("Move"))
+        {
+            head.transform.Translate(head.transform.up * speed * Time.deltaTime, Space.World);
+        }
+
+        for (int i = 1; i < bodyParts.Count; i++)
+        {
+            distance = Vector3.Distance(bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
+            Vector3 newPosition = bodyParts[i - 1].transform.position;
+            float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
+
+            if (T > 0.5f)
+            {
+                T = 0.5f;
+            }
+
+            if (distance > bodyPartDistance)
+            {
+                bodyParts[i].transform.position = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
+                bodyParts[i].transform.rotation = Quaternion.Lerp(bodyParts[i].transform.rotation, bodyParts[i - 1].transform.rotation, T);
+            }
+        }
+
+    }
 		
 	public void Move() {
 		if (Input.GetMouseButton (1) || Input.GetKey(KeyCode.W)) {
@@ -193,8 +238,9 @@ public class CharacterController : MonoBehaviour {
 				//head.transform.position = Vector3.Lerp (head.transform.position, _target, 0.1f);
 			}
 		}
-				
-		for (int i = 1; i < bodyParts.Count; i++) {
+
+
+        for (int i = 1; i < bodyParts.Count; i++) {
 			distance = Vector3.Distance (bodyParts [i - 1].transform.position, bodyParts [i].transform.position);
 			Vector3 newPosition = bodyParts [i - 1].transform.position;
 			float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
@@ -284,7 +330,7 @@ public class CharacterController : MonoBehaviour {
 
     private void Fire3()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("Fire1"))
         {
             Vector3 playerPos = head.transform.position;
             Vector3 playerDirection = head.transform.up;
@@ -294,7 +340,7 @@ public class CharacterController : MonoBehaviour {
             temp = Instantiate(fireBall, spawnPos, head.transform.rotation);
         }
 
-        if (Input.GetMouseButton(0) && temp != null) {
+        if (Input.GetMouseButton(0) || Input.GetButton("Fire1") && temp != null) {
             temp.transform.position = head.transform.position + (head.transform.up * 1);
             temp.transform.rotation = head.transform.rotation;
 
@@ -305,7 +351,7 @@ public class CharacterController : MonoBehaviour {
                 temp.GetComponent<Fireball>().IncreaseDamage(damageIncrease * Time.deltaTime);
             }
         }
-        if (Input.GetMouseButtonUp(0) && temp != null)
+        if (Input.GetMouseButtonUp(0) || Input.GetButtonUp("Fire1") && temp != null)
         {
             temp.GetComponent<Fireball>().Shoot();
         }
