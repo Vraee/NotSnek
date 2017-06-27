@@ -6,7 +6,7 @@ public class EnemyController : MonoBehaviour
 {
     public float speed;
 	public float retreatSpeed;
-    public float stamina;
+    public float stamina = 5;
 	public float damageOutput;
 	public float attackDelay = 2;
     public GameObject powerUpPrefab;
@@ -66,7 +66,7 @@ public class EnemyController : MonoBehaviour
 	}
 
 	public bool GetVulnerable() {
-		return moving;
+		return vulnerable;
 	}
 
 	public void SetVulnerable(bool vulnerable) {
@@ -74,7 +74,7 @@ public class EnemyController : MonoBehaviour
 	}
 
 	// Use this for initialization
-	void Start()
+	public virtual void Start()
 	{
 		targetPlayerPart = GameObject.Find ("Head");
 		sprite = GetComponent<SpriteRenderer>();
@@ -91,12 +91,16 @@ public class EnemyController : MonoBehaviour
 	void Update()
 	{
 		MoveEnemy();
+
 		if (inflictDamage && vulnerable)
 		{
+
 			InflictDamage();
 		}
 		else
 		{
+			Debug.Log (inflictDamage);
+
 			sprite.color = new Color(1, 1, 1);
 		}
 	}
@@ -179,9 +183,9 @@ public class EnemyController : MonoBehaviour
 
 	private void InflictDamage(float damage)
     {
-		Debug.Log ("stamina: " + stamina + " damage: " + damage);
+		//Debug.Log ("stamina: " + stamina + " damage: " + damage);
 		stamina = stamina - damage;
-		Debug.Log ("new stamina: " + stamina + " damage: " + damage);
+		//Debug.Log ("new stamina: " + stamina + " damage: " + damage);
 
         sprite.color = hitColor;
         if (stamina <= 0)
