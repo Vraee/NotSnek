@@ -42,6 +42,7 @@ public class BodyPart : MonoBehaviour {
 
 	public void OnTriggerEnter2D(Collider2D collider) {
 		if (this.gameObject.tag == "Head" && collider.gameObject.tag == "PowerUp") {
+			Debug.Log ("treeeeeeeeeeeeeeeeeeeeeeeeee");
 			collider.gameObject.GetComponent<PowerUp> ().PickUp (parentScript);
             Destroy(collider.gameObject);
 

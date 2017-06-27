@@ -24,6 +24,7 @@ public class EnemyController : MonoBehaviour
 	private float timer;
 	private bool moving;
 	private bool vulnerable;
+	private GameManager gameManager;
 
 	public float GetDamageOutput() {
 		return damageOutput;
@@ -85,6 +86,7 @@ public class EnemyController : MonoBehaviour
 		timer = Time.time + attackDelay;
 		moving = false;
 		vulnerable = true;
+		gameManager = GameObject.Find ("GameManager").GetComponent<GameManager>();
 	}
 
 	// Update is called once per frame
@@ -99,7 +101,7 @@ public class EnemyController : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log (inflictDamage);
+			//Debug.Log (inflictDamage);
 
 			sprite.color = new Color(1, 1, 1);
 		}
@@ -196,6 +198,7 @@ public class EnemyController : MonoBehaviour
     private void Die()
     {
         Instantiate(powerUpPrefab, transform.position, transform.rotation);
+		gameManager.IncreaseScore (1);
         Destroy(gameObject);
     }
 }
