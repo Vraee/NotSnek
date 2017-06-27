@@ -20,7 +20,7 @@ public class CharacterController : MonoBehaviour {
 	public int powerUpLimit = 5;
     
     //Holds the fireball gameobject during buildup
-    private GameObject temp;
+    private GameObject fireball;
     //how much damage is added to the fireball per sec
     public float damageIncrease;
     public float fireballDamage;
@@ -164,11 +164,19 @@ public class CharacterController : MonoBehaviour {
 		
 	private void RotateToMouse()
 	{
-        //plz fix
-        Quaternion rotation = Quaternion.LookRotation (head.transform.position - destinationPoint, Vector3.forward);
-        head.transform.rotation = rotation;
-        head.transform.eulerAngles = new Vector3 (0, 0, head.transform.eulerAngles.z);
-    }
+		//fixed by internet with collaboration with the cleaner man god_Miika
+		Debug.DrawLine(head.transform.position, destinationPoint);
+
+		float camDis = Camera.main.transform.position.y - head.transform.position.y;
+
+		// Get the mouse position in world space. Using camDis for the Z axis.
+		Vector3 mouse = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, camDis));
+
+		float AngleRad = Mathf.Atan2(mouse.y - head.transform.position.y, mouse.x - head.transform.position.x);
+		float angle = (180 / Mathf.PI) * AngleRad;
+
+		head.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle-90f));
+	}
 		
 	public void Move() {
 		if (Input.GetMouseButton (1) || Input.GetKey(KeyCode.W)) {
@@ -381,28 +389,17 @@ public class CharacterController : MonoBehaviour {
         if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("Fire1"))
         {
             Vector3 playerPos = head.transform.position;
-            Vector3 playerDirection = head.transform.up;
+			Vector3 playerDirection = head.transform.up;
             Quaternion playerRotation = head.transform.rotation;
             float spawnDistance = 1;
             Vector3 spawnPos = playerPos + playerDirection * spawnDistance;
-            temp = Instantiate(fireBall, spawnPos, head.transform.rotation);
-        }
-
-        if (Input.GetMouseButton(0) || Input.GetButton("Fire1") && temp != null) {
-            temp.transform.position = head.transform.position + (head.transform.up * 1);
-            temp.transform.rotation = head.transform.rotation;
-
-            //Increase fireball size and damage when mouse is held
-            if (temp.transform.localScale.x <= 10) {
-                temp.transform.localScale += new Vector3(0.25f * Time.deltaTime, 0.25f * Time.deltaTime, 0.25f * Time.deltaTime);
-                //fireballDamage = fireballDamage + damageIncrease * Time.deltaTime;
-                temp.GetComponent<Fireball>().IncreaseDamage(damageIncrease * Time.deltaTime);
-            }
-        }
-        if (Input.GetMouseButtonUp(0) || Input.GetButtonUp("Fire1") && temp != null)
-        {
-            temp.GetComponent<Fireball>().Shoot();
-        }
+			
+            fireball = Instantiate(fireBall, spawnPos, head.transform.rotation);
+			
+			fireball.GetComponent<Fireball>().player = head;
+			fireball.GetComponent<Fireball>().damageIncrease = damageIncrease;
+			fireball.GetComponent<Fireball>().damage = fireballDamage;
+		}
     }
 
 	IEnumerator Berserk() {

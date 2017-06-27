@@ -169,7 +169,7 @@ public class EnemyController : MonoBehaviour
 		if (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11 || collider.gameObject.tag == "Fireball")
         {
 			if (collider.gameObject.tag == "Fireball") {
-				Destroy (collider.gameObject); //hope this is smart
+				collider.gameObject.GetComponent<Fireball> ().RemoveFireball(); //this is now smart
 			}
 
             inflictDamage = false;

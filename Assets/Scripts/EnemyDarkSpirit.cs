@@ -16,7 +16,7 @@ public class EnemyDarkSpirit : EnemyController {
 		this.divisionsAmount = divisionsAmount;
 	}
 
-	public override void Start() {
+	new void Start() {
 		base.Start ();
 		divisionTimer = Time.time + divisionDelay;
 	}
