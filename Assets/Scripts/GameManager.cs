@@ -7,18 +7,23 @@ public class GameManager : MonoBehaviour {
 
     public float[] timeToNextSpawn;
     public GameObject[] spawnObjects;
+    public CharacterController player;
     public int id;
+    public float multiplier;
     public float gameTime;
 
     public float timer;
 
     public float score;
     public Text scoreText;
+    public Text multiplierText;
     
 
 	// Use this for initialization
 	void Start () {
         gameTime = timeToNextSpawn[0];
+        player = GameObject.Find("Player").GetComponent<CharacterController>();
+        multiplier = player.GetBodyPartsAmount();
     }
 
     // Update is called once per frame
@@ -47,13 +52,20 @@ public class GameManager : MonoBehaviour {
 
     public void IncreaseScore(float amount)
     {
-        score += amount;
+        score += (amount * multiplier);
         UpdateScore();
+    }
+
+    public void UpdateMultiplier()
+    {
+        multiplier = player.GetBodyPartsAmount();
+        multiplierText.text = "x" + multiplier;
     }
 
     void UpdateScore()
     {
         scoreText.text = "super duper highscore: " + score;
+        Debug.Log(score);
     }
 
 }
