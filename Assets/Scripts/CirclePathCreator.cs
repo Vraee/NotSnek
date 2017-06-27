@@ -14,7 +14,7 @@ public class CirclePathCreator : MonoBehaviour {
 			endAngle = 360;
 		}
 		
-		for (var i = 0; i <= pathObjectsAmount; i++) {
+		for (var i = 0; i < pathObjectsAmount; i++) {
 			//.~.*~*majig*~*.~.
 			float angle = i * Mathf.PI * 2 / pathObjectsAmount;
 			Vector3 position = new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * radius;
