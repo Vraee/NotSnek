@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
     public GameObject powerUpPrefab;
 	public GameObject targetPlayerPart;
 
+    private GameManager gameManager;
     private SpriteRenderer sprite;
     private Color hitColor = Color.red;
     private int dir = 0;
@@ -76,7 +77,8 @@ public class EnemyController : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		targetPlayerPart = GameObject.Find ("Head");
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        targetPlayerPart = GameObject.Find ("Head");
 		sprite = GetComponent<SpriteRenderer>();
 		attacking = false;
 		retreating = false;
@@ -179,9 +181,7 @@ public class EnemyController : MonoBehaviour
 
 	private void InflictDamage(float damage)
     {
-		Debug.Log ("stamina: " + stamina + " damage: " + damage);
 		stamina = stamina - damage;
-		Debug.Log ("new stamina: " + stamina + " damage: " + damage);
 
         sprite.color = hitColor;
         if (stamina <= 0)
@@ -192,6 +192,7 @@ public class EnemyController : MonoBehaviour
     private void Die()
     {
         Instantiate(powerUpPrefab, transform.position, transform.rotation);
+        gameManager.IncreaseScore(1);
         Destroy(gameObject);
     }
 }

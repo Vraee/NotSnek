@@ -27,6 +27,7 @@ public class CharacterController : MonoBehaviour {
 
     public bool controllerInput;
 
+    private GameManager gameManager;
     private List<GameObject> bodyParts;
 	private List<GameObject> tailParts;
 	private Vector3 destinationPoint;
@@ -43,7 +44,7 @@ public class CharacterController : MonoBehaviour {
 	private bool berserk;
 	private float damageSum;
 		
-	public int GetbBodyPartsAmount() {
+	public int GetBodyPartsAmount() {
 		return bodyPartsAmount;
 	}
 
@@ -113,7 +114,8 @@ public class CharacterController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		bodyParts = new List<GameObject> ();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        bodyParts = new List<GameObject> ();
 		tailParts = new List<GameObject>();
 		bodyParts.Add (head);
 
@@ -144,7 +146,11 @@ public class CharacterController : MonoBehaviour {
 
 	void Update() {
 		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-        RotateToMouse();
+        
+        if (!controllerInput) {
+            RotateToMouse();
+        }
+
         Movement();
 		//Fire();
 		Fire3();
@@ -158,10 +164,11 @@ public class CharacterController : MonoBehaviour {
 		
 	private void RotateToMouse()
 	{
-		Quaternion rotation = Quaternion.LookRotation (head.transform.position - destinationPoint, Vector3.forward);
-		head.transform.rotation = rotation;
-		head.transform.eulerAngles = new Vector3 (0, 0, head.transform.eulerAngles.z);
-	}
+        //plz fix
+        Quaternion rotation = Quaternion.LookRotation (head.transform.position - destinationPoint, Vector3.forward);
+        head.transform.rotation = rotation;
+        head.transform.eulerAngles = new Vector3 (0, 0, head.transform.eulerAngles.z);
+    }
 		
 	public void Move() {
 		if (Input.GetMouseButton (1) || Input.GetKey(KeyCode.W)) {
@@ -243,17 +250,21 @@ public class CharacterController : MonoBehaviour {
 
     private void Movement()
     {
-        head.transform.Translate(Input.GetAxis("Horizontal") * Time.deltaTime * speed, Input.GetAxis("Vertical") * Time.deltaTime * speed, 0, Space.World);
-
-        Debug.Log(Input.GetAxis("VerticalStick2"));
-        Debug.Log(Input.GetAxis("HorizontalStick2"));
-
-        float _angle = Mathf.Atan2(-Input.GetAxis("HorizontalStick2"), -Input.GetAxis("VerticalStick2")) * Mathf.Rad2Deg;
+        if (controllerInput)
+        {
+            head.transform.Translate(Input.GetAxis("HorizontalStick1") * Time.deltaTime * speed, Input.GetAxis("VerticalStick1") * Time.deltaTime * speed, 0, Space.World);
+            float _angle = Mathf.Atan2(-Input.GetAxis("HorizontalStick2"), -Input.GetAxis("VerticalStick2")) * Mathf.Rad2Deg;
         
-        if (new Vector2(Input.GetAxis("HorizontalStick2"), Input.GetAxis("VerticalStick2")) != Vector2.zero) {
-            var rotation = Quaternion.AngleAxis(_angle, new Vector3(0, 0, 1));
-            head.transform.rotation = Quaternion.Lerp(head.transform.rotation, rotation, 10 * Time.deltaTime);
+            if (new Vector2(Input.GetAxis("HorizontalStick2"), Input.GetAxis("VerticalStick2")) != Vector2.zero) {
+                var rotation = Quaternion.AngleAxis(_angle, new Vector3(0, 0, 1));
+                head.transform.rotation = Quaternion.Lerp(head.transform.rotation, rotation, 10 * Time.deltaTime);
+            }
         }
+        else
+        {
+            head.transform.Translate(Input.GetAxis("Horizontal") * Time.deltaTime * speed, Input.GetAxis("Vertical") * Time.deltaTime * speed, 0, Space.World);
+        }
+        
 
         for (int i = 1; i < bodyParts.Count; i++)
         {
@@ -329,11 +340,12 @@ public class CharacterController : MonoBehaviour {
 		bodyPartsAmount++;
 		HP += bodyPartHP;
 		comparableHP += bodyPartHP;
-
-		//Debug.Log (bodyPartsAmount);
-	}
+        gameManager.UpdateMultiplier();
+        //Debug.Log (bodyPartsAmount);
+    }
 
 	public void RemoveBodyPart(int removableIndex) {
+
 		GameObject removablePart = bodyParts [removableIndex];
 
 		if (HP > 0 && removableIndex != 0 && removableIndex != bodyParts.Count - tailParts.Count) {
@@ -342,9 +354,9 @@ public class CharacterController : MonoBehaviour {
 
             bodyPartsAmount--;
         }
-
-		//Debug.Log ("bodyparts left " + bodyPartsAmount + " " + (bodyParts.Count - 1 - tailParts.Count));
-	}
+        gameManager.UpdateMultiplier();
+        //Debug.Log ("bodyparts left " + bodyPartsAmount + " " + (bodyParts.Count - 1 - tailParts.Count));
+    }
 
 	public void Fire() {
 

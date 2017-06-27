@@ -64,6 +64,7 @@ public class PowerUp : MonoBehaviour {
 			int resetCollectibleSum = player.GetCollectibleSum () - player.GetPowerUpLimit ();
 			player.SetCollectibleSum (resetCollectibleSum);
 			player.AddBodyPart ();
+            
 		}
 	}
 }
