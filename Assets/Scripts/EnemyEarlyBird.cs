@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class EnemyEarlyBird : EnemyController {
 
+	TrailRenderer _rend;
+
+	new void Start(){
+		base.Start ();
+		_rend = GetComponent<TrailRenderer> ();
+	}
+
 	public override void MoveEnemy() {
 		if (!GetAttacking()) {
 			RotateToPlayer ();
@@ -16,5 +23,19 @@ public class EnemyEarlyBird : EnemyController {
 		if (GetMoving() && gameObject.GetComponent<MoveOnPath>().GetPathReached()) {
 			AttackPlayer (speed, this.gameObject);
 		}
+	}
+
+	new void Update(){
+		base.Update ();
+
+		if (!attacking) {
+			//Debug.Log ("moikkelis");
+			_rend.enabled = false;
+		} else {
+			_rend.enabled = true;
+			//Debug.Log ("hellurei");
+		}
+
+
 	}
 }

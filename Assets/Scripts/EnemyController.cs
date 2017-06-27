@@ -17,8 +17,8 @@ public class EnemyController : MonoBehaviour
     private Color hitColor = Color.red;
     private int dir = 0;
     private bool inflictDamage;
-	private bool attacking;
-    private bool retreating;
+	protected bool attacking;
+    protected bool retreating;
 	private Vector3 destinationPoint;
     private Vector3 attackTarget;
     private Vector3 enemyStartPos;
@@ -75,8 +75,9 @@ public class EnemyController : MonoBehaviour
 	}
 
 	// Use this for initialization
-	void Start()
+	protected void Start()
 	{
+		Debug.Log ("memes");
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         targetPlayerPart = GameObject.Find ("Head");
 		sprite = GetComponent<SpriteRenderer>();
@@ -90,7 +91,7 @@ public class EnemyController : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update()
+	protected void Update()
 	{
 		MoveEnemy();
 		if (inflictDamage && vulnerable)

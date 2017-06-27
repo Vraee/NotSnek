@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
-    public float[] timeToNextSpawn;
+	public float[] timeToNextSpawn = new float[999];
     public GameObject[] spawnObjects;
+	[HideInInspector]
     public CharacterController player;
     public int id;
     public float multiplier;
@@ -21,9 +22,10 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        gameTime = timeToNextSpawn[0];
         player = GameObject.Find("Player").GetComponent<CharacterController>();
         multiplier = player.GetBodyPartsAmount();
+		gameTime = timeToNextSpawn[0];
+		Debug.Log ("ei kussu xD");
     }
 
     // Update is called once per frame
