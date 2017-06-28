@@ -18,7 +18,8 @@ public class CharacterController : MonoBehaviour {
 	public float bodyPartHP;
 	public int takeDamageDelay = 1;
 	public int powerUpLimit = 5;
-    
+    public float deadzone = 0.25f;
+
     //Holds the fireball gameobject during buildup
     private GameObject fireball;
     //how much damage is added to the fireball per sec
@@ -152,10 +153,12 @@ public class CharacterController : MonoBehaviour {
         }
 
         Movement();
-		//Fire();
-		Fire3();
+        //Fire();
+        //kekke kee!
+        Fire2();
+        //Fire3();
 
-		if (Input.GetKey(KeyCode.Space) && !berserk && bodyParts.Count > 1 + tailParts.Count)
+        if (Input.GetKey(KeyCode.Space) || (Input.GetButton("Berserk")) && !berserk && bodyParts.Count > 1 + tailParts.Count)
 		{
 			berserk = true;
 			StartCoroutine("Berserk");
@@ -260,7 +263,17 @@ public class CharacterController : MonoBehaviour {
     {
         if (controllerInput)
         {
-            head.transform.Translate(Input.GetAxis("HorizontalStick1") * Time.deltaTime * speed, Input.GetAxis("VerticalStick1") * Time.deltaTime * speed, 0, Space.World);
+            Vector2 stickInput = new Vector2(Input.GetAxis("HorizontalStick1"), Input.GetAxis("VerticalStick1"));
+            if (stickInput.magnitude < deadzone) {
+                stickInput = Vector2.zero;
+            }
+            else
+            {
+                stickInput = stickInput.normalized * ((stickInput.magnitude - deadzone) / (1 - deadzone));
+            }
+
+            head.transform.Translate(stickInput * Time.deltaTime * speed, Space.World);
+
             float _angle = Mathf.Atan2(-Input.GetAxis("HorizontalStick2"), -Input.GetAxis("VerticalStick2")) * Mathf.Rad2Deg;
         
             if (new Vector2(Input.GetAxis("HorizontalStick2"), Input.GetAxis("VerticalStick2")) != Vector2.zero) {
@@ -382,6 +395,23 @@ public class CharacterController : MonoBehaviour {
             fire.SetActive(false);
         }   
 	}
+
+    private void Fire2() {
+
+        if (Input.GetMouseButton(0) || Input.GetButton("Fire1"))
+        {
+            Vector3 playerPos = head.transform.position;
+            Vector3 playerDirection = head.transform.up;
+            Quaternion playerRotation = head.transform.rotation;
+            float spawnDistance = 1;
+            Vector3 spawnPos = playerPos + playerDirection * spawnDistance;
+
+            fireball = Instantiate(fireBall, spawnPos, head.transform.rotation);
+
+            fireball.GetComponent<Fireball>().player = head;
+            fireball.GetComponent<Fireball>().damage = fireballDamage;
+        }
+    }
     
 
     private void Fire3()
