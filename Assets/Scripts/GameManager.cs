@@ -25,7 +25,6 @@ public class GameManager : MonoBehaviour {
         player = GameObject.Find("Player").GetComponent<CharacterController>();
         multiplier = player.GetBodyPartsAmount();
 		gameTime = timeToNextSpawn[0];
-		Debug.Log ("ei kussu xD");
     }
 
     // Update is called once per frame
@@ -67,7 +66,7 @@ public class GameManager : MonoBehaviour {
     void UpdateScore()
     {
         scoreText.text = "super duper highscore: " + score;
-        Debug.Log(score);
+        //Debug.Log(score);
     }
 
 }

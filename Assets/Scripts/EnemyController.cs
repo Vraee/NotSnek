@@ -77,7 +77,6 @@ public class EnemyController : MonoBehaviour
 	// Use this for initialization
 	protected void Start()
 	{
-		Debug.Log ("memes");
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         targetPlayerPart = GameObject.Find ("Head");
 		sprite = GetComponent<SpriteRenderer>();
@@ -182,7 +181,9 @@ public class EnemyController : MonoBehaviour
 
 	private void InflictDamage(float damage)
     {
+		//Debug.Log ("stamina: " + stamina + " damage " + damage);
 		stamina = stamina - damage;
+		//Debug.Log ("stamina: " + stamina + " damage " + damage);
 
         sprite.color = hitColor;
         if (stamina <= 0)

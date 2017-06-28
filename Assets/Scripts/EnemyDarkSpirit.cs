@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class EnemyDarkSpirit : EnemyController {
 	public float divisionDelay = 5f;
+	private float baseStamina;
 	private float divisionTimer;
 	private bool divided = false;
 	private int divisionsAmount = 0;
+
+	static int ID;
 
 	public int GetDivisionsAmount() {
 		return divisionsAmount;
@@ -16,13 +19,17 @@ public class EnemyDarkSpirit : EnemyController {
 		this.divisionsAmount = divisionsAmount;
 	}
 
-	new void Start() {
+	new void Start() {	
+		ID++;
 		base.Start ();
 		divisionTimer = Time.time + divisionDelay;
+		baseStamina = stamina;
+		//Debug.Log ("ID: " + ID + " stamina: " + stamina + " baseStamina " + baseStamina);
 	}
 
-	public void Update() {
-		if (Time.time >= divisionTimer && divisionsAmount < 2 && !divided) {
+	new void Update() {
+		base.Update ();
+		if (Time.time >= divisionTimer && divisionsAmount < 3 && !divided) {
 			divisionsAmount++;
 			Divide ();
 			divided = true;
@@ -40,10 +47,31 @@ public class EnemyDarkSpirit : EnemyController {
 	}
 
 	public void Divide() {
-		this.transform.localScale = this.transform.localScale / 2;
+		StartCoroutine(Scale ());
 		EnemyDarkSpirit currentDarkSpirit = this;
+		baseStamina = baseStamina / 2;
+		stamina = baseStamina;
 
 		EnemyDarkSpirit newDarkSpirit = Instantiate(currentDarkSpirit) as EnemyDarkSpirit;
+		newDarkSpirit.StartScaling ();
 		newDarkSpirit.SetDivisionsAmount (divisionsAmount);
+	}
+
+	public void StartScaling() {
+		StartCoroutine(Scale ());
+	}
+
+	IEnumerator Scale()
+	{
+		Vector3 startSize = transform.localScale;
+		Vector3 targetSize = transform.localScale / 2;
+		float progress = 0;
+
+		while (progress <= 1)
+		{
+			transform.localScale = Vector3.Lerp(startSize, targetSize, progress);
+			progress += Time.deltaTime;
+			yield return null;
+		}
 	}
 }
