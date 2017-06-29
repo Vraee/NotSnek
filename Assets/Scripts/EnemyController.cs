@@ -182,7 +182,9 @@ public class EnemyController : MonoBehaviour
 
 	private void InflictDamage(float damage)
     {
+		//Debug.Log ("stamina: " + stamina + " damage " + damage);
 		stamina = stamina - damage;
+		//Debug.Log ("stamina: " + stamina + " damage " + damage);
 
         sprite.color = hitColor;
         if (stamina <= 0)
