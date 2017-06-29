@@ -29,7 +29,7 @@ public class EnemyDarkSpirit : EnemyController {
 
 	new void Update() {
 		base.Update ();
-		if (Time.time >= divisionTimer && divisionsAmount < 3 && !divided) {
+		if (Time.time >= divisionTimer && divisionsAmount < 3 && !divided && gameObject.GetComponent<MoveOnPath>().GetOnPath()) {
 			divisionsAmount++;
 			Divide ();
 			divided = true;

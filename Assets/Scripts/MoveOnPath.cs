@@ -113,14 +113,15 @@ public class MoveOnPath : MonoBehaviour {
 		//move to the next waypoint
 		transform.position = Vector3.MoveTowards (transform.position, pathToFollow.pathObjects [currentWayPointID].position, Time.deltaTime * speedOnPath);
 
-		//rotate towards the next waypoint
-		var rotation = Quaternion.LookRotation (pathToFollow.pathObjects [currentWayPointID].position, transform.position);
-		rotation.y = 0;
-		rotation.x = 0;
-		if (Slerp) {
-			transform.rotation = Quaternion.Slerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-		} else {
-			transform.rotation = Quaternion.Lerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+		if (pathToFollow.pathObjects [currentWayPointID].position != Vector3.zero) {
+			var rotation = Quaternion.LookRotation (pathToFollow.pathObjects [currentWayPointID].position, transform.position);
+			rotation.y = 0;
+			rotation.x = 0;
+			if (Slerp) {
+				transform.rotation = Quaternion.Slerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+			} else {
+				transform.rotation = Quaternion.Lerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+			}
 		}
 	}
 
