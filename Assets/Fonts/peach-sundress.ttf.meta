@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 1f3054216695c9f4a8fc71a5d9a5e04b
+timeCreated: 1498733623
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: peach sundress ~
+  fontNames:
+  - peach sundress ~
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -109,14 +109,15 @@ public class EnemyController : MonoBehaviour
 
 	public void RotateToPlayer()
 	{
-        destinationPoint = targetPlayerPart.transform.position;
-        Vector3 target = destinationPoint - transform.position;
-        float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
-        Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 30);
-	}
+            destinationPoint = targetPlayerPart.transform.position;
+        
+            Vector3 target = destinationPoint - transform.position;
+            float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
+            Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+            transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 30);
+    }
 
-	public void AttackPlayer (float attackSpeed, GameObject enemy) {
+    public void AttackPlayer (float attackSpeed, GameObject enemy) {
         Vector3 tempAttackTarget = attackTarget;
 		Vector3 retreatPosition = enemyStartPos;
 

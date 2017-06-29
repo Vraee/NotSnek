@@ -44,8 +44,14 @@ public class CharacterController : MonoBehaviour {
 	private int collectibleSum;
 	private bool berserk;
 	private float damageSum;
-		
-	public int GetBodyPartsAmount() {
+    private Camera cam;
+    private float viewHeight;
+    private float viewWidth;
+    
+    public float bulletsPerSecond = 14.0f;
+    private bool shooting = false;
+
+    public int GetBodyPartsAmount() {
 		return bodyPartsAmount;
 	}
 
@@ -115,6 +121,10 @@ public class CharacterController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        cam = Camera.main;
+        viewHeight = 2f * cam.orthographicSize;
+        viewWidth = viewHeight * cam.aspect;
+        InvokeRepeating("Shoot", 1.0f, 1.0f / bulletsPerSecond);
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         bodyParts = new List<GameObject> ();
 		tailParts = new List<GameObject>();
@@ -153,10 +163,7 @@ public class CharacterController : MonoBehaviour {
         }
 
         Movement();
-        //Fire();
-        //kekke kee!
-        Fire2();
-        //Fire3();
+        Fire();
 
         if (Input.GetKey(KeyCode.Space) || (Input.GetButton("Berserk")) && !berserk && bodyParts.Count > 1 + tailParts.Count)
 		{
@@ -273,6 +280,7 @@ public class CharacterController : MonoBehaviour {
             }
 
             head.transform.Translate(stickInput * Time.deltaTime * speed, Space.World);
+            
 
             float _angle = Mathf.Atan2(-Input.GetAxis("HorizontalStick2"), -Input.GetAxis("VerticalStick2")) * Mathf.Rad2Deg;
         
@@ -283,9 +291,29 @@ public class CharacterController : MonoBehaviour {
         }
         else
         {
+
             head.transform.Translate(Input.GetAxis("Horizontal") * Time.deltaTime * speed, Input.GetAxis("Vertical") * Time.deltaTime * speed, 0, Space.World);
+            
         }
-        
+
+        //checking if the player is going off screen
+        if (head.transform.position.y >= viewHeight / 2)
+        {
+            head.transform.position = new Vector2(head.transform.position.x, viewHeight / 2);
+        }
+        if (head.transform.position.y <= -viewHeight / 2)
+        {
+            head.transform.position = new Vector2(head.transform.position.x, -viewHeight / 2);
+        }
+        if (head.transform.position.x >= viewWidth / 2)
+        {
+            head.transform.position = new Vector2(viewWidth / 2, head.transform.position.y);
+        }
+        if (head.transform.position.x <= -viewWidth / 2)
+        {
+            head.transform.position = new Vector2(-viewWidth / 2, head.transform.position.y);
+        }
+
 
         for (int i = 1; i < bodyParts.Count; i++)
         {
@@ -376,43 +404,41 @@ public class CharacterController : MonoBehaviour {
             bodyPartsAmount--;
         }
         gameManager.UpdateMultiplier();
+        if(bodyPartsAmount == 0)
+        {
+            shooting = false;
+            gameObject.SetActive(false);
+            gameManager.Restart();
+        }
         //Debug.Log ("bodyparts left " + bodyPartsAmount + " " + (bodyParts.Count - 1 - tailParts.Count));
     }
 
-	public void Fire() {
 
-        if (Input.GetMouseButton(0))
-        {
-            fire.SetActive(true);
-			if (!fireParticles.isPlaying)
-            {
-                fireParticles.Play();
-            }
-        }
-        else
-        {
-            fireParticles.Stop();
-            fire.SetActive(false);
-        }   
-	}
+    private void Fire()
+    {
 
-    private void Fire2() {
-
+        shooting = false;
         if (Input.GetMouseButton(0) || Input.GetButton("Fire1"))
         {
-            Vector3 playerPos = head.transform.position;
-            Vector3 playerDirection = head.transform.up;
-            Quaternion playerRotation = head.transform.rotation;
-            float spawnDistance = 1;
-            Vector3 spawnPos = playerPos + playerDirection * spawnDistance;
-
-            fireball = Instantiate(fireBall, spawnPos, head.transform.rotation);
-
-            fireball.GetComponent<Fireball>().player = head;
-            fireball.GetComponent<Fireball>().damage = fireballDamage;
+            shooting = true;
         }
     }
+
+    private void Shoot()
+    {
+        if (!shooting) return;
+        Vector3 playerPos = head.transform.position;
+        Vector3 playerDirection = head.transform.up;
+        Quaternion playerRotation = head.transform.rotation;
+        float spawnDistance = 1;
+        Vector3 spawnPos = playerPos + playerDirection * spawnDistance;
+        fireball = Instantiate(fireBall, spawnPos, head.transform.rotation);
+        fireball.GetComponent<Fireball>().damage = fireballDamage;
+    }
+
+
     
+
 
     private void Fire3()
     {

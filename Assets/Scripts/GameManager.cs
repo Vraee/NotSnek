@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour {
     public float score;
     public Text scoreText;
     public Text multiplierText;
+    public Text greetingsText;
     
 
 	// Use this for initialization
@@ -25,6 +27,7 @@ public class GameManager : MonoBehaviour {
         player = GameObject.Find("Player").GetComponent<CharacterController>();
         multiplier = player.GetBodyPartsAmount();
 		gameTime = timeToNextSpawn[0];
+        greetingsText.enabled = false;
     }
 
     // Update is called once per frame
@@ -59,14 +62,26 @@ public class GameManager : MonoBehaviour {
 
     public void UpdateMultiplier()
     {
-        multiplier = player.GetBodyPartsAmount();
+        if(player != null) {
+            multiplier = player.GetBodyPartsAmount();
+        }
         multiplierText.text = "x" + multiplier;
     }
 
     void UpdateScore()
     {
         scoreText.text = "super duper highscore: " + score;
-        //Debug.Log(score);
     }
 
+    public void Restart()
+    {
+        greetingsText.enabled = true;
+        StartCoroutine(LoadLevelAfterDelay(3));
+    }
+
+    IEnumerator LoadLevelAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }
