@@ -9,7 +9,7 @@ public class EnemyDarkSpirit : EnemyController {
 	private bool divided = false;
 	private int divisionsAmount = 0;
 
-	static int ID;
+	//static int ID;
 
 	public int GetDivisionsAmount() {
 		return divisionsAmount;
@@ -20,7 +20,7 @@ public class EnemyDarkSpirit : EnemyController {
 	}
 
 	new void Start() {	
-		ID++;
+		//ID++;
 		base.Start ();
 		divisionTimer = Time.time + divisionDelay;
 		baseStamina = stamina;
@@ -71,6 +71,7 @@ public class EnemyDarkSpirit : EnemyController {
 		{
 			transform.localScale = Vector3.Lerp(startSize, targetSize, progress);
 			progress += Time.deltaTime;
+			gameObject.GetComponent<MoveOnPath> ().speedOnPath += Time.deltaTime;
 			yield return null;
 		}
 	}

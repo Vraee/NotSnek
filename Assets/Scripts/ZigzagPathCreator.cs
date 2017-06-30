@@ -8,6 +8,7 @@ public class ZigzagPathCreator : MonoBehaviour {
 	public float wavelength;
 	public bool horizontal;
 	public bool flipVertical;
+	public bool flipHorizontal;
 
 	private Vector3 prevPathObjectPosition;
 
@@ -15,19 +16,32 @@ public class ZigzagPathCreator : MonoBehaviour {
 	void Start () {
 		for (int i = 0; i < pathObjectsAmount; i++) {
 			Vector3 position;
+			float x;
+			float y;
 
 			if (i == 0) {
 				position = transform.position;
 			} else if (horizontal) {
-				if (!flipVertical)
-					position = new Vector3 (prevPathObjectPosition.x + distanceBetweenPoints, prevPathObjectPosition.y + wavelength, 0);
-				else
-					position = new Vector3 (prevPathObjectPosition.x - distanceBetweenPoints, prevPathObjectPosition.y + wavelength, 0);
+				x = prevPathObjectPosition.x + distanceBetweenPoints;
+				y = prevPathObjectPosition.y + wavelength;
+
+				if (flipVertical) 
+					x = prevPathObjectPosition.x - distanceBetweenPoints;
+				if (flipHorizontal) 
+					y = prevPathObjectPosition.y - wavelength;
+
+				position = new Vector3 (x, y, 0);
+
 			} else {
-				if (!flipVertical)
-					position = new Vector3 (prevPathObjectPosition.x + wavelength, prevPathObjectPosition.y + distanceBetweenPoints, 0);
-				else
-					position = new Vector3 (prevPathObjectPosition.x - wavelength, prevPathObjectPosition.y + distanceBetweenPoints, 0);
+				x = prevPathObjectPosition.x + wavelength;
+				y = prevPathObjectPosition.y + distanceBetweenPoints;
+
+				if (flipVertical)
+					y = prevPathObjectPosition.y - distanceBetweenPoints;
+				if (flipHorizontal)
+					x = prevPathObjectPosition.x - wavelength;
+
+				position = new Vector3 (x, y, 0);
 			}
 
 			distanceBetweenPoints = -distanceBetweenPoints;
