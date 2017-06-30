@@ -29,12 +29,14 @@ public class CharacterController : MonoBehaviour {
     public bool controllerInput;
 
     private GameManager gameManager;
+	//Contains ALL the bodypart, including head and tail parts
     private List<GameObject> bodyParts;
 	private List<GameObject> tailParts;
 	private Vector3 destinationPoint;
 	private float distance;
     private int orderInLayer = -1;
 	private ParticleSystem fireParticles;
+	//Counts ONLY the bodyparts between head and tail
 	private int bodyPartsAmount; //USED TO BE "tailLength"!
 	private float baseHP;
 	private float HP;
@@ -165,7 +167,7 @@ public class CharacterController : MonoBehaviour {
         Movement();
         Fire();
 
-        if (Input.GetKey(KeyCode.Space) || (Input.GetButton("Berserk")) && !berserk && bodyParts.Count > 1 + tailParts.Count)
+		if ((Input.GetKey(KeyCode.Space) || (Input.GetButton("Berserk"))) && !berserk && bodyPartsAmount > 0)
 		{
 			berserk = true;
 			StartCoroutine("Berserk");
@@ -404,7 +406,7 @@ public class CharacterController : MonoBehaviour {
             bodyPartsAmount--;
         }
         gameManager.UpdateMultiplier();
-        if(bodyPartsAmount == 0)
+		if(HP <= 0)
         {
             shooting = false;
             gameObject.SetActive(false);
