@@ -34,7 +34,6 @@ public class CharacterController : MonoBehaviour {
 	private Vector3 destinationPoint;
 	private float distance;
     private int orderInLayer = -1;
-	private ParticleSystem fireParticles;
 	private int bodyPartsAmount; //USED TO BE "tailLength"!
 	private float baseHP;
 	private float HP;
@@ -136,12 +135,6 @@ public class CharacterController : MonoBehaviour {
 			tailParts.Add(tail.transform.GetChild(i).gameObject);
 		}
 
-		//pisa shit
-		fireParticles = head.GetComponent<ParticleSystem>();
-		fire.SetActive (false);
-		//fireParticles.Play();
-		var em = fireParticles.emission;
-		em.enabled = false;
 
 		for (int i = 0; i < startSize; i++) {
 			AddBodyPart ();
