@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnemyDarkSpirit : EnemyController {
 	public float divisionDelay = 5f;
+	public GameObject secondPowerUp;
+	public GameObject thirdPowerUp;
+
 	private float baseStamina;
 	private float divisionTimer;
 	private bool divided = false;
@@ -47,6 +50,11 @@ public class EnemyDarkSpirit : EnemyController {
 	}
 
 	public void Divide() {
+		if (divisionsAmount >= 0 && divisionsAmount < 3)
+			powerUpPrefab = secondPowerUp;
+		else
+			powerUpPrefab = thirdPowerUp;
+
 		StartCoroutine(Scale ());
 		EnemyDarkSpirit currentDarkSpirit = this;
 		baseStamina = baseStamina / 2;

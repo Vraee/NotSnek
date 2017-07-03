@@ -45,7 +45,7 @@ public class BodyPart : MonoBehaviour {
 			collider.gameObject.GetComponent<PowerUp> ().PickUp (parentScript);
             Destroy(collider.gameObject);
 
-        } else if (collider.gameObject.tag == "Enemy") {
+		} else if (this.gameObject.tag == "Head" && collider.gameObject.tag == "Enemy") {
 			if (!(gameObject.tag == "Fire")) {
 				enemy = collider.gameObject;
 				parentScript.StartCoroutine ("EnemyDamage", this);

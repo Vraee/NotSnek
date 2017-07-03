@@ -29,11 +29,13 @@ public class CharacterController : MonoBehaviour {
     public bool controllerInput;
 
     private GameManager gameManager;
+	//Contains ALL the bodyparts, including head and tail parts
     private List<GameObject> bodyParts;
 	private List<GameObject> tailParts;
 	private Vector3 destinationPoint;
 	private float distance;
     private int orderInLayer = -1;
+	//Counts ONLY the bodyparts between head and tail
 	private int bodyPartsAmount; //USED TO BE "tailLength"!
 	private float baseHP;
 	private float HP;
@@ -46,6 +48,8 @@ public class CharacterController : MonoBehaviour {
     private Camera cam;
     private float viewHeight;
     private float viewWidth;
+	//The colour for all the bodyparts besides head; since only the head takes damage, the other parts are a bit darker
+	private Color32 bodyPartColor = new Color32 (112, 131, 163, 255);
     
     public float bulletsPerSecond = 14.0f;
     private bool shooting = false;
@@ -133,6 +137,8 @@ public class CharacterController : MonoBehaviour {
 		{
 			bodyParts.Add(tail.transform.GetChild(i).gameObject);
 			tailParts.Add(tail.transform.GetChild(i).gameObject);
+			tail.transform.GetChild (i).gameObject.GetComponent<SpriteRenderer> ().color = bodyPartColor;
+			tail.transform.GetChild (i).gameObject.GetComponent<SpriteRenderer>().sortingOrder = orderInLayer - tailParts.Count + i;
 		}
 
 
@@ -158,7 +164,7 @@ public class CharacterController : MonoBehaviour {
         Movement();
         Fire();
 
-        if (Input.GetKey(KeyCode.Space) || (Input.GetButton("Berserk")) && !berserk && bodyParts.Count > 1 + tailParts.Count)
+		if ((Input.GetKey(KeyCode.Space) || (Input.GetButton("Berserk"))) && !berserk && bodyPartsAmount > 0)
 		{
 			berserk = true;
 			StartCoroutine("Berserk");
@@ -352,6 +358,7 @@ public class CharacterController : MonoBehaviour {
 		newBodyPart.transform.parent = this.transform;
 
         newBodyPart.GetComponent<SpriteRenderer>().sortingOrder = orderInLayer;
+		newBodyPart.GetComponent<SpriteRenderer>().color = bodyPartColor;
 
 		//Beacuse the tail is 3 parts long and the new part has to be added in front of it
 		bodyParts [bodyParts.Count - 3] = newBodyPart;
@@ -368,12 +375,14 @@ public class CharacterController : MonoBehaviour {
 			{
 				bodyParts.Add(tailParts[j]);
 				tailParts[j].GetComponent<SpriteRenderer>().sortingOrder = orderInLayer - tailParts.Count + j;
+				tailParts[j].GetComponent<SpriteRenderer>().color = bodyPartColor;
 				break;
 			}
 			else
 			{
 				bodyParts[i] = tailParts[j];
 				tailParts[j].GetComponent<SpriteRenderer>().sortingOrder = orderInLayer - tailParts.Count + j;
+				tailParts[j].GetComponent<SpriteRenderer>().color = bodyPartColor;
 			}
 			j++;
 		}
@@ -397,7 +406,7 @@ public class CharacterController : MonoBehaviour {
             bodyPartsAmount--;
         }
         gameManager.UpdateMultiplier();
-        if(bodyPartsAmount == 0)
+        if(HP <= 0)
         {
             shooting = false;
             gameObject.SetActive(false);
@@ -490,7 +499,10 @@ public class CharacterController : MonoBehaviour {
 					berserk = false;
 					for (int j = 0; j < bodyParts.Count; j++)
 					{
-						bodyParts[j].GetComponent<SpriteRenderer>().color = Color.white;
+						if (j == 0)
+							bodyParts[j].GetComponent<SpriteRenderer>().color = Color.white;
+						else
+							bodyParts[j].GetComponent<SpriteRenderer>().color = bodyPartColor;
 						bodyParts [j].layer = 8;
 						var emni = bodyParts[j].GetComponent<ParticleSystem>().emission;
 						emni.enabled = false;
@@ -534,8 +546,11 @@ public class CharacterController : MonoBehaviour {
 						bodyPart.GetComponent<SpriteRenderer> ().color = Color.red;     
 					}
 					yield return new WaitForSeconds (0.1f);
-					foreach (GameObject bodyPart in bodyParts) {
-						bodyPart.GetComponent<SpriteRenderer> ().color = Color.white;     
+					for (int j = 0; j < bodyParts.Count; j++) {
+						if (j == 0)
+							bodyParts [j].GetComponent<SpriteRenderer> ().color = Color.white;
+						else
+							bodyParts [j].GetComponent<SpriteRenderer> ().color = bodyPartColor;
 					}
 					yield return new WaitForSeconds (0.1f);
 				}
