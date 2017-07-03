@@ -44,6 +44,8 @@ public class CharacterController : MonoBehaviour {
 	private bool takingDamage;
 	private int collectibleSum;
 	private bool berserk;
+	private float berserkCooldown = 2f;
+	private float berserkCoolDownTimer;
 	private float damageSum;
     private Camera cam;
     private float viewHeight;
@@ -164,10 +166,14 @@ public class CharacterController : MonoBehaviour {
         Movement();
         Fire();
 
-		if ((Input.GetKey(KeyCode.Space) || (Input.GetButton("Berserk"))) && !berserk && bodyPartsAmount > 0)
+		if (!berserk && bodyPartsAmount > 0 && (Input.GetKeyDown(KeyCode.Space) || (Input.GetButtonDown("Berserk"))))
 		{
 			berserk = true;
 			StartCoroutine("Berserk");
+			berserkCoolDownTimer = Time.time + berserkCooldown;
+		} else if  (berserk && Time.time >= berserkCoolDownTimer && (Input.GetKeyDown(KeyCode.Space) || (Input.GetButtonDown("Berserk")))) {
+			StopCoroutine ("Berserk");
+			StopBerserk ();
 		}
 	}
 		
@@ -474,10 +480,9 @@ public class CharacterController : MonoBehaviour {
 			//Add effects to each bodypart after a delay of 0,1 seconds
 			foreach (GameObject bodyPart in bodyParts)
 			{
-				yield return new WaitForSeconds (0.1f);
+				yield return new WaitForSeconds (0.05f);
 				var emni = bodyPart.GetComponent<ParticleSystem>().emission;
 				emni.enabled = true;
-
 				bodyPart.GetComponent<SpriteRenderer>().color = new Vector4 (0.9f,0.9f,0.9f,0.9f);
 			}
 
@@ -495,20 +500,28 @@ public class CharacterController : MonoBehaviour {
 				//}
 
 				//Once the last part is reached, changes remaining bodyparts back to normal (layer 8 = "Plyaer")
-				if (i == 1) {
+				if (i == 1 && berserk) {
 					berserk = false;
 					for (int j = 0; j < bodyParts.Count; j++)
 					{
-						if (j == 0)
-							bodyParts[j].GetComponent<SpriteRenderer>().color = Color.white;
-						else
-							bodyParts[j].GetComponent<SpriteRenderer>().color = bodyPartColor;
-						bodyParts [j].layer = 8;
-						var emni = bodyParts[j].GetComponent<ParticleSystem>().emission;
-						emni.enabled = false;
+						StopBerserk ();
 					}
 				}
 			}
+		}
+	}
+
+	public void StopBerserk() {
+		berserk = false;
+		for (int i = 0; i < bodyParts.Count; i++)
+		{
+			if (i == 0)
+				bodyParts[i].GetComponent<SpriteRenderer>().color = Color.white;
+			else
+				bodyParts[i].GetComponent<SpriteRenderer>().color = bodyPartColor;
+			bodyParts [i].layer = 8;
+			var emni = bodyParts[i].GetComponent<ParticleSystem>().emission;
+			emni.enabled = false;
 		}
 	}
 

@@ -166,7 +166,7 @@ public class EnemyController : MonoBehaviour
 
     public void OnTriggerExit2D(Collider2D collider)
     {
-		if (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11 || collider.gameObject.tag == "Fireball")
+		if (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11 || collider.gameObject.layer == 8 ||collider.gameObject.tag == "Fireball")//Hope adding Player layer here didn't break anything.
         {
 			if (collider.gameObject.tag == "Fireball") {
 				collider.gameObject.GetComponent<Fireball> ().RemoveFireball(); //this is now smart
