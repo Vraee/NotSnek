@@ -65,6 +65,7 @@ public class GameManager : MonoBehaviour {
         if(player != null) {
             multiplier = player.GetBodyPartsAmount();
         }
+
         multiplierText.text = "x" + multiplier;
     }
 

@@ -24,15 +24,8 @@ public class Fireball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-	//	if (Input.GetMouseButtonUp(0) || Input.GetButtonUp("Fire1"))
-	//	{
-			Shoot();
-	//	}
-
-		if (shoot) {
-            gameObject.transform.Translate(gameObject.transform.up * speed * Time.deltaTime, Space.World);
-        }
-
+        gameObject.transform.Translate(gameObject.transform.up * speed * Time.deltaTime, Space.World);
+        
         if (gameObject.transform.position.x > 20 || gameObject.transform.position.y > 20 || gameObject.transform.position.x < -20 || gameObject.transform.position.y < -20)
         {
 			RemoveFireball();
