@@ -29,12 +29,13 @@ public class CharacterController : MonoBehaviour {
     public bool controllerInput;
 
     private GameManager gameManager;
+	//Contains ALL the bodyparts, including head and tail parts
     private List<GameObject> bodyParts;
 	private List<GameObject> tailParts;
 	private Vector3 destinationPoint;
 	private float distance;
     private int orderInLayer = -1;
-	private ParticleSystem fireParticles;
+	//Counts ONLY the bodyparts between head and tail
 	private int bodyPartsAmount; //USED TO BE "tailLength"!
 	private float baseHP;
 	private float HP;
@@ -43,10 +44,14 @@ public class CharacterController : MonoBehaviour {
 	private bool takingDamage;
 	private int collectibleSum;
 	private bool berserk;
+	private float berserkCooldown = 2f;
+	private float berserkCoolDownTimer;
 	private float damageSum;
     private Camera cam;
     private float viewHeight;
     private float viewWidth;
+	//The colour for all the bodyparts besides head; since only the head takes damage, the other parts are a bit darker
+	private Color32 bodyPartColor = new Color32 (112, 131, 163, 255);
     
     public float bulletsPerSecond = 14.0f;
     private bool shooting = false;
@@ -134,14 +139,10 @@ public class CharacterController : MonoBehaviour {
 		{
 			bodyParts.Add(tail.transform.GetChild(i).gameObject);
 			tailParts.Add(tail.transform.GetChild(i).gameObject);
+			tail.transform.GetChild (i).gameObject.GetComponent<SpriteRenderer> ().color = bodyPartColor;
+			tail.transform.GetChild (i).gameObject.GetComponent<SpriteRenderer>().sortingOrder = orderInLayer - tailParts.Count + i;
 		}
 
-		//pisa shit
-		fireParticles = head.GetComponent<ParticleSystem>();
-		fire.SetActive (false);
-		//fireParticles.Play();
-		var em = fireParticles.emission;
-		em.enabled = false;
 
 		for (int i = 0; i < startSize; i++) {
 			AddBodyPart ();
@@ -165,10 +166,14 @@ public class CharacterController : MonoBehaviour {
         Movement();
         Fire();
 
-        if (Input.GetKey(KeyCode.Space) || (Input.GetButton("Berserk")) && !berserk && bodyParts.Count > 1 + tailParts.Count)
+		if (!berserk && bodyPartsAmount > 0 && (Input.GetKeyDown(KeyCode.Space) || (Input.GetButtonDown("Berserk"))))
 		{
 			berserk = true;
 			StartCoroutine("Berserk");
+			berserkCoolDownTimer = Time.time + berserkCooldown;
+		} else if  (berserk && Time.time >= berserkCoolDownTimer && (Input.GetKeyDown(KeyCode.Space) || (Input.GetButtonDown("Berserk")))) {
+			StopCoroutine ("Berserk");
+			StopBerserk ();
 		}
 	}
 		
@@ -359,6 +364,7 @@ public class CharacterController : MonoBehaviour {
 		newBodyPart.transform.parent = this.transform;
 
         newBodyPart.GetComponent<SpriteRenderer>().sortingOrder = orderInLayer;
+		newBodyPart.GetComponent<SpriteRenderer>().color = bodyPartColor;
 
 		//Beacuse the tail is 3 parts long and the new part has to be added in front of it
 		bodyParts [bodyParts.Count - 3] = newBodyPart;
@@ -375,12 +381,14 @@ public class CharacterController : MonoBehaviour {
 			{
 				bodyParts.Add(tailParts[j]);
 				tailParts[j].GetComponent<SpriteRenderer>().sortingOrder = orderInLayer - tailParts.Count + j;
+				tailParts[j].GetComponent<SpriteRenderer>().color = bodyPartColor;
 				break;
 			}
 			else
 			{
 				bodyParts[i] = tailParts[j];
 				tailParts[j].GetComponent<SpriteRenderer>().sortingOrder = orderInLayer - tailParts.Count + j;
+				tailParts[j].GetComponent<SpriteRenderer>().color = bodyPartColor;
 			}
 			j++;
 		}
@@ -404,7 +412,7 @@ public class CharacterController : MonoBehaviour {
             bodyPartsAmount--;
         }
         gameManager.UpdateMultiplier();
-        if(bodyPartsAmount == 0)
+        if(HP <= 0)
         {
             shooting = false;
             gameObject.SetActive(false);
@@ -472,10 +480,9 @@ public class CharacterController : MonoBehaviour {
 			//Add effects to each bodypart after a delay of 0,1 seconds
 			foreach (GameObject bodyPart in bodyParts)
 			{
-				yield return new WaitForSeconds (0.1f);
+				yield return new WaitForSeconds (0.05f);
 				var emni = bodyPart.GetComponent<ParticleSystem>().emission;
 				emni.enabled = true;
-
 				bodyPart.GetComponent<SpriteRenderer>().color = new Vector4 (0.9f,0.9f,0.9f,0.9f);
 			}
 
@@ -493,17 +500,28 @@ public class CharacterController : MonoBehaviour {
 				//}
 
 				//Once the last part is reached, changes remaining bodyparts back to normal (layer 8 = "Plyaer")
-				if (i == 1) {
+				if (i == 1 && berserk) {
 					berserk = false;
 					for (int j = 0; j < bodyParts.Count; j++)
 					{
-						bodyParts[j].GetComponent<SpriteRenderer>().color = Color.white;
-						bodyParts [j].layer = 8;
-						var emni = bodyParts[j].GetComponent<ParticleSystem>().emission;
-						emni.enabled = false;
+						StopBerserk ();
 					}
 				}
 			}
+		}
+	}
+
+	public void StopBerserk() {
+		berserk = false;
+		for (int i = 0; i < bodyParts.Count; i++)
+		{
+			if (i == 0)
+				bodyParts[i].GetComponent<SpriteRenderer>().color = Color.white;
+			else
+				bodyParts[i].GetComponent<SpriteRenderer>().color = bodyPartColor;
+			bodyParts [i].layer = 8;
+			var emni = bodyParts[i].GetComponent<ParticleSystem>().emission;
+			emni.enabled = false;
 		}
 	}
 
@@ -541,8 +559,11 @@ public class CharacterController : MonoBehaviour {
 						bodyPart.GetComponent<SpriteRenderer> ().color = Color.red;     
 					}
 					yield return new WaitForSeconds (0.1f);
-					foreach (GameObject bodyPart in bodyParts) {
-						bodyPart.GetComponent<SpriteRenderer> ().color = Color.white;     
+					for (int j = 0; j < bodyParts.Count; j++) {
+						if (j == 0)
+							bodyParts [j].GetComponent<SpriteRenderer> ().color = Color.white;
+						else
+							bodyParts [j].GetComponent<SpriteRenderer> ().color = bodyPartColor;
 					}
 					yield return new WaitForSeconds (0.1f);
 				}

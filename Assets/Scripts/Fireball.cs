@@ -24,14 +24,21 @@ public class Fireball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.Translate(gameObject.transform.up * speed * Time.deltaTime, Space.World);
+        //	if (Input.GetMouseButtonUp(0) || Input.GetButtonUp("Fire1"))
+        //	{
+            //Shoot();
+	//	}
+
+		
+            gameObject.transform.Translate(gameObject.transform.up * speed * Time.deltaTime, Space.World);
         
+
         if (gameObject.transform.position.x > 20 || gameObject.transform.position.y > 20 || gameObject.transform.position.x < -20 || gameObject.transform.position.y < -20)
         {
 			RemoveFireball();
         }
 
-		if ((Input.GetMouseButton(0) || Input.GetButton("Fire1")) && !shoot)
+		/*if ((Input.GetMouseButton(0) || Input.GetButton("Fire1")) && !shoot)
 		{
 			transform.position = player.transform.position + (player.transform.up * 1);
 			transform.rotation = player.transform.rotation;
@@ -44,6 +51,7 @@ public class Fireball : MonoBehaviour
 				IncreaseDamage(damageIncrease * Time.deltaTime);
 			}
 		}
+        */
 		
 	}
 
@@ -61,8 +69,8 @@ public class Fireball : MonoBehaviour
     public void Shoot()
     {
         shoot = true;
-		var main = particlesystem.main;
-		main.simulationSpace = ParticleSystemSimulationSpace.World;
+		//var main = particlesystem.main;
+		//main.simulationSpace = ParticleSystemSimulationSpace.World;
 	}
 
 	public void RemoveFireball()

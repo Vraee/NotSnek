@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class EnemyDarkSpirit : EnemyController {
 	public float divisionDelay = 5f;
+	public GameObject secondPowerUp;
+	public GameObject thirdPowerUp;
+
 	private float baseStamina;
 	private float divisionTimer;
 	private bool divided = false;
 	private int divisionsAmount = 0;
 
-	static int ID;
+	//static int ID;
 
 	public int GetDivisionsAmount() {
 		return divisionsAmount;
@@ -20,7 +23,7 @@ public class EnemyDarkSpirit : EnemyController {
 	}
 
 	new void Start() {	
-		ID++;
+		//ID++;
 		base.Start ();
 		divisionTimer = Time.time + divisionDelay;
 		baseStamina = stamina;
@@ -43,10 +46,14 @@ public class EnemyDarkSpirit : EnemyController {
 
 
 	public override void MoveEnemy() {
-		//SSSOOOOON
 	}
 
 	public void Divide() {
+		if (divisionsAmount >= 0 && divisionsAmount < 3)
+			powerUpPrefab = secondPowerUp;
+		else
+			powerUpPrefab = thirdPowerUp;
+
 		StartCoroutine(Scale ());
 		EnemyDarkSpirit currentDarkSpirit = this;
 		baseStamina = baseStamina / 2;
@@ -71,6 +78,7 @@ public class EnemyDarkSpirit : EnemyController {
 		{
 			transform.localScale = Vector3.Lerp(startSize, targetSize, progress);
 			progress += Time.deltaTime;
+			gameObject.GetComponent<MoveOnPath> ().speedOnPath += Time.deltaTime;
 			yield return null;
 		}
 	}
