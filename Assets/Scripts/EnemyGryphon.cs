@@ -5,6 +5,8 @@ using UnityEngine;
 public class EnemyGryphon : EnemyController {
 	public Sprite normal;
 	public Sprite stone;
+	public float attackDelay = 2;
+	public float retreatSpeed;
 
 	public override void MoveEnemy() {
 		if (!GetAttacking()) {

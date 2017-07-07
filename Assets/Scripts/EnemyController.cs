@@ -5,10 +5,8 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public float speed;
-	public float retreatSpeed;
     public float stamina;
 	public float damageOutput;
-	public float attackDelay = 2;
     public GameObject powerUpPrefab;
 	public GameObject targetPlayerPart;
 
@@ -25,6 +23,8 @@ public class EnemyController : MonoBehaviour
 	private float timer;
 	private bool moving;
 	private bool vulnerable;
+	private float childAttackDelay;
+	private float childRetreatSpeed;
 
 	public float GetDamageOutput() {
 		return damageOutput;
@@ -84,7 +84,17 @@ public class EnemyController : MonoBehaviour
 		retreating = false;
 		enemyStartPos = gameObject.transform.position;
 
-		timer = Time.time + attackDelay;
+		if (this is EnemyEarlyBird) {
+			childAttackDelay = this.GetComponent<EnemyEarlyBird> ().attackDelay;
+			childRetreatSpeed = this.GetComponent<EnemyEarlyBird> ().retreatSpeed;
+			timer = Time.time + childAttackDelay;
+		}
+
+		if (this is EnemyGryphon) {
+			childAttackDelay = this.GetComponent<EnemyGryphon> ().attackDelay;
+			childRetreatSpeed = this.GetComponent<EnemyGryphon> ().retreatSpeed;
+			timer = Time.time + childAttackDelay;
+		}
 		moving = false;
 		vulnerable = true;
 	}
@@ -127,13 +137,13 @@ public class EnemyController : MonoBehaviour
 			attacking = true;
 			gameObject.GetComponent<MoveOnPath> ().SetOnPath (false);
         } else if (retreating) {
-			gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, enemyStartPos, retreatSpeed * Time.deltaTime);
+			gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, enemyStartPos, childRetreatSpeed * Time.deltaTime);
 
             if (gameObject.transform.position == enemyStartPos) {
                 retreating = false;
 				moving = false;
 				gameObject.GetComponent<MoveOnPath> ().SetOnPath (true);
-				timer = Time.time + attackDelay;
+				timer = Time.time + childAttackDelay;
             }
 
         } else if (attacking) {

@@ -3,24 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyEye : EnemyController {
-	public float frequency = 2f;  // Speed of sine movement
-	public float magnitude = 2f;   // Size of sine movement
-	private Vector3 axis;
-	private Vector3 pos;
-
-	float amplitudeX = -10.0f;
-	float amplitudeY = 5.0f;
-	float omegaX = 1f;
-	float omegaY = 5f;
-	float index;
-
-	private float spawnTimer;
 	public float spawnDelay = 0.5f;
 	public int spawnAmount;
+	public bool wall;
+	public float movementAmount;
+	public float amplitude;
+	/*public float turnPoint1;
+	public float turnPoint2;*/
 
-	static int spawned = 0;
-	static Vector3 originalPos;
+	public enum Direction {LeftRight, RightLeft, UpDown, DownUp};
+	public Direction direction;
 
+	private float spawnTimer;
+	private int spawned = 0;
+	private Vector3 originalPos;
+	private Vector3 pos;
+	private float index;
+	private Vector3 axis;
+	private bool turned;
+
+	private int GetSpawned() {
+		return spawned;
+	}
+
+	private void SetSpawned(int spawned) {
+		this.spawned = spawned;
+	}
+
+	private Vector3 GetOriginalPos() {
+		return originalPos;
+	}
+
+	private void SetOriginalPos(Vector3 originalPos) {
+		this.originalPos = originalPos;
+	}
 
 	// Use this for initialization
 	new void Start () {
@@ -29,8 +45,6 @@ public class EnemyEye : EnemyController {
 
 		if (spawned == 1) {
 			originalPos = this.transform.position;
-			pos = transform.position;
-
 		}
 
 		spawnTimer = Time.time + spawnDelay;
@@ -38,37 +52,42 @@ public class EnemyEye : EnemyController {
 		if (spawned < spawnAmount) 
 			Invoke ("CreateNew", spawnDelay);
 
-		pos = transform.position;
-		//DestroyObject(gameObject, 5.0f);
-		axis = transform.up;  // May or may not be the axis you want
+		if (wall)
+			pos = transform.position;
+		else
+			pos = originalPos;
+
+		turned = false;
 	}
 
-	/*new void Update() {
-		if (spawnAmount < 3 && Time.time >= spawnTimer) {
-			Debug.Log (spawnTimer);
-			EnemyEye newEye = Instantiate(this) as EnemyEye;
-			newEye.transform.position = originalPos;
-			Debug.Log (spawnTimer);
-			spawnTimer = Time.time + spawnDelay;
-			Debug.Log (spawnTimer);
-		}
-
-		base.Update ();
-	}*/
-
 	public override void MoveEnemy() {
-		/*pos += transform.right * Time.deltaTime * speed;
-		transform.position = pos + axis * Mathf.Sin (Time.time * frequency) * magnitude;*/
 
-		index += Time.deltaTime;
-		float x = amplitudeX * Mathf.Cos (omegaX * index);
-		float y = amplitudeY * Mathf.Sin (omegaY * index);
-		//Debug.Log ("x: " + x + " y: " + y + " amplitudeX: " + amplitudeX + " amplitudeY: " + amplitudeY + " omegaX: " + omegaX + " omegaY " + omegaY + " index: " + index);
-		transform.localPosition = new Vector3(x, y, 0);
+		if (direction == Direction.LeftRight) {
+			pos.x += movementAmount * Time.deltaTime;
+			index += Time.deltaTime;
+			pos.y = Mathf.Sin (index * speed) * amplitude;
+			transform.position = pos;
+		} else if (direction == Direction.RightLeft) {
+			pos.x -= movementAmount * Time.deltaTime;
+			index += Time.deltaTime;
+			pos.y = Mathf.Sin (index * speed) * amplitude;
+			transform.position = pos;
+		} else if (direction == Direction.UpDown) {
+			pos.y -= movementAmount * Time.deltaTime;
+			index += Time.deltaTime;
+			pos.x = Mathf.Sin (index * speed) * amplitude;
+			transform.position = pos;
+		} else {
+			pos.y += movementAmount * Time.deltaTime;
+			index += Time.deltaTime;
+			pos.x = Mathf.Sin (index * speed) * amplitude;
+			transform.position = pos;
+		}
 	}
 
 	private void CreateNew() {
 		EnemyEye newEye = Instantiate(this) as EnemyEye;
-		newEye.transform.position = originalPos;
+		newEye.SetOriginalPos (this.originalPos);
+		newEye.SetSpawned (spawned);
 	}
 }

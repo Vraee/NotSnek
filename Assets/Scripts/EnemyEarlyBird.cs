@@ -5,6 +5,8 @@ using UnityEngine;
 public class EnemyEarlyBird : EnemyController {
 
 	TrailRenderer _rend;
+	public float attackDelay = 2;
+	public float retreatSpeed;
 
 	new void Start(){
 		base.Start ();
