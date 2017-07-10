@@ -202,11 +202,14 @@ public class EnemyController : MonoBehaviour
 			Die ();
         }
     }
-    private void Die()
+
+	public virtual void Die()
     {
-        Instantiate(powerUpPrefab, transform.position, transform.rotation);
+		if (powerUpPrefab != null)
+        	Instantiate(powerUpPrefab, transform.position, transform.rotation);
         gameManager.IncreaseScore(1);
-        Destroy(gameObject);
+
+		Destroy (gameObject);
     }
 }
 

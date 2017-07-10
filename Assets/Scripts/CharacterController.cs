@@ -368,8 +368,6 @@ public class CharacterController : MonoBehaviour {
 
 		//Beacuse the tail is 3 parts long and the new part has to be added in front of it
 		bodyParts [bodyParts.Count - 3] = newBodyPart;
-		//Sets the body parts index on the bodyParts list (don't remember if there was point to this, can possibly be removed)
-        newBodyPart.gameObject.GetComponent<BodyPart>().SetListIndex(bodyParts.Count - 3);
 			
 		/*Adds the tail parts behind all the other parts; first two parts are just moved one index forward, the last one is added as a new list item.
 		Also puts the parts in the right order on top of each other when rendering (the first one is below everything, the other body and tail parts, the last one
