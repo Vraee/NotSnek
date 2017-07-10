@@ -15,15 +15,6 @@ public class BodyPart : MonoBehaviour {
 		StartCoroutine (Scale ());
 	}
 
-    public int GetListIndex()
-    {
-        return listIndex;
-    }
-
-    public void SetListIndex(int newListIndex) {
-        listIndex = newListIndex;
-    }
-
 	public bool GetIsHit () {
 		return isHit;
 	}
