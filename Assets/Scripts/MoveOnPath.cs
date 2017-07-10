@@ -14,7 +14,8 @@ public class MoveOnPath : MonoBehaviour {
     public float rotationSpeed = 5.0f;
     //true to slerp between points
     public bool Slerp;
-	//Defines whether the object moves in a loop or back and forth
+    //Defines whether the object moves in a loop or back and forth
+    public bool Rotation = true;
 	public bool looping;
 	public bool startClockwise;
 
@@ -90,11 +91,10 @@ public class MoveOnPath : MonoBehaviour {
 	public void MoveAlongPath() {
 		if (onPath) {
 			MoveTowardsNext ();
-			
 			if (distance <= reachDistance) {
 				if (!goingBack) {
-					currentWayPointID++;
-				} else {
+                    currentWayPointID++;
+                } else {
 					currentWayPointID--;
 				}
 			}
@@ -114,15 +114,18 @@ public class MoveOnPath : MonoBehaviour {
 		transform.position = Vector3.MoveTowards (transform.position, pathToFollow.pathObjects [currentWayPointID].position, Time.deltaTime * speedOnPath);
 
 		if (pathToFollow.pathObjects [currentWayPointID].position != Vector3.zero) {
-			var rotation = Quaternion.LookRotation (pathToFollow.pathObjects [currentWayPointID].position, transform.position);
-			rotation.y = 0;
-			rotation.x = 0;
-			if (Slerp) {
-				transform.rotation = Quaternion.Slerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-			} else {
-				transform.rotation = Quaternion.Lerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
-			}
-		}
+            if (Rotation)
+            {
+                var rotation = Quaternion.LookRotation (pathToFollow.pathObjects [currentWayPointID].position, transform.position);
+			    rotation.y = 0;
+		    	rotation.x = 0;
+			    if (Slerp) {
+				    transform.rotation = Quaternion.Slerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+			    } else {
+				    transform.rotation = Quaternion.Lerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+			    }
+            }
+        }
 	}
 
     //Destroys the object :)

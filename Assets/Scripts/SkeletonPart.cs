@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkeletonPart : MonoBehaviour {
+public class SkeletonPart : EnemyController {
 
     private EnemySkeletonSnake parentScript;
     private int listIndex;
-    private float bodyPartHP;
+    public float bodyPartHP;
     private bool isHit;
     private GameObject enemy;
 
+    public override void MoveEnemy()
+    {
+        base.MoveEnemy();
+    }
+
     // Use this for initialization
-    void Start()
+    new void Start()
     {
         parentScript = GetComponentInParent<EnemySkeletonSnake>();
         bodyPartHP = parentScript.GetBodyPartHP();
@@ -21,8 +26,8 @@ public class SkeletonPart : MonoBehaviour {
 
 
     // Update is called once per frame
-    void Update () {
-		
+    new void Update () {
+
 	}
 
     IEnumerator Scale()
@@ -36,4 +41,5 @@ public class SkeletonPart : MonoBehaviour {
             yield return null;
         }
     }
+    
 }

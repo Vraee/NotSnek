@@ -19,7 +19,7 @@ public class EnemyController : MonoBehaviour
     private bool inflictDamage;
 	protected bool attacking;
     protected bool retreating;
-	private Vector3 destinationPoint;
+	public Vector3 destinationPoint;
     private Vector3 attackTarget;
     private Vector3 enemyStartPos;
 	private float timer;
@@ -110,7 +110,6 @@ public class EnemyController : MonoBehaviour
 	public void RotateToPlayer()
 	{
             destinationPoint = targetPlayerPart.transform.position;
-        
             Vector3 target = destinationPoint - transform.position;
             float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
             Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);

@@ -2,39 +2,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemySkeletonSnake : MonoBehaviour
+public class EnemySkeletonSnake : EnemyController
 {
     public GameObject head;
     public GameObject tail;
     public GameObject bodyPrefab;
     public GameObject legPrefab;
+    private Vector3 destinationPoint2;
     public int startSize;
-    public float speed;
     public float bodyPartSpeed;
     public float minDistance;
     public float bodyPartDistance;
     public float bodyPartHP;
+    public Transform target;
     private List<GameObject> bodyParts;
     private List<GameObject> tailParts;
     private float distance;
-    private GameManager gameManager;
     private int orderInLayer = -1;
     private int bodyPartsAmount;
     private float HP;
     private float comparableHP;
+    private Vector3 startPos;
+
+    public float floatSpan = 0.25f;
+    private float startX;
 
     public float GetBodyPartHP()
     {
         return bodyPartHP;
     }
 
-    // Use this for initialization
-    void Start()
+    public override void MoveEnemy()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        base.MoveEnemy();
+    }
+
+    // Use this for initialization
+    new void Start()
+    {
+        startPos = head.transform.position;
         bodyParts = new List<GameObject>();
         tailParts = new List<GameObject>();
         bodyParts.Add(head);
+
         for (int i = 0; i < tail.transform.childCount; i++)
         {
             bodyParts.Add(tail.transform.GetChild(i).gameObject);
@@ -48,33 +58,53 @@ public class EnemySkeletonSnake : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+    new void Update()
     {
         Move();
+        Rotate();
     }
 
     void Move()
     {
-        head.transform.Translate(Vector3.up* Time.deltaTime * speed);
-        
         for (int i = 1; i < bodyParts.Count; i++)
         {
-
+            
             distance = Vector3.Distance(bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
             Vector3 newPosition = bodyParts[i - 1].transform.position;
             float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
-
-            if (T > 0.5f)
-            {
-                T = 0.5f;
-            }
+            
 
             if (distance > bodyPartDistance)
             {
                 bodyParts[i].transform.position = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
-                bodyParts[i].transform.rotation = Quaternion.Lerp(bodyParts[i].transform.rotation, bodyParts[i - 1].transform.rotation, T);
+
+                if (i == 1)
+                {
+                    destinationPoint2 = bodyParts[i - 1].transform.position;
+                    Vector3 target = destinationPoint2 - bodyParts[i].transform.position;
+                    float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
+                    Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+                    bodyParts[i].transform.rotation = Quaternion.Slerp(bodyParts[i].transform.rotation, q, T);
+
+                    //bodyParts [i].transform.rotation = Quaternion.Lerp (bodyParts [i].transform.rotation, Quaternion.LookRotation(bodyParts[i].transform.position), T);
+                }
+                else
+                {
+                    bodyParts[i].transform.rotation = Quaternion.Lerp(bodyParts[i].transform.rotation, bodyParts[i - 1].transform.rotation, T);
+                }
             }
         }
+    }
+
+    void Rotate()
+    {
+        destinationPoint = targetPlayerPart.transform.position;
+        float camDis = Camera.main.transform.position.y - head.transform.position.y;
+        
+        float AngleRad = Mathf.Atan2(destinationPoint.y - head.transform.position.y, destinationPoint.x - head.transform.position.x);
+        float angle = (180 / Mathf.PI) * AngleRad;
+
+        head.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90f));
     }
 
     void AddBodyPart()
