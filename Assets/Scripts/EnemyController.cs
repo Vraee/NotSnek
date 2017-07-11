@@ -13,7 +13,6 @@ public class EnemyController : MonoBehaviour
     private GameManager gameManager;
     private SpriteRenderer sprite;
     private Color hitColor = Color.red;
-    private int dir = 0;
     private bool inflictDamage;
 	protected bool attacking;
     protected bool retreating;
@@ -206,9 +205,8 @@ public class EnemyController : MonoBehaviour
     {
 		if (powerUpPrefab != null)
         	Instantiate(powerUpPrefab, transform.position, transform.rotation);
-        gameManager.IncreaseScore(1);
-
-		Destroy (gameObject);
+            gameManager.IncreaseScore(1);
+		    Destroy (gameObject);
     }
 }
 
