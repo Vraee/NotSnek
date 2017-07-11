@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class EnemyEye : EnemyController {
 	public float spawnDelay = 0.5f;
+	public float destroyDelay = 10f;
 	//The amount of enemies to be spawned on the same "path"
 	public int spawnAmount;
-	//Should enemies move in a queue or together as a wall
-	public bool moveAsWall;
 	public float movementAmount;
 	public float amplitude;
-
+	public bool destroyAfterTime;
+	//Should enemies move in a queue or together as a wall
+	public bool moveAsWall;
+	public bool switchStartDirection;
 	//Defines whether the enemy should move back and forth or not
 	public bool moveBackAndForth;
 	//The point where enemy should turn back, not needed if "turnBack" is false
@@ -21,7 +23,7 @@ public class EnemyEye : EnemyController {
 	public enum Direction {LeftRight, RightLeft, UpDown, DownUp};
 	public Direction direction;
 
-	private float spawnTimer;
+	private float destroyTimer;
 	//The amount of spawned enemies so far; couldn't use a static variable, since it would cause problems when there are more than one enemy at the start of the game
 	private int spawned = 0;
 	private Vector3 originalPos;
@@ -47,14 +49,13 @@ public class EnemyEye : EnemyController {
 	// Use this for initialization
 	new void Start () {
 		base.Start ();
+		destroyTimer = Time.time + destroyDelay;
 		spawned++;
 
 		if (spawned == 1) {
 			originalPos = this.transform.position;
 		}
-
-		spawnTimer = Time.time + spawnDelay;
-
+			
 		if (spawned < spawnAmount)
 			Invoke ("CreateNew", spawnDelay);
 
@@ -71,7 +72,30 @@ public class EnemyEye : EnemyController {
 			turnPoint2 = tmpTurnPoint1;
 		}	
 
+
+
+		/*if (turnPoint1 == 0) {
+			if (direction == Direction.LeftRight || direction == Direction.RightLeft)
+				turnPoint1 = -pos.x;
+			else
+				turnPoint1 = -pos.y;
+		}
+
+		if (turnPoint2 == 0) {
+			if (direction == Direction.LeftRight || direction == Direction.RightLeft)
+				turnPoint1 = pos.x;
+			else
+				turnPoint1 = pos.y;
+		}*/
+
 		RandomisePowerUp ();
+	}
+
+	new void Update() {
+		base.Update ();
+
+		if (Time.time >= destroyTimer && destroyAfterTime)
+			Die ();
 	}
 
 	public override void MoveEnemy() {
@@ -81,19 +105,32 @@ public class EnemyEye : EnemyController {
 		if (direction == Direction.LeftRight) {
 			pos.x += movementAmount * Time.deltaTime;
 			tmpPos.x = pos.x;
-			tmpPos.y = pos.y + Mathf.Sin (index * speed) * amplitude;
+
+			if (!switchStartDirection)
+				tmpPos.y = pos.y + Mathf.Sin (index * speed) * amplitude;
+			else
+				tmpPos.y = pos.y - Mathf.Sin (index * speed) * amplitude;
 		} else if (direction == Direction.RightLeft) {
 			pos.x -= movementAmount * Time.deltaTime;
 			tmpPos.x = pos.x;
-			tmpPos.y = pos.y + Mathf.Sin (index * speed) * amplitude;
+			if (!switchStartDirection)
+				tmpPos.y = pos.y + Mathf.Sin (index * speed) * amplitude;
+			else
+				tmpPos.y = pos.y - Mathf.Sin (index * speed) * amplitude;
 		} else if (direction == Direction.UpDown) {
 			pos.y -= movementAmount * Time.deltaTime;
 			tmpPos.y = pos.y;
-			tmpPos.x = pos.x +Mathf.Sin (index * speed) * amplitude;
+			if (!switchStartDirection)
+				tmpPos.x = pos.x + Mathf.Sin (index * speed) * amplitude;
+			else
+				tmpPos.x = pos.x - Mathf.Sin (index * speed) * amplitude;
 		} else {
 			pos.y += movementAmount * Time.deltaTime;
 			tmpPos.y = pos.y;
-			tmpPos.x = pos.x + Mathf.Sin (index * speed) * amplitude;
+			if (!switchStartDirection)
+				tmpPos.x = pos.x + Mathf.Sin (index * speed) * amplitude;
+			else
+				tmpPos.x = pos.x - Mathf.Sin (index * speed) * amplitude;
 		}
 
 		transform.position = tmpPos;

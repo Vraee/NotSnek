@@ -48,7 +48,7 @@ public class EnemyDarkSpirit : EnemyController {
 	}
 
 	public void Divide() {
-		if (divisionsAmount >= 0 && divisionsAmount < 3)
+		if (divisionsAmount >= 0 && divisionsAmount < 2)
 			powerUpPrefab = secondPowerUp;
 		else
 			powerUpPrefab = thirdPowerUp;
