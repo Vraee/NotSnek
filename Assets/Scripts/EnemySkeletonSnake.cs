@@ -20,9 +20,12 @@ public class EnemySkeletonSnake : EnemyController
     private float distance;
     private int orderInLayer = -1;
     private int bodyPartsAmount;
+    private bool takingDamage;
     private float HP;
     private float comparableHP;
     private Vector3 startPos;
+
+    private Color32 bodyPartColor = new Color32(112, 131, 163, 255);
 
     public float floatSpan = 0.25f;
     private float startX;
@@ -40,11 +43,12 @@ public class EnemySkeletonSnake : EnemyController
     // Use this for initialization
     new void Start()
     {
+        base.Start();
+        takingDamage = false;
         startPos = head.transform.position;
         bodyParts = new List<GameObject>();
         tailParts = new List<GameObject>();
         bodyParts.Add(head);
-
         for (int i = 0; i < tail.transform.childCount; i++)
         {
             bodyParts.Add(tail.transform.GetChild(i).gameObject);
@@ -158,6 +162,63 @@ public class EnemySkeletonSnake : EnemyController
         //Debug.Log (bodyPartsAmount);
     }
 
-  
+    public void RemoveBodyPart(int removableIndex)
+    {
+
+        GameObject removablePart = bodyParts[removableIndex];
+
+        if (HP > 0 && removableIndex != 0 && removableIndex != bodyParts.Count - tailParts.Count)
+        {
+            bodyParts.Remove(removablePart);
+            Destroy(removablePart);
+            
+            bodyPartsAmount--;
+        }
+
+        if (HP <= 0)
+        {
+            Die();
+        }
+    }
+
+    IEnumerator EnemyDamage(SkeletonPart hitPart) //USED TO BE "TakeDamage"
+    {
+            float enemyDamage = hitPart.GetEnemy().GetComponent<Fireball>().damage;
+            ReduceHP(enemyDamage);
+        
+            if (!takingDamage)
+            {
+                takingDamage = true;
+                for (int i = 0; i < 2; i++)
+                {
+                    foreach (GameObject bodyPart in bodyParts)
+                    {
+                        bodyPart.GetComponent<SpriteRenderer>().color = Color.red;
+                    }
+                    yield return new WaitForSeconds(0.1f);
+                    for (int j = 0; j < bodyParts.Count; j++)
+                    {
+                        if (j == 0)
+                            bodyParts[j].GetComponent<SpriteRenderer>().color = Color.white;
+                        else
+                            bodyParts[j].GetComponent<SpriteRenderer>().color = bodyPartColor;
+                    }
+                    yield return new WaitForSeconds(0.1f);
+                }
+                takingDamage = false;
+            }
+        }
+
+    public void ReduceHP(float lostHP)
+    {
+        HP = HP - lostHP;
+        if (HP <= comparableHP)
+        {
+            comparableHP = comparableHP - bodyPartHP;
+            RemoveBodyPart(bodyPartsAmount);
+        }
+    }
+
+
 
 }
