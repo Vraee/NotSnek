@@ -12,6 +12,8 @@ public class EnemyDarkSpirit : EnemyController {
 	private bool divided = false;
 	private int divisionsAmount = 0;
 
+	//static int ID;
+
 	public int GetDivisionsAmount() {
 		return divisionsAmount;
 	}
@@ -21,12 +23,11 @@ public class EnemyDarkSpirit : EnemyController {
 	}
 
 	new void Start() {	
+		//ID++;
 		base.Start ();
 		divisionTimer = Time.time + divisionDelay;
 		baseStamina = stamina;
-
-		if (divisionsAmount == 3)
-			RandomisePowerUp ();
+		//Debug.Log ("ID: " + ID + " stamina: " + stamina + " baseStamina " + baseStamina);
 	}
 
 	new void Update() {
@@ -48,7 +49,7 @@ public class EnemyDarkSpirit : EnemyController {
 	}
 
 	public void Divide() {
-		if (divisionsAmount >= 0 && divisionsAmount < 2)
+		if (divisionsAmount >= 0 && divisionsAmount < 3)
 			powerUpPrefab = secondPowerUp;
 		else
 			powerUpPrefab = thirdPowerUp;
@@ -61,7 +62,6 @@ public class EnemyDarkSpirit : EnemyController {
 		EnemyDarkSpirit newDarkSpirit = Instantiate(currentDarkSpirit) as EnemyDarkSpirit;
 		newDarkSpirit.StartScaling ();
 		newDarkSpirit.SetDivisionsAmount (divisionsAmount);
-		newDarkSpirit.transform.SetParent(this.transform.parent);
 	}
 
 	public void StartScaling() {
@@ -81,20 +81,5 @@ public class EnemyDarkSpirit : EnemyController {
 			gameObject.GetComponent<MoveOnPath> ().speedOnPath += Time.deltaTime;
 			yield return null;
 		}
-	}
-
-	private void RandomisePowerUp() {
-		int random = Random.Range (0, 2);
-
-		if (random == 0)
-			powerUpPrefab = null;
-	}
-
-	public override void Die() {
-		//If all the dark spirits on path have been destroyed, destroys also the DarkSpiritComponents gameobject (and therefore the path)
-		if (transform.parent.transform.childCount == 1) 
-			Destroy (transform.parent.transform.parent.gameObject);
-
-		base.Die ();
 	}
 }
