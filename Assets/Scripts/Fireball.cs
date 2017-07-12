@@ -12,24 +12,32 @@ public class Fireball : MonoBehaviour
 	public float damageIncrease;
 	private ParticleSystem particlesystem;
 
+
+    private Camera cam;
+    private float viewHeight;
+    private float viewWidth;
+
     // Use this for initialization
     void Start()
     {
 		//Debug.Log("Ya'll need some jeesus");
 		//damage = GameObject.Find("Player").GetComponent<CharacterController>().fireballDamage;
 		particlesystem = GetComponent<ParticleSystem>();
+        cam = Camera.main;
+        viewHeight = 2f * cam.orthographicSize;
+        viewWidth = viewHeight * cam.aspect;
 
-	}
+    }
 
     // Update is called once per frame
     void Update()
     {
         //	if (Input.GetMouseButtonUp(0) || Input.GetButtonUp("Fire1"))
         //	{
-            //Shoot();
-	//	}
+        //Shoot();
+        //	}
 
-		
+        CheckLocation();
             gameObject.transform.Translate(gameObject.transform.up * speed * Time.deltaTime, Space.World);
         
 
@@ -64,6 +72,27 @@ public class Fireball : MonoBehaviour
     public void IncreaseDamage(float damage)
     {
         this.damage = this.damage + damage;
+    }
+
+    private void CheckLocation()
+    {
+        if (gameObject.transform.position.y >= viewHeight / 2)
+        {
+            Destroy();
+        }
+        if (gameObject.transform.position.y <= -viewHeight / 2)
+        {
+            Destroy();
+        }
+        if (gameObject.transform.position.x >= viewWidth / 2)
+        {
+            Destroy();
+        }
+        if (gameObject.transform.position.x <= -viewWidth / 2)
+        {
+            Destroy();
+        }
+
     }
 
     public void Shoot()

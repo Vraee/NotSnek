@@ -25,7 +25,7 @@ public class EnemySkeletonSnake : EnemyController
     private float comparableHP;
     private Vector3 startPos;
 
-    private Color32 bodyPartColor = new Color32(112, 131, 163, 255);
+    public Color32 bodyPartColor = new Color32(112, 131, 163, 255);
 
     public float floatSpan = 0.25f;
     private float startX;

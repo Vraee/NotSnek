@@ -10,9 +10,16 @@ public class PowerUp : MonoBehaviour {
     public float acceleration;
     private bool pulling;
 
-	void Start()
+    private Camera cam;
+    private float viewHeight;
+    private float viewWidth;
+
+    void Start()
 	{
-		target = GameObject.Find ("Head");
+        cam = Camera.main;
+        viewHeight = 2f * cam.orthographicSize;
+        viewWidth = viewHeight * cam.aspect;
+        target = GameObject.Find ("Head");
 	}
 
     void Update()
@@ -24,7 +31,7 @@ public class PowerUp : MonoBehaviour {
         {
             PullTowards();
         }
-        
+        CheckLocation();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -67,4 +74,25 @@ public class PowerUp : MonoBehaviour {
             
 		}
 	}
+
+    private void CheckLocation()
+    {
+        if (gameObject.transform.position.y >= (viewHeight / 2) + transform.localScale.y)
+        {
+            Destroy(gameObject);
+        }
+        if (gameObject.transform.position.y <= (-viewHeight / 2) - transform.localScale.y)
+        {
+            Destroy(gameObject);
+        }
+        if (gameObject.transform.position.x >= (viewWidth / 2) + transform.localScale.x)
+        {
+            Destroy(gameObject);
+        }
+        if (gameObject.transform.position.x <= (-viewWidth / 2) - transform.localScale.x)
+        {
+            Destroy(gameObject);
+        }
+
+    }
 }
