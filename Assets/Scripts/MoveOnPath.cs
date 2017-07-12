@@ -26,7 +26,7 @@ public class MoveOnPath : MonoBehaviour {
 	private int endIndex;
 	private bool onPath;
 	private bool pathReached;
-	private float distance;
+	public float distance;
 
 	public bool GetOnPath() {
 		return onPath;

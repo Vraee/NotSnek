@@ -35,6 +35,11 @@ public class EnemySkeletonSnake : EnemyController
     public float floatSpan = 0.25f;
     private float startX;
 
+	private float index;
+	private Vector3 pos;
+	private Vector3 _startPosition;
+	private Vector3 prevPos;
+
     public float GetBodyPartHP()
     {
         return bodyPartHP;
@@ -64,6 +69,9 @@ public class EnemySkeletonSnake : EnemyController
         {
             AddBodyPart();
         }
+
+		pos = transform.position;
+		_startPosition = bodyParts[1].transform.position;
     }
 
 
@@ -82,26 +90,101 @@ public class EnemySkeletonSnake : EnemyController
             distance = Vector3.Distance(bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
             Vector3 newPosition = bodyParts[i - 1].transform.position;
             float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
+
+			if (T > 0.5f)
+			{
+				T = 0.5f;
+			}
             
 
-            if (distance > bodyPartDistance)
+            if (true)
             {
-                bodyParts[i].transform.position = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
+				prevPos = transform.position;
+				Vector3 tmpPos = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
+				bodyParts[i].transform.position = tmpPos;
 
-                if (i == 1)
-                {
-                    destinationPoint2 = bodyParts[i - 1].transform.position;
+				//if (i == 1) //PLS DON'T REMOVE ANYTHING HERE PLZ-------------------------------------------------------------------------------------------V T.VREEe
+                //{
+					//index += Time.deltaTime;
+					/*Vector3 tmpPos = new Vector3(0, 0, 0);
+					//pos.y += 5 * Time.deltaTime;
+					//tmpPos.y = pos.y;
+					tmpPos.y = newPos.y;
+					tmpPos.x = newPos.x + Mathf.Sin(index * speed) * 0.5f;
+
+					transform.position = tmpPos;
+					Debug.Log(tmpPos);*/
+
+					/*Vector3 nextPointPos = head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[head.GetComponent<MoveOnPath>().currentWayPointID].position;
+					float distX;
+					float distY;
+					if (Mathf.Abs(nextPointPos.x) > Mathf.Abs(bodyParts[i].transform.position.x))
+						distX = Mathf.Abs(nextPointPos.x) - Mathf.Abs(bodyParts[i].transform.position.x);
+					else
+						distX = Mathf.Abs(bodyParts[i].transform.position.x) - Mathf.Abs(nextPointPos.x);
+
+					if (Mathf.Abs(nextPointPos.y) > Mathf.Abs(bodyParts[i].transform.position.y))
+						distY = Mathf.Abs(nextPointPos.y) - Mathf.Abs(bodyParts[i].transform.position.y);
+					else
+						distY = Mathf.Abs(bodyParts[i].transform.position.y) - Mathf.Abs(nextPointPos.y);
+
+					//if (Vector3.Distance(head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[head.GetComponent<MoveOnPath>().currentWayPointID].position, transform.position) > head.GetComponent<MoveOnPath>().distance)
+					if (distX > head.GetComponent<MoveOnPath>().distance)
+					{
+						bodyParts[i].transform.position = tmpPos + new Vector3(0.0f, Mathf.Sin(Time.time * speed), 0.0f) * 0.5f;
+						//Debug.Log("y");
+					}
+
+					//if (Vector3.Distance(head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[head.GetComponent<MoveOnPath>().currentWayPointID].position, transform.position) > head.GetComponent<MoveOnPath>().distance)
+					if (distY > head.GetComponent<MoveOnPath>().distance)
+					{
+						bodyParts[i].transform.position = tmpPos + new Vector3(Mathf.Sin(Time.time * speed), 0.0f, 0.0f) * 0.5f;
+						//Debug.Log("x");
+					}
+
+					/*Vector3 nextPointPos = head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[head.GetComponent<MoveOnPath>().currentWayPointID].position;
+					float distX;
+					float distY;
+
+					if (Mathf.Abs(nextPointPos.x) > Mathf.Abs(bodyParts[i].transform.position.x))
+						distX = Mathf.Abs(nextPointPos.x) - Mathf.Abs(bodyParts[i].transform.position.x);
+					else
+						distX = Mathf.Abs(bodyParts[i].transform.position.x) - Mathf.Abs(nextPointPos.x);
+
+					if (Mathf.Abs(nextPointPos.y) > Mathf.Abs(bodyParts[i].transform.position.y))
+						distY = Mathf.Abs(nextPointPos.y) - Mathf.Abs(bodyParts[i].transform.position.y);
+					else
+						distY = Mathf.Abs(bodyParts[i].transform.position.y) - Mathf.Abs(nextPointPos.y);
+
+					bodyParts[i].transform.position = tmpPos + new Vector3(distY * Mathf.Sin(index), distX * Mathf.Sin(index), 0.0f);
+					Debug.Log(head.GetComponent<MoveOnPath>().currentWayPointID);
+					Debug.Log(nextPointPos + " distX " + distX + " distY: " + distY + " snekpos " + bodyParts[i].transform.position);*/
+
+					//Debug.Log(transform.position);
+
+                    /*destinationPoint2 = bodyParts[i - 1].transform.position;
                     Vector3 target = destinationPoint2 - bodyParts[i].transform.position;
                     float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
                     Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-                    bodyParts[i].transform.rotation = Quaternion.Slerp(bodyParts[i].transform.rotation, q, T);
+                    bodyParts[i].transform.rotation = Quaternion.Slerp(bodyParts[i].transform.rotation, q, 5 * T);
+
+					/*float AngleRad = Mathf.Atan2(destinationPoint2.y - bodyParts[i].transform.position.y, destinationPoint2.x - bodyParts[i].transform.position.x);
+					float angle2 = (180 / Mathf.PI) * AngleRad;
+
+					bodyParts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle2 - 90f));*/
 
                     //bodyParts [i].transform.rotation = Quaternion.Lerp (bodyParts [i].transform.rotation, Quaternion.LookRotation(bodyParts[i].transform.position), T);
-                }
-                else
+                //}
+                /*else
                 {
                     bodyParts[i].transform.rotation = Quaternion.Lerp(bodyParts[i].transform.rotation, bodyParts[i - 1].transform.rotation, T);
-                }
+                }*/
+				destinationPoint2 = bodyParts[i - 1].transform.position;
+				Vector3 target = destinationPoint2 - bodyParts[i].transform.position;
+				float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
+				Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+				bodyParts[i].transform.rotation = Quaternion.Slerp(bodyParts[i].transform.rotation, q, 5 * T);
+
             }
         }
     }
