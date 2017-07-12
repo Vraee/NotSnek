@@ -8,19 +8,24 @@ public class EnemySkeletonSnake : EnemyController
     public GameObject tail;
     public GameObject bodyPrefab;
     public GameObject legPrefab;
+    public GameObject fireBall;
     private Vector3 destinationPoint2;
     public int startSize;
     public float bodyPartSpeed;
     public float minDistance;
     public float bodyPartDistance;
     public float bodyPartHP;
+    public float shootDelay;
+    public float fireballDamage;
     public Transform target;
+    private GameObject fireball;
     private List<GameObject> bodyParts;
     private List<GameObject> tailParts;
     private float distance;
     private int orderInLayer = -1;
     private int bodyPartsAmount;
     private bool takingDamage;
+    private bool shooting;
     private float HP;
     private float comparableHP;
     private Vector3 startPos;
@@ -44,6 +49,7 @@ public class EnemySkeletonSnake : EnemyController
     new void Start()
     {
         base.Start();
+     //   InvokeRepeating("Shoot", 2, shootDelay);
         takingDamage = false;
         startPos = head.transform.position;
         bodyParts = new List<GameObject>();
@@ -219,6 +225,16 @@ public class EnemySkeletonSnake : EnemyController
         }
     }
 
-
+    private void Shoot()
+    {
+        if (!shooting) return;
+        Vector3 playerPos = head.transform.position;
+        Vector3 playerDirection = head.transform.up;
+        Quaternion playerRotation = head.transform.rotation;
+        float spawnDistance = 1;
+        Vector3 spawnPos = playerPos + playerDirection * spawnDistance;
+        fireball = Instantiate(fireBall, spawnPos, head.transform.rotation);
+        fireball.GetComponent<Fireball>().damage = fireballDamage;
+    }
 
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemyEye : EnemyController {
 	public float spawnDelay = 0.5f;
+    private Animator anime;
+    public float blinkDelay = 3;
 	public float destroyDelay = 10f;
 	//The amount of enemies to be spawned on the same "path"
 	public int spawnAmount;
@@ -49,7 +51,9 @@ public class EnemyEye : EnemyController {
 	// Use this for initialization
 	new void Start () {
 		base.Start ();
-		destroyTimer = Time.time + destroyDelay;
+        anime = GetComponent<Animator>();
+        InvokeRepeating("Blink", Random.Range(0.1f, 3f), blinkDelay);
+        destroyTimer = Time.time + destroyDelay;
 		spawned++;
 
 		if (spawned == 1) {
@@ -171,4 +175,10 @@ public class EnemyEye : EnemyController {
 		if (random == 0)
 			powerUpPrefab = null;
 	}
+
+    private void Blink()
+    {
+        anime.Play("Blink");
+    }
+
 }
