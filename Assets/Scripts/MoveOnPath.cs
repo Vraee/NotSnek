@@ -27,6 +27,7 @@ public class MoveOnPath : MonoBehaviour {
 	private bool onPath;
 	private bool pathReached;
 	public float distance;
+	private Vector3 destinationPoint;
 
 	public bool GetOnPath() {
 		return onPath;
@@ -116,13 +117,15 @@ public class MoveOnPath : MonoBehaviour {
 		if (pathToFollow.pathObjects [currentWayPointID].position != Vector3.zero) {
             if (Rotation)
             {
-                var rotation = Quaternion.LookRotation (pathToFollow.pathObjects [currentWayPointID].position, transform.position);
-			    rotation.y = 0;
-		    	rotation.x = 0;
+				destinationPoint = pathToFollow.pathObjects[currentWayPointID].position;
+				Vector3 target = destinationPoint - transform.position;
+				float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
+				Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+
 			    if (Slerp) {
-				    transform.rotation = Quaternion.Slerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+					transform.rotation = Quaternion.Slerp(transform.rotation, q, rotationSpeed * Time.deltaTime);
 			    } else {
-				    transform.rotation = Quaternion.Lerp (transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+					transform.rotation = Quaternion.Lerp(transform.rotation, q, rotationSpeed * Time.deltaTime);
 			    }
             }
         }

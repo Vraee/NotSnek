@@ -44,8 +44,8 @@ public class EnemySkeletonSnake : EnemyController
 	private int currentWayPointID = 0;
 
 
-	/*float fMagnitude = 5f;
-	Vector3 v3Axis = new Vector3(0.5f, 0.5f, 0.0f);*/
+	float fMagnitude = 2f;
+	Vector3 v3Axis = new Vector3(0.5f, 0.0f, 0.0f);
 
     public float GetBodyPartHP()
     {
@@ -74,6 +74,9 @@ public class EnemySkeletonSnake : EnemyController
 
 		for (int i = 0; i < bodyParts.Count; i++) {
 			bodyParts [i].GetComponent<SkeletonPart> ().SetStartPos (bodyParts[0].transform.position);
+			bodyParts[i].GetComponent<SkeletonPart>().SetStartX(bodyParts[0].transform.position.x);
+			bodyParts[i].GetComponent<SkeletonPart>().SetStartY(bodyParts[0].transform.position.y);
+
 		}
 
 		//pos = bodyParts[0].transform.position;
@@ -81,7 +84,7 @@ public class EnemySkeletonSnake : EnemyController
 		startX = head.transform.position.x;
 		//_startPosition = bodyParts[1].transform.position;
 
-		//v3Axis.Normalize();
+		v3Axis.Normalize();
 
     }
 
@@ -103,9 +106,10 @@ public class EnemySkeletonSnake : EnemyController
     {
         for (int i = 1; i < bodyParts.Count; i++)
         {
-            
             distance = Vector3.Distance(bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
-            Vector3 newPosition = bodyParts[i - 1].transform.position;
+			Vector3 newPosition;
+			newPosition = bodyParts[i - 1].transform.position;
+
             float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
 
 			if (T > 0.5f)
@@ -118,18 +122,33 @@ public class EnemySkeletonSnake : EnemyController
             {
 				Vector3 tmpPos = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
 				bodyParts[i].transform.position = tmpPos;
+
 				/*bodyParts [i].GetComponent<SkeletonPart> ().SetIndex (bodyParts[i].GetComponent<SkeletonPart>().GetIndex() + Time.deltaTime);
-				Vector3 tmpPos = new Vector3 (0, 0, 0);
-				Vector3 pos = bodyParts [i].GetComponent<SkeletonPart> ().GetStartPos ();
-				pos.y += 4 * Time.deltaTime;
+				Vector3 tmpPos = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
+				Vector3 pos = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
+				//pos.y += 5 * Time.deltaTime;
 				tmpPos.y = pos.y;
 				Debug.Log (tmpPos.x);
-				tmpPos.x = pos.x + Mathf.Sin (bodyParts[i].GetComponent<SkeletonPart>().GetIndex() * speed) * 0.5f;
+				tmpPos.x = pos.x + Mathf.Sin(bodyParts[i].GetComponent<SkeletonPart>().GetIndex() * speed) * 0.5f;
+		
 				Debug.Log (tmpPos.x);
 				bodyParts[i].transform.position = tmpPos;
 				bodyParts [i].GetComponent<SkeletonPart> ().SetStartPos (pos);
 				Debug.Log (bodyParts[i].transform.position.x);*/
 
+				/*Vector3 tempPos = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
+
+				if (head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[currentWayPointID].position.y != head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[prevWaypointID].position.y)
+				{
+					tempPos.x = startX + Mathf.Sin(Time.time * speed) * 2;
+					startY = bodyParts[i].transform.position.y;
+				}
+				if (head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[currentWayPointID].position.x != head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[prevWaypointID].position.x)
+				{
+					tempPos.y = startY + Mathf.Sin(Time.time * speed) * 2;
+					startX = bodyParts[i].transform.position.x;
+				}
+				bodyParts[i].transform.position = tempPos;*/
 
 				destinationPoint2 = bodyParts[i - 1].transform.position;
 				Vector3 target = destinationPoint2 - bodyParts[i].transform.position;
@@ -142,7 +161,7 @@ public class EnemySkeletonSnake : EnemyController
     }
 
 	void MoveHead() {
-		Vector3 tempPos = head.transform.position;
+		/*Vector3 tempPos = head.transform.position;
 
 		if (head.GetComponent<MoveOnPath> ().pathToFollow.pathObjects [currentWayPointID].position.y != head.GetComponent<MoveOnPath> ().pathToFollow.pathObjects [prevWaypointID].position.y) {
 			tempPos.x = startX + Mathf.Sin (Time.time * speed) * 2;
@@ -154,9 +173,9 @@ public class EnemySkeletonSnake : EnemyController
 			startX = head.transform.position.x;
 		}
 		
-		head.transform.position = tempPos;
+		head.transform.position = tempPos;*/
 
-		//head.transform.localPosition = v3Axis * Mathf.Sin (Time.time) * fMagnitude;
+		head.transform.localPosition = v3Axis * Mathf.Sin (Time.time * speed) * fMagnitude;
 
 	}
 
