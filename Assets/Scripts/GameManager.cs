@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour {
         multiplier = player.GetBodyPartsAmount();
 		gameTime = timeToNextSpawn[0];
         greetingsText.enabled = false;
+    
     }
 
     // Update is called once per frame
