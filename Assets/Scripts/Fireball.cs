@@ -78,19 +78,19 @@ public class Fireball : MonoBehaviour
     {
         if (gameObject.transform.position.y >= viewHeight / 2)
         {
-            Destroy();
+            RemoveFireball();
         }
         if (gameObject.transform.position.y <= -viewHeight / 2)
         {
-            Destroy();
+            RemoveFireball();
         }
         if (gameObject.transform.position.x >= viewWidth / 2)
         {
-            Destroy();
+            RemoveFireball();
         }
         if (gameObject.transform.position.x <= -viewWidth / 2)
         {
-            Destroy();
+            RemoveFireball();
         }
 
     }
