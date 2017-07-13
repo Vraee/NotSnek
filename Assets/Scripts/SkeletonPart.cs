@@ -9,6 +9,8 @@ public class SkeletonPart : EnemyController {
     public float bodyPartHP;
     private bool isHit;
     private GameObject enemy;
+	private Vector3 startPos;
+	private float index;
 
     public override void MoveEnemy()
     {
@@ -34,6 +36,22 @@ public class SkeletonPart : EnemyController {
     {
         enemy = newEnemy;
     }
+
+	public Vector3 GetStartPos() {
+		return startPos;
+	}
+
+	public void SetStartPos(Vector3 startPos) {
+		this.startPos = startPos;
+	}
+
+	public float GetIndex() {
+		return index;
+	}
+
+	public void SetIndex(float index) {
+		this.index = index;
+	}
 
     // Use this for initialization
     new void Start()

@@ -335,17 +335,13 @@ public class CharacterController : MonoBehaviour {
             {
                 bodyParts[i].transform.position = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
 
-				if (i == 1) {
-					destinationPoint = bodyParts[i - 1].transform.position;
-					Vector3 target = destinationPoint - bodyParts[i].transform.position;
-					float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
-					Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-					bodyParts[i].transform.rotation = Quaternion.Slerp(bodyParts[i].transform.rotation, q, T);
+				destinationPoint = bodyParts[i - 1].transform.position;
+				Vector3 target = destinationPoint - bodyParts[i].transform.position;
+				float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
+				Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+				bodyParts[i].transform.rotation = Quaternion.Slerp(bodyParts[i].transform.rotation, q, T);
 
-					//bodyParts [i].transform.rotation = Quaternion.Lerp (bodyParts [i].transform.rotation, Quaternion.LookRotation(bodyParts[i].transform.position), T);
-				} else {
-					bodyParts [i].transform.rotation = Quaternion.Lerp (bodyParts [i].transform.rotation, bodyParts [i - 1].transform.rotation, T);
-				}
+				//bodyParts [i].transform.rotation = Quaternion.Lerp (bodyParts [i].transform.rotation, bodyParts [i - 1].transform.rotation, T);
             }
         }
     }

@@ -208,6 +208,17 @@ public class EnemyController : MonoBehaviour
             gameManager.IncreaseScore(1);
 		    Destroy (gameObject);
     }
+
+	public void RandomisePowerUp(int change, int space, GameObject powerUp) {
+		int random = Random.Range (0, space);
+
+		if (random < change)
+			powerUpPrefab = powerUp;
+		else
+			powerUpPrefab = null;
+
+		//Debug.Log (random + " " + powerUpPrefab);
+	}
 }
 
 
