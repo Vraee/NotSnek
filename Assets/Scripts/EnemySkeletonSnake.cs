@@ -28,24 +28,9 @@ public class EnemySkeletonSnake : EnemyController
     private bool shooting;
     private float HP;
     private float comparableHP;
-    private Vector3 startPos;
 
     public Color32 bodyPartColor = new Color32(112, 131, 163, 255);
-
-    public float floatSpan = 0.25f;
-
-	private float index;
-	private Vector3 pos;
-	private float startY;
-	private float startX;
-	private Vector3 originalPos;
-	//private Vector3 pos;
-	private int prevWaypointID = 0;
-	private int currentWayPointID = 0;
-
-
-	float fMagnitude = 2f;
-	Vector3 v3Axis = new Vector3(0.5f, 0.0f, 0.0f);
+	public float magnitude = 2f;
 
     public float GetBodyPartHP()
     {
@@ -58,7 +43,6 @@ public class EnemySkeletonSnake : EnemyController
         base.Start();
      //   InvokeRepeating("Shoot", 2, shootDelay);
         takingDamage = false;
-        startPos = head.transform.position;
         bodyParts = new List<GameObject>();
         tailParts = new List<GameObject>();
         bodyParts.Add(head);
@@ -79,13 +63,6 @@ public class EnemySkeletonSnake : EnemyController
 
 		}
 
-		//pos = bodyParts[0].transform.position;
-		startY = head.transform.position.y;
-		startX = head.transform.position.x;
-		//_startPosition = bodyParts[1].transform.position;
-
-		v3Axis.Normalize();
-
     }
 
 
@@ -95,20 +72,15 @@ public class EnemySkeletonSnake : EnemyController
 		Rotate();
 		MoveHead ();
 		MoveEnemy ();
-
-		if (head.GetComponent<MoveOnPath> ().currentWayPointID != currentWayPointID) {
-			prevWaypointID = currentWayPointID;
-			currentWayPointID = head.GetComponent<MoveOnPath> ().currentWayPointID;
-		}
     }
 
 	public override void MoveEnemy()
     {
         for (int i = 1; i < bodyParts.Count; i++)
         {
-            distance = Vector3.Distance(bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
 			Vector3 newPosition;
 			newPosition = bodyParts[i - 1].transform.position;
+			distance = Vector3.Distance(newPosition, bodyParts[i].transform.position);
 
             float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
 
@@ -123,33 +95,6 @@ public class EnemySkeletonSnake : EnemyController
 				Vector3 tmpPos = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
 				bodyParts[i].transform.position = tmpPos;
 
-				/*bodyParts [i].GetComponent<SkeletonPart> ().SetIndex (bodyParts[i].GetComponent<SkeletonPart>().GetIndex() + Time.deltaTime);
-				Vector3 tmpPos = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
-				Vector3 pos = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
-				//pos.y += 5 * Time.deltaTime;
-				tmpPos.y = pos.y;
-				Debug.Log (tmpPos.x);
-				tmpPos.x = pos.x + Mathf.Sin(bodyParts[i].GetComponent<SkeletonPart>().GetIndex() * speed) * 0.5f;
-		
-				Debug.Log (tmpPos.x);
-				bodyParts[i].transform.position = tmpPos;
-				bodyParts [i].GetComponent<SkeletonPart> ().SetStartPos (pos);
-				Debug.Log (bodyParts[i].transform.position.x);*/
-
-				/*Vector3 tempPos = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
-
-				if (head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[currentWayPointID].position.y != head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[prevWaypointID].position.y)
-				{
-					tempPos.x = startX + Mathf.Sin(Time.time * speed) * 2;
-					startY = bodyParts[i].transform.position.y;
-				}
-				if (head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[currentWayPointID].position.x != head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[prevWaypointID].position.x)
-				{
-					tempPos.y = startY + Mathf.Sin(Time.time * speed) * 2;
-					startX = bodyParts[i].transform.position.x;
-				}
-				bodyParts[i].transform.position = tempPos;*/
-
 				destinationPoint2 = bodyParts[i - 1].transform.position;
 				Vector3 target = destinationPoint2 - bodyParts[i].transform.position;
 				float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
@@ -161,22 +106,8 @@ public class EnemySkeletonSnake : EnemyController
     }
 
 	void MoveHead() {
-		/*Vector3 tempPos = head.transform.position;
-
-		if (head.GetComponent<MoveOnPath> ().pathToFollow.pathObjects [currentWayPointID].position.y != head.GetComponent<MoveOnPath> ().pathToFollow.pathObjects [prevWaypointID].position.y) {
-			tempPos.x = startX + Mathf.Sin (Time.time * speed) * 2;
-			startY = head.transform.position.y;
-		} 
-
-		if (head.GetComponent<MoveOnPath> ().pathToFollow.pathObjects [currentWayPointID].position.x != head.GetComponent<MoveOnPath> ().pathToFollow.pathObjects [prevWaypointID].position.x) {
-			tempPos.y = startY + Mathf.Sin (Time.time * speed) * 2;
-			startX = head.transform.position.x;
-		}
-		
-		head.transform.position = tempPos;*/
-
-		head.transform.localPosition = v3Axis * Mathf.Sin (Time.time * speed) * fMagnitude;
-
+		Vector3 axis = new Vector3 (0.5f, 0.0f, 0.0f);
+		head.transform.localPosition = axis * Mathf.Sin (Time.time* speed) * magnitude;
 	}
 
     void Rotate()
