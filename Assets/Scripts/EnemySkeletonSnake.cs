@@ -28,26 +28,13 @@ public class EnemySkeletonSnake : EnemyController
     private bool shooting;
     private float HP;
     private float comparableHP;
-    private Vector3 startPos;
 
     public Color32 bodyPartColor = new Color32(112, 131, 163, 255);
-
-    public float floatSpan = 0.25f;
-    private float startX;
-
-	private float index;
-	private Vector3 pos;
-	private Vector3 _startPosition;
-	private Vector3 prevPos;
+	public float magnitude = 2f;
 
     public float GetBodyPartHP()
     {
         return bodyPartHP;
-    }
-
-    public override void MoveEnemy()
-    {
-        base.MoveEnemy();
     }
 
     // Use this for initialization
@@ -56,7 +43,6 @@ public class EnemySkeletonSnake : EnemyController
         base.Start();
      //   InvokeRepeating("Shoot", 2, shootDelay);
         takingDamage = false;
-        startPos = head.transform.position;
         bodyParts = new List<GameObject>();
         tailParts = new List<GameObject>();
         bodyParts.Add(head);
@@ -70,25 +56,32 @@ public class EnemySkeletonSnake : EnemyController
             AddBodyPart();
         }
 
-		pos = transform.position;
-		_startPosition = bodyParts[1].transform.position;
+		for (int i = 0; i < bodyParts.Count; i++) {
+			bodyParts [i].GetComponent<SkeletonPart> ().SetStartPos (bodyParts[0].transform.position);
+			bodyParts[i].GetComponent<SkeletonPart>().SetStartX(bodyParts[0].transform.position.x);
+			bodyParts[i].GetComponent<SkeletonPart>().SetStartY(bodyParts[0].transform.position.y);
+
+		}
+
     }
 
 
     // Update is called once per frame
     new void Update()
     {
-        Move();
-        Rotate();
+		Rotate();
+		MoveHead ();
+		MoveEnemy ();
     }
 
-    void Move()
+	public override void MoveEnemy()
     {
         for (int i = 1; i < bodyParts.Count; i++)
         {
-            
-            distance = Vector3.Distance(bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
-            Vector3 newPosition = bodyParts[i - 1].transform.position;
+			Vector3 newPosition;
+			newPosition = bodyParts[i - 1].transform.position;
+			distance = Vector3.Distance(newPosition, bodyParts[i].transform.position);
+
             float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
 
 			if (T > 0.5f)
@@ -97,88 +90,11 @@ public class EnemySkeletonSnake : EnemyController
 			}
             
 
-            if (true)
+			if (distance > bodyPartDistance)
             {
-				prevPos = transform.position;
 				Vector3 tmpPos = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
 				bodyParts[i].transform.position = tmpPos;
 
-				//if (i == 1) //PLS DON'T REMOVE ANYTHING HERE PLZ-------------------------------------------------------------------------------------------V T.VREEe
-                //{
-					//index += Time.deltaTime;
-					/*Vector3 tmpPos = new Vector3(0, 0, 0);
-					//pos.y += 5 * Time.deltaTime;
-					//tmpPos.y = pos.y;
-					tmpPos.y = newPos.y;
-					tmpPos.x = newPos.x + Mathf.Sin(index * speed) * 0.5f;
-
-					transform.position = tmpPos;
-					Debug.Log(tmpPos);*/
-
-					/*Vector3 nextPointPos = head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[head.GetComponent<MoveOnPath>().currentWayPointID].position;
-					float distX;
-					float distY;
-					if (Mathf.Abs(nextPointPos.x) > Mathf.Abs(bodyParts[i].transform.position.x))
-						distX = Mathf.Abs(nextPointPos.x) - Mathf.Abs(bodyParts[i].transform.position.x);
-					else
-						distX = Mathf.Abs(bodyParts[i].transform.position.x) - Mathf.Abs(nextPointPos.x);
-
-					if (Mathf.Abs(nextPointPos.y) > Mathf.Abs(bodyParts[i].transform.position.y))
-						distY = Mathf.Abs(nextPointPos.y) - Mathf.Abs(bodyParts[i].transform.position.y);
-					else
-						distY = Mathf.Abs(bodyParts[i].transform.position.y) - Mathf.Abs(nextPointPos.y);
-
-					//if (Vector3.Distance(head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[head.GetComponent<MoveOnPath>().currentWayPointID].position, transform.position) > head.GetComponent<MoveOnPath>().distance)
-					if (distX > head.GetComponent<MoveOnPath>().distance)
-					{
-						bodyParts[i].transform.position = tmpPos + new Vector3(0.0f, Mathf.Sin(Time.time * speed), 0.0f) * 0.5f;
-						//Debug.Log("y");
-					}
-
-					//if (Vector3.Distance(head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[head.GetComponent<MoveOnPath>().currentWayPointID].position, transform.position) > head.GetComponent<MoveOnPath>().distance)
-					if (distY > head.GetComponent<MoveOnPath>().distance)
-					{
-						bodyParts[i].transform.position = tmpPos + new Vector3(Mathf.Sin(Time.time * speed), 0.0f, 0.0f) * 0.5f;
-						//Debug.Log("x");
-					}
-
-					/*Vector3 nextPointPos = head.GetComponent<MoveOnPath>().pathToFollow.pathObjects[head.GetComponent<MoveOnPath>().currentWayPointID].position;
-					float distX;
-					float distY;
-
-					if (Mathf.Abs(nextPointPos.x) > Mathf.Abs(bodyParts[i].transform.position.x))
-						distX = Mathf.Abs(nextPointPos.x) - Mathf.Abs(bodyParts[i].transform.position.x);
-					else
-						distX = Mathf.Abs(bodyParts[i].transform.position.x) - Mathf.Abs(nextPointPos.x);
-
-					if (Mathf.Abs(nextPointPos.y) > Mathf.Abs(bodyParts[i].transform.position.y))
-						distY = Mathf.Abs(nextPointPos.y) - Mathf.Abs(bodyParts[i].transform.position.y);
-					else
-						distY = Mathf.Abs(bodyParts[i].transform.position.y) - Mathf.Abs(nextPointPos.y);
-
-					bodyParts[i].transform.position = tmpPos + new Vector3(distY * Mathf.Sin(index), distX * Mathf.Sin(index), 0.0f);
-					Debug.Log(head.GetComponent<MoveOnPath>().currentWayPointID);
-					Debug.Log(nextPointPos + " distX " + distX + " distY: " + distY + " snekpos " + bodyParts[i].transform.position);*/
-
-					//Debug.Log(transform.position);
-
-                    /*destinationPoint2 = bodyParts[i - 1].transform.position;
-                    Vector3 target = destinationPoint2 - bodyParts[i].transform.position;
-                    float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
-                    Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-                    bodyParts[i].transform.rotation = Quaternion.Slerp(bodyParts[i].transform.rotation, q, 5 * T);
-
-					/*float AngleRad = Mathf.Atan2(destinationPoint2.y - bodyParts[i].transform.position.y, destinationPoint2.x - bodyParts[i].transform.position.x);
-					float angle2 = (180 / Mathf.PI) * AngleRad;
-
-					bodyParts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle2 - 90f));*/
-
-                    //bodyParts [i].transform.rotation = Quaternion.Lerp (bodyParts [i].transform.rotation, Quaternion.LookRotation(bodyParts[i].transform.position), T);
-                //}
-                /*else
-                {
-                    bodyParts[i].transform.rotation = Quaternion.Lerp(bodyParts[i].transform.rotation, bodyParts[i - 1].transform.rotation, T);
-                }*/
 				destinationPoint2 = bodyParts[i - 1].transform.position;
 				Vector3 target = destinationPoint2 - bodyParts[i].transform.position;
 				float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
@@ -188,6 +104,11 @@ public class EnemySkeletonSnake : EnemyController
             }
         }
     }
+
+	void MoveHead() {
+		Vector3 axis = new Vector3 (0.5f, 0.0f, 0.0f);
+		head.transform.localPosition = axis * Mathf.Sin (Time.time* speed) * magnitude;
+	}
 
     void Rotate()
     {
@@ -270,7 +191,7 @@ public class EnemySkeletonSnake : EnemyController
         }
     }
 
-    IEnumerator EnemyDamage(SkeletonPart hitPart) //USED TO BE "TakeDamage"
+    IEnumerator EnemyDamage(SkeletonPart hitPart)
     {
             float enemyDamage = hitPart.GetEnemy().GetComponent<Fireball>().damage;
             ReduceHP(enemyDamage);
