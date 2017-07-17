@@ -41,8 +41,6 @@ public class GameManager : MonoBehaviour {
             Instantiate(spawnObjects[id], new Vector3(0,0,0), Quaternion.identity);
             gameTime = timeToNextSpawn[id];
             id++;
-
-
         }
     }
 

@@ -8,6 +8,7 @@ public class EnemyController : MonoBehaviour
     public float stamina;
 	public float damageOutput;
     public GameObject powerUpPrefab;
+    public int powerUpAmount;
 	public GameObject targetPlayerPart;
 
     private GameManager gameManager;
@@ -203,8 +204,11 @@ public class EnemyController : MonoBehaviour
 
 	public virtual void Die()
     {
-		if (powerUpPrefab != null)
-        	Instantiate(powerUpPrefab, transform.position, transform.rotation);
+        if (powerUpPrefab != null)
+            for (int i = 0; i < powerUpAmount; i++)
+            {
+                Instantiate(powerUpPrefab, transform.position, transform.rotation);
+            }
             gameManager.IncreaseScore(1);
 		    Destroy (gameObject);
     }
