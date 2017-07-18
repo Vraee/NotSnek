@@ -5,13 +5,14 @@ using UnityEngine;
 public class Scroll : MonoBehaviour {
 
     public float scrollSpeed;
+
     private Renderer rend;
 
     // Use this for initialization
     void Start () {
         rend = GetComponent<Renderer>();
 		//ScaleToCamera();
-		//SetToPixelPerfect();
+		SetToPixelPerfect();
     }
 	
 	// Update is called once per frame
@@ -36,6 +37,6 @@ public class Scroll : MonoBehaviour {
 		float newX = texture.width / scale;
 		float newY = texture.height / scale;
 		transform.localScale = new Vector3(newX, newY, 1);
-		transform.position = new Vector3(0, 0, 1);
+		transform.position = new Vector3 (0, newY / 2 - Camera.main.orthographicSize, 1);
 	}
 }
