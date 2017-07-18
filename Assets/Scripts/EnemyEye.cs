@@ -49,14 +49,6 @@ public class EnemyEye : EnemyController {
 		this.originalPos = originalPos;
 	}
 
-	private GameObject GetOriginalPowerUp() {
-		return originalPowerUp;
-	}
-
-	private void SetOriginalPowerUp(GameObject originalPowerUp) {
-		this.originalPowerUp = originalPowerUp;
-	}
-
 	// Use this for initialization
 	new void Start () {
 		base.Start ();
@@ -67,7 +59,6 @@ public class EnemyEye : EnemyController {
 
 		if (spawned == 1) {
 			originalPos = this.transform.position;
-			originalPowerUp = powerUpPrefab;
 		}
 			
 		if (spawned < spawnAmount)
@@ -101,8 +92,7 @@ public class EnemyEye : EnemyController {
 			else
 				turnPoint1 = pos.y;
 		}*/
-
-		RandomisePowerUp (1, 2, originalPowerUp);
+        
 	}
 
 	new void Update() {
@@ -177,8 +167,6 @@ public class EnemyEye : EnemyController {
 		EnemyEye newEye = Instantiate(this) as EnemyEye;
 		newEye.SetOriginalPos (this.originalPos);
 		newEye.SetSpawned (spawned);
-		newEye.SetOriginalPowerUp (this.originalPowerUp);
-		RandomisePowerUp (1, 3, originalPowerUp);
 
 	}
 

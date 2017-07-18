@@ -49,12 +49,21 @@ public class EnemyDarkSpirit : EnemyController {
 	}
 
 	public void Divide() {
-		if (divisionsAmount >= 0 && divisionsAmount < 3)
-			powerUpPrefab = secondPowerUp;
-		else
-			powerUpPrefab = thirdPowerUp;
-
-		StartCoroutine(Scale ());
+        if (divisionsAmount >= 0 && divisionsAmount < 3)
+        {
+            //second smallest
+            mediumDropRate = 95;
+            smallDropRate = 5;
+            largeDropRate = 0;
+        }
+        else
+        {
+            //smallest
+            mediumDropRate = 5;
+            smallDropRate = 95;
+            largeDropRate = 0;
+        }
+        StartCoroutine(Scale ());
 		EnemyDarkSpirit currentDarkSpirit = this;
 		baseStamina = baseStamina / 2;
 		stamina = baseStamina;

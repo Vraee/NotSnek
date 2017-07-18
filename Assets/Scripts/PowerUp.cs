@@ -14,6 +14,11 @@ public class PowerUp : MonoBehaviour {
     private float viewHeight;
     private float viewWidth;
 
+    private void Awake()
+    {
+        StartCoroutine(MoveAway());
+    }
+
     void Start()
 	{
         cam = Camera.main;
@@ -94,5 +99,22 @@ public class PowerUp : MonoBehaviour {
             Destroy(gameObject);
         }
 
+    }
+    private IEnumerator MoveAway()
+    {
+        // save it current rotation
+        Quaternion rotation = transform.rotation;
+        // Spin it around a random amount
+        transform.Rotate(Vector3.forward, Random.Range(0, 360));
+        //time to move
+        float endTime = Time.time + 0.5f;
+
+        while (Time.time < endTime)
+        {
+            transform.Translate(Vector3.up * 0.75f * Time.deltaTime);
+            yield return null;
+        }
+        // put it back to its original rotation 
+        transform.rotation = rotation;
     }
 }

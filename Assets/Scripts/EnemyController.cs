@@ -7,9 +7,15 @@ public class EnemyController : MonoBehaviour
     public float speed;
     public float stamina;
 	public float damageOutput;
-    public GameObject powerUpPrefab;
+    public float smallDropRate;
+    public float mediumDropRate;
+    public float largeDropRate;
+    public GameObject[] powerUps;
+    public int maxPowerUpAmount;
+    public int minPowerUpAmount;
+    private int powerUpAmount;
 	public GameObject targetPlayerPart;
-
+    
     private GameManager gameManager;
     private SpriteRenderer sprite;
     private Color hitColor = Color.red;
@@ -76,6 +82,7 @@ public class EnemyController : MonoBehaviour
 	// Use this for initialization
 	protected void Start()
 	{
+        powerUpAmount = Random.Range(minPowerUpAmount, maxPowerUpAmount + 1);
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         targetPlayerPart = GameObject.Find ("Head");
 		sprite = GetComponent<SpriteRenderer>();
@@ -203,22 +210,36 @@ public class EnemyController : MonoBehaviour
 
 	public virtual void Die()
     {
-		if (powerUpPrefab != null)
-        	Instantiate(powerUpPrefab, transform.position, transform.rotation);
+            for (int i = 0; i < powerUpAmount; i++)
+            {
+                RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate);
+            }
             gameManager.IncreaseScore(1);
 		    Destroy (gameObject);
     }
 
-	public void RandomisePowerUp(int change, int space, GameObject powerUp) {
-		int random = Random.Range (0, space);
 
-		if (random < change)
-			powerUpPrefab = powerUp;
-		else
-			powerUpPrefab = null;
+    private void RandomisePowerUps(float smallDropRate, float mediumDropRate, float largeDropRate)
+    {
+        float random = Random.Range(0, (smallDropRate + mediumDropRate + largeDropRate));
+        
+        if (random <= smallDropRate)
+        {
+            Instantiate(powerUps[0], transform.position, transform.rotation);
+        }
+        else if (random <= (mediumDropRate + smallDropRate))
+        {
+            Instantiate(powerUps[1], transform.position, transform.rotation);
+        }
+        else if (random <= (largeDropRate + mediumDropRate + smallDropRate))
+        {
+            Instantiate(powerUps[2], transform.position, transform.rotation);
+        }
+        else
+        {
 
-		//Debug.Log (random + " " + powerUpPrefab);
-	}
+        }
+    }
 }
 
 
