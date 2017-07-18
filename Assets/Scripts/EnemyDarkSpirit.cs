@@ -68,6 +68,13 @@ public class EnemyDarkSpirit : EnemyController {
 		StartCoroutine(Scale ());
 	}
 
+    public override void Die()
+    {
+        base.Die();
+        GameObject death = Instantiate(deathPrefab, transform.position, transform.rotation);
+        //death.GetComponent<Explosion>().ChangeParameters(gameObject.transform);
+    }
+
 	IEnumerator Scale()
 	{
 		Vector3 startSize = transform.localScale;

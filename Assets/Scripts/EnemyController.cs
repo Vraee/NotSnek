@@ -11,7 +11,9 @@ public class EnemyController : MonoBehaviour
     public int powerUpAmount;
 	public GameObject targetPlayerPart;
 
-    private GameManager gameManager;
+    public GameObject deathPrefab;
+
+    protected GameManager gameManager;
     private SpriteRenderer sprite;
     private Color hitColor = Color.red;
     private bool inflictDamage;
