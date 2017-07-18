@@ -10,7 +10,8 @@ public class Scroll : MonoBehaviour {
     // Use this for initialization
     void Start () {
         rend = GetComponent<Renderer>();
-        ScaleToCamera();
+		//ScaleToCamera();
+		//SetToPixelPerfect();
     }
 	
 	// Update is called once per frame
@@ -18,6 +19,7 @@ public class Scroll : MonoBehaviour {
         Vector2 offset = new Vector2(0, Time.time * scrollSpeed);
 
         rend.material.mainTextureOffset = offset;
+		//SetToPixelPerfect();
     }
     private void ScaleToCamera()
     {
@@ -27,4 +29,13 @@ public class Scroll : MonoBehaviour {
         transform.localScale = new Vector3(width, height, 1);
         transform.position = new Vector3(0, 0, 1);
     }
+
+	private void SetToPixelPerfect() {
+		Texture texture = rend.material.mainTexture;
+		float scale = (Screen.height / 2.0f) / Camera.main.orthographicSize;
+		float newX = texture.width / scale;
+		float newY = texture.height / scale;
+		transform.localScale = new Vector3(newX, newY, 1);
+		transform.position = new Vector3(0, 0, 1);
+	}
 }

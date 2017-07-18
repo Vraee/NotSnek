@@ -111,7 +111,7 @@ public class PowerUp : MonoBehaviour {
 
         while (Time.time < endTime)
         {
-            transform.Translate(Vector3.up * 0.5f * Time.deltaTime);
+            transform.Translate(Vector3.up * 0.75f * Time.deltaTime);
             yield return null;
         }
         // put it back to its original rotation 
