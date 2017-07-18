@@ -55,14 +55,6 @@ public class EnemySkeletonSnake : EnemyController
         {
             AddBodyPart();
         }
-
-		for (int i = 0; i < bodyParts.Count; i++) {
-			bodyParts [i].GetComponent<SkeletonPart> ().SetStartPos (bodyParts[0].transform.position);
-			bodyParts[i].GetComponent<SkeletonPart>().SetStartX(bodyParts[0].transform.position.x);
-			bodyParts[i].GetComponent<SkeletonPart>().SetStartY(bodyParts[0].transform.position.y);
-
-		}
-
     }
 
 
@@ -92,8 +84,8 @@ public class EnemySkeletonSnake : EnemyController
 
 			if (distance > bodyPartDistance)
             {
-				Vector3 tmpPos = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
-				bodyParts[i].transform.position = tmpPos;
+				Vector3 tmpPos = Vector3.Slerp(bodyParts[i].transform.position, newPosition, T);
+				bodyParts [i].transform.position = tmpPos;
 
 				destinationPoint2 = bodyParts[i - 1].transform.position;
 				Vector3 target = destinationPoint2 - bodyParts[i].transform.position;
