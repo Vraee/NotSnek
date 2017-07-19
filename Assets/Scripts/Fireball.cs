@@ -106,7 +106,6 @@ public class Fireball : MonoBehaviour
 	{
 		var emission = particlesystem.emission;
 		emission.enabled = false;
-
 		Invoke("Destroy", 2f);
 
 	}
