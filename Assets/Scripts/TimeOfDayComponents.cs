@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyWaveSpawner : MonoBehaviour {
+public class TimeOfDayComponents : MonoBehaviour {
 	public GameObject[] enemiesToSpawn;
 	public Texture backgroundTexture;
 }

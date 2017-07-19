@@ -8,19 +8,20 @@ public class GameManager : MonoBehaviour {
 
 	//public float[] timeToNextSpawn = new float[999];
     //public GameObject[] spawnObjects;
-	[HideInInspector]
-    public CharacterController player;
     //public int id;
     public float multiplier;
     public float gameTime;
     public float timer;
+	public float score;
+	public Text scoreText;
+	public Text multiplierText;
+	public Text greetingsText;
+	public GameObject[] timeOfDayComponents;
 
-    public float score;
-    public Text scoreText;
-    public Text multiplierText;
-    public Text greetingsText;
 	[HideInInspector]
-	public enum TimeOfDay {Morning, Day, Evening, Night};
+	public CharacterController player;
+	[HideInInspector]
+	public enum TimeOfDay { Morning, Day, Evening, Night };
 	[HideInInspector]
 	public TimeOfDay timeOfDay;
 
@@ -31,7 +32,6 @@ public class GameManager : MonoBehaviour {
 		//gameTime = timeToNextSpawn[0];
         greetingsText.enabled = false;
 		timeOfDay = TimeOfDay.Morning;
-    
     }
 
     // Update is called once per frame
