@@ -225,7 +225,7 @@ public class EnemyController : MonoBehaviour
         
         if (random <= smallDropRate)
         {
-            Instantiate(powerUps[0], transform.position, transform.rotation);
+           Instantiate(powerUps[0], transform.position, transform.rotation);
         }
         else if (random <= (mediumDropRate + smallDropRate))
         {
