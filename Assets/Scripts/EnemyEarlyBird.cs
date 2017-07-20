@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyEarlyBird : EnemyController {
-
+	public Sprite normalSprite;
+	public Sprite attackSprite;
 	TrailRenderer _rend;
 	public float attackDelay = 2;
 	public float retreatSpeed;
@@ -34,6 +35,16 @@ public class EnemyEarlyBird : EnemyController {
 
 		if (GetMoving() && gameObject.GetComponent<MoveOnPath>().GetPathReached()) {
 			AttackPlayer (speed, this.gameObject);
+			ChangeSprite (attackSprite);
+
+			if (!attacking)
+				ChangeSprite (normalSprite);
+		}
+	}
+
+	public void ChangeSprite(Sprite newSprite) {
+		if (newSprite != gameObject.GetComponent<SpriteRenderer> ().sprite) {
+			gameObject.GetComponent<SpriteRenderer> ().sprite = newSprite;
 		}
 	}
 
