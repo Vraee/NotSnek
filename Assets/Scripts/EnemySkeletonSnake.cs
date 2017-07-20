@@ -188,7 +188,7 @@ public class EnemySkeletonSnake : EnemyController
 
         if (HP <= 0)
         {
-            Die();
+            Die(head.transform.position);
         }
     }
 

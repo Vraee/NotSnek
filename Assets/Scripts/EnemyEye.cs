@@ -99,7 +99,7 @@ public class EnemyEye : EnemyController {
 		base.Update ();
 
 		if (Time.time >= destroyTimer && destroyAfterTime)
-			Die ();
+			Die (this.gameObject.transform.position);
 	}
 
 	public override void MoveEnemy() {

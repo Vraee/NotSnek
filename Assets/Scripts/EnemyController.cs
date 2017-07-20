@@ -204,36 +204,36 @@ public class EnemyController : MonoBehaviour
         sprite.color = hitColor;
         if (stamina <= 0)
         {
-			Die ();
+			Die (gameObject.transform.position);
         }
     }
 
-	public virtual void Die()
+	public virtual void Die(Vector3 spawnPos)
     {
             for (int i = 0; i < powerUpAmount; i++)
             {
-                RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate);
+                RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate, spawnPos);
             }
             gameManager.IncreaseScore(1);
 		    Destroy (gameObject);
     }
 
 
-    private void RandomisePowerUps(float smallDropRate, float mediumDropRate, float largeDropRate)
+    private void RandomisePowerUps(float smallDropRate, float mediumDropRate, float largeDropRate, Vector3 spawnPos)
     {
         float random = Random.Range(0, (smallDropRate + mediumDropRate + largeDropRate));
         
         if (random <= smallDropRate)
         {
-           Instantiate(powerUps[0], transform.position, transform.rotation);
+            Instantiate(powerUps[0], spawnPos, Quaternion.identity);
         }
         else if (random <= (mediumDropRate + smallDropRate))
         {
-            Instantiate(powerUps[1], transform.position, transform.rotation);
+            Instantiate(powerUps[1], spawnPos, Quaternion.identity);
         }
         else if (random <= (largeDropRate + mediumDropRate + smallDropRate))
         {
-            Instantiate(powerUps[2], transform.position, transform.rotation);
+            Instantiate(powerUps[2], spawnPos, Quaternion.identity);
         }
         else
         {
