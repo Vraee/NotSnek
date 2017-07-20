@@ -10,12 +10,16 @@ public class BackgroundScroller : MonoBehaviour
     private Renderer rend;
 	//The offset where the entire texture has been shown
 	private float endOffset;
-	private float spawnDistance;
-	private float nextSpawn;
+	private float eyeSpawnDist;
+	private float nextEyeSpawn;
+	private float otherEnemySpawnDist;
+	private float nextOtherEnemySpawn;
 	private GameManager gameManager;
-	private GameObject[] enemyWaves;
+	private GameObject[] eyeWaves;
+	private GameObject[] otherEnemyWaves;
 	private GameObject[] allTimeOfDayComponents;
-	private int id;
+	private int eyeId;
+	private int otherEnemyId;
 	private GameManager.TimeOfDay timeOfDay;
 	private float offsetTimer;
 	private Vector2 offset;
@@ -27,10 +31,14 @@ public class BackgroundScroller : MonoBehaviour
 		ScaleToCamera();
 		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		allTimeOfDayComponents = gameManager.timeOfDayComponents;
-		enemyWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().enemiesToSpawn;
+		eyeWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().eyesToSpawn;
+		otherEnemyWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().timeSpecificEnemiesToSpawn;
 
-		spawnDistance = endOffset / enemyWaves.Length;
-		nextSpawn = 0;
+		eyeSpawnDist = endOffset / eyeWaves.Length;
+		otherEnemySpawnDist = endOffset / otherEnemyWaves.Length;
+		nextEyeSpawn = 0;
+		nextOtherEnemySpawn = 0;
+
 		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		bossDead = false;
     }
@@ -55,7 +63,7 @@ public class BackgroundScroller : MonoBehaviour
 		{
 			if (!bossDead && enemyHolder.transform.position.y > -(Camera.main.orthographicSize * 2))
 			{
-				Vector3 enemiesPos = new Vector3(0, enemyHolder.transform.position.y - scrollSpeed, 0);
+				Vector3 enemiesPos = new Vector3(0, enemyHolder.transform.position.y - scrollSpeed * 2, 0);
 				enemyHolder.transform.position = enemiesPos;
 			}
 
@@ -83,8 +91,8 @@ public class BackgroundScroller : MonoBehaviour
 				offsetTimer = 0;
 				rend.material.mainTextureOffset = offset;
 				ScaleToCamera();
-				enemyWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().enemiesToSpawn;
-				nextSpawn = 0;
+				eyeWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().eyesToSpawn;
+				nextEyeSpawn = 0;
 				enemyHolder.transform.position = new Vector3(0, 0, 0);
 			}
 		}
@@ -92,13 +100,22 @@ public class BackgroundScroller : MonoBehaviour
 
 	private void SpawnEnemies()
 	{
-		if (offset.y >= nextSpawn && id < enemyWaves.Length)
+		if (offset.y >= nextEyeSpawn && eyeId < eyeWaves.Length)
 		{
 			GameObject wave;
-			wave = Instantiate(enemyWaves[id], new Vector3(0, 0, 0), Quaternion.identity);
+			wave = Instantiate(eyeWaves[eyeId], new Vector3(0, 0, 0), Quaternion.identity);
 			wave.transform.SetParent(enemyHolder.transform);
-			id++;
-			nextSpawn += spawnDistance;
+			eyeId++;
+			nextEyeSpawn += eyeSpawnDist;
+		}
+
+		if (offset.y >= nextOtherEnemySpawn && otherEnemyId < otherEnemyWaves.Length)
+		{
+			GameObject wave;
+			wave = Instantiate(otherEnemyWaves[eyeId], new Vector3(0, 0, 0), Quaternion.identity);
+			wave.transform.SetParent(enemyHolder.transform);
+			otherEnemyId++;
+			nextOtherEnemySpawn += otherEnemySpawnDist;
 		}
 	}
 
