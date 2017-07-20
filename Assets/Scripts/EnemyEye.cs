@@ -17,6 +17,7 @@ public class EnemyEye : EnemyController {
 	public bool switchStartDirection;
 	//Defines whether the enemy should move back and forth or not
 	public bool moveBackAndForth;
+	public bool bouncyMovement;
 	//The point where enemy should turn back, not needed if "turnBack" is false
 	public float turnPoint1;
 	//The point where enemy should turn back to its original direction, not needed if "turnBack" is false
@@ -135,6 +136,15 @@ public class EnemyEye : EnemyController {
 				tmpPos.x = pos.x + Mathf.Sin (index * speed) * amplitude;
 			else
 				tmpPos.x = pos.x - Mathf.Sin (index * speed) * amplitude;
+		}
+
+		if (bouncyMovement)
+		{
+			if (direction == Direction.UpDown || direction == Direction.DownUp)
+				tmpPos.x = Mathf.Abs(tmpPos.x);
+			if (direction == Direction.LeftRight || direction == Direction.RightLeft)
+				tmpPos.y = Mathf.Abs(tmpPos.y);
+
 		}
 
 		transform.position = tmpPos;
