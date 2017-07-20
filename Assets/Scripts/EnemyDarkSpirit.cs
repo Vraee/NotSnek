@@ -71,6 +71,8 @@ public class EnemyDarkSpirit : EnemyController {
 		EnemyDarkSpirit newDarkSpirit = Instantiate(currentDarkSpirit) as EnemyDarkSpirit;
 		newDarkSpirit.StartScaling ();
 		newDarkSpirit.SetDivisionsAmount (divisionsAmount);
+		newDarkSpirit.transform.parent = this.transform.parent;
+		newDarkSpirit.transform.position = transform.position;
 	}
 
 	public void StartScaling() {

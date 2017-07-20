@@ -108,7 +108,8 @@ public class EnemyController : MonoBehaviour
 	// Update is called once per frame
 	protected void Update()
 	{
-		MoveEnemy();
+		MoveEnemy ();
+
 		if (inflictDamage && vulnerable)
 		{
 			InflictDamage();
@@ -123,13 +124,16 @@ public class EnemyController : MonoBehaviour
     {
     }
 
+	public virtual void DisableAttacking () {
+	}
+
 	public void RotateToPlayer()
 	{
-            destinationPoint = targetPlayerPart.transform.position;
-            Vector3 target = destinationPoint - transform.position;
-            float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
-            Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-            transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 30);
+        destinationPoint = targetPlayerPart.transform.position;
+        Vector3 target = destinationPoint - transform.position;
+        float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
+        Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 30);
     }
 
     public void AttackPlayer (float attackSpeed, GameObject enemy) {
@@ -210,12 +214,12 @@ public class EnemyController : MonoBehaviour
 
 	public virtual void Die()
     {
-            for (int i = 0; i < powerUpAmount; i++)
-            {
-                RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate);
-            }
-            gameManager.IncreaseScore(1);
-		    Destroy (gameObject);
+        for (int i = 0; i < powerUpAmount; i++)
+        {
+            RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate);
+        }
+        gameManager.IncreaseScore(1);
+	    Destroy (gameObject);
     }
 
 

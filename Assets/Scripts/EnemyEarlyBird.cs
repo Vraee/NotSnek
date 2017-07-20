@@ -13,6 +13,16 @@ public class EnemyEarlyBird : EnemyController {
 		_rend = GetComponent<TrailRenderer> ();
 	}
 
+	new void Update(){
+		base.Update ();
+
+		if (!attacking) {
+			_rend.enabled = false;
+		} else {
+			_rend.enabled = true;
+		}
+	}
+
 	public override void MoveEnemy() {
 		if (!GetAttacking()) {
 			RotateToPlayer ();
@@ -27,17 +37,13 @@ public class EnemyEarlyBird : EnemyController {
 		}
 	}
 
-	new void Update(){
-		base.Update ();
-
-		if (!attacking) {
-			//Debug.Log ("moikkelis");
-			_rend.enabled = false;
-		} else {
-			_rend.enabled = true;
-			//Debug.Log ("hellurei");
-		}
-
-
+	public override void DisableAttacking ()
+	{
+		if (attacking) {
+			attacking = false;
+			retreating = true;
+			AttackPlayer (speed, this.gameObject);
+			RotateToPlayer ();
+		}		
 	}
 }

@@ -53,12 +53,13 @@ public class BackgroundScroller : MonoBehaviour
 
 		else
 		{
-			id = 0;
 			if (!bossDead && enemyHolder.transform.position.y > -(Camera.main.orthographicSize * 2))
 			{
-				Vector3 enemiesPos = new Vector3(0, enemyHolder.transform.position.y - offset.y, 0);
+				Vector3 enemiesPos = new Vector3(0, enemyHolder.transform.position.y - scrollSpeed, 0);
 				enemyHolder.transform.position = enemiesPos;
 			}
+
+			DisableEnemyMovement ();
 
 			if (enemyHolder.transform.position.y <= -(Camera.main.orthographicSize * 2))
 			{
@@ -91,13 +92,22 @@ public class BackgroundScroller : MonoBehaviour
 
 	private void SpawnEnemies()
 	{
-		if (offset.y >= nextSpawn)
+		if (offset.y >= nextSpawn && id < enemyWaves.Length)
 		{
 			GameObject wave;
 			wave = Instantiate(enemyWaves[id], new Vector3(0, 0, 0), Quaternion.identity);
 			wave.transform.SetParent(enemyHolder.transform);
 			id++;
 			nextSpawn += spawnDistance;
+		}
+	}
+
+	private void DisableEnemyMovement() {
+		foreach (Transform enemySpawner in enemyHolder.transform)
+		{
+			foreach (EnemyController enemy in enemySpawner.GetComponentsInChildren<EnemyController>()) {
+				enemy.DisableAttacking ();
+			}
 		}
 	}
 
