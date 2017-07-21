@@ -127,14 +127,13 @@ public class EnemyController : MonoBehaviour
 	{
 	}
 
-
 	public void RotateToPlayer()
 	{
-            destinationPoint = targetPlayerPart.transform.position;
-            Vector3 target = destinationPoint - transform.position;
-            float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
-            Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-            transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 30);
+        destinationPoint = targetPlayerPart.transform.position;
+        Vector3 target = destinationPoint - transform.position;
+        float angle = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg - 90;
+        Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 30);
     }
 
     public void AttackPlayer (float attackSpeed, GameObject enemy) {
@@ -215,12 +214,12 @@ public class EnemyController : MonoBehaviour
 
 	public virtual void Die(Vector3 spawnPos)
     {
-            for (int i = 0; i < powerUpAmount; i++)
-            {
-                RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate, spawnPos);
-            }
-            gameManager.IncreaseScore(1);
-		    Destroy (gameObject);
+        for (int i = 0; i < powerUpAmount; i++)
+        {
+            RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate, spawnPos);
+        }
+        gameManager.IncreaseScore(1);
+	    Destroy (gameObject);
     }
 
 

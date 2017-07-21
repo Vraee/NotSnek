@@ -28,8 +28,8 @@ public class BackgroundScroller : MonoBehaviour
     // Use this for initialization
     void Start () {
         rend = GetComponent<Renderer>();
-		ScaleToCamera();
 		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+		ScaleToCamera();
 		allTimeOfDayComponents = gameManager.timeOfDayComponents;
 		eyeWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().eyesToSpawn;
 		otherEnemyWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().timeSpecificEnemiesToSpawn;
@@ -112,7 +112,7 @@ public class BackgroundScroller : MonoBehaviour
 		if (offset.y >= nextOtherEnemySpawn && otherEnemyId < otherEnemyWaves.Length)
 		{
 			GameObject wave;
-			wave = Instantiate(otherEnemyWaves[eyeId], new Vector3(0, 0, 0), Quaternion.identity);
+			wave = Instantiate(otherEnemyWaves[otherEnemyId], new Vector3(0, 0, 0), Quaternion.identity);
 			wave.transform.SetParent(enemyHolder.transform);
 			otherEnemyId++;
 			nextOtherEnemySpawn += otherEnemySpawnDist;
@@ -138,10 +138,8 @@ public class BackgroundScroller : MonoBehaviour
 
 	private void ScaleToCamera() {
 		Texture background = rend.material.mainTexture;
-		float visibleAreaH = Camera.main.orthographicSize * 2;
-		float visibleAreaW = visibleAreaH * Screen.width / Screen.height;
 
-		float scaledTexWidth = visibleAreaW;
+		float scaledTexWidth = gameManager.visibleAreaWidth;
 		float scaledTexHeight = background.height * (scaledTexWidth / background.width);
 
 		transform.localScale = new Vector3 (scaledTexWidth, scaledTexHeight, 1);
