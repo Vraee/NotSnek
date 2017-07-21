@@ -19,6 +19,7 @@ public class BackgroundScroller : MonoBehaviour
 	private GameManager.TimeOfDay timeOfDay;
 	private float offsetTimer;
 	private Vector2 offset;
+    private bool bossAppear = false;
 	private bool bossDead;
 
     // Use this for initialization
@@ -53,6 +54,7 @@ public class BackgroundScroller : MonoBehaviour
 
 		else
 		{
+            bossAppear = true;
 			if (!bossDead && enemyHolder.transform.position.y > -(Camera.main.orthographicSize * 2))
 			{
 				Vector3 enemiesPos = new Vector3(0, enemyHolder.transform.position.y - scrollSpeed, 0);

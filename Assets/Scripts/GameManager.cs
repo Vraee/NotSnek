@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviour {
 	void Start () {
         player = GameObject.Find("Player").GetComponent<CharacterController>();
         multiplier = player.GetBodyPartsAmount();
-		//gameTime = timeToNextSpawn[0];
         greetingsText.enabled = false;
 		timeOfDay = TimeOfDay.Morning;
     }
@@ -38,13 +37,6 @@ public class GameManager : MonoBehaviour {
     void Update()
     {
         timer += Time.deltaTime;
-        gameTime -= Time.deltaTime;
-        /*if(gameTime <= 0 && id != spawnObjects.Length )
-        {
-            Instantiate(spawnObjects[id], new Vector3(0,0,0), Quaternion.identity);
-            gameTime = timeToNextSpawn[id];
-            id++;
-        }*/
     }
 
     void OnGUI()
