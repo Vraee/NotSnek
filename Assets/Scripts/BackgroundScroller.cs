@@ -102,23 +102,40 @@ public class BackgroundScroller : MonoBehaviour
 
 	private void SpawnEnemies()
 	{
+		GameObject wave = new GameObject();
 		if (offset.y >= nextEyeSpawn && eyeId < eyeWaves.Length)
 		{
-			GameObject wave;
 			wave = Instantiate(eyeWaves[eyeId], new Vector3(0, 0, 0), Quaternion.identity);
 			wave.transform.SetParent(enemyHolder.transform);
 			eyeId++;
 			nextEyeSpawn += eyeSpawnDist;
+
+			if (allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().increaseEyeSpeed)
+			{
+				foreach (EnemyController enemy in wave.GetComponentsInChildren<EnemyController>()) {
+					enemy.speed += enemy.speed * offset.y;
+					Debug.Log(enemy.speed);
+
+				}
+			}
 		}
 
 		if (offset.y >= nextOtherEnemySpawn && otherEnemyId < otherEnemyWaves.Length)
 		{
-			GameObject wave;
 			wave = Instantiate(otherEnemyWaves[otherEnemyId], new Vector3(0, 0, 0), Quaternion.identity);
 			wave.transform.SetParent(enemyHolder.transform);
 			otherEnemyId++;
 			nextOtherEnemySpawn += otherEnemySpawnDist;
+
+			if (allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().increaseSpecificEnemySpeed)
+			{
+				foreach (EnemyController enemy in wave.GetComponentsInChildren<EnemyController>()) {
+					enemy.speed += enemy.speed * offset.y;
+					Debug.Log(enemy.speed);
+				}
+			}
 		}
+
 	}
 
 	private void DisableEnemyMovement() {
