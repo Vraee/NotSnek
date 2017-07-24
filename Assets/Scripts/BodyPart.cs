@@ -41,7 +41,14 @@ public class BodyPart : MonoBehaviour {
 				enemy = collider.gameObject;
 				parentScript.StartCoroutine ("EnemyDamage", this);
 			}
-		}
+            
+		}else if(this.gameObject.tag == "Head" && collider.gameObject.tag == "EnemyFireball")
+        {
+            float damage = collider.gameObject.GetComponent<Fireball>().damage;
+            parentScript.StartCoroutine("EnemyFireballDamage", damage);
+            collider.gameObject.GetComponent<Fireball>().Explode();
+            collider.gameObject.GetComponent<Fireball>().RemoveFireball();
+        }
 	}
 		
     IEnumerator Scale()

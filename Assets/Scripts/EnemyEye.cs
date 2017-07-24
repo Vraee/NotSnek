@@ -51,7 +51,7 @@ public class EnemyEye : EnemyController {
 
 	// Use this for initialization
 	new void Start () {
-		base.Start ();
+		//base.Start ();
         anime = GetComponent<Animator>();
         InvokeRepeating("Blink", Random.Range(0.1f, 3f), blinkDelay);
         destroyTimer = Time.time + destroyDelay;
@@ -64,10 +64,12 @@ public class EnemyEye : EnemyController {
 		if (spawned < spawnAmount)
 			Invoke ("CreateNew", spawnDelay);
 
-		if (moveAsWall)
-			pos = transform.position;
-		else
+		if (moveAsWall) {
+			pos = this.transform.position;
+		} else {
+			this.transform.position = originalPos;
 			pos = originalPos;
+		}
 
 		/*If enemy moves from right to left or down up at the start, flips turning points; 
 		this just makes checking when the enemy should turn back later in the code simpler.*/
@@ -77,29 +79,14 @@ public class EnemyEye : EnemyController {
 			turnPoint2 = tmpTurnPoint1;
 		}	
 
-
-
-		/*if (turnPoint1 == 0) {
-			if (direction == Direction.LeftRight || direction == Direction.RightLeft)
-				turnPoint1 = -pos.x;
-			else
-				turnPoint1 = -pos.y;
-		}
-
-		if (turnPoint2 == 0) {
-			if (direction == Direction.LeftRight || direction == Direction.RightLeft)
-				turnPoint1 = pos.x;
-			else
-				turnPoint1 = pos.y;
-		}*/
-        
+		base.Start ();
 	}
 
 	new void Update() {
 		base.Update ();
 
 		if (Time.time >= destroyTimer && destroyAfterTime)
-			Die ();
+			Die (this.gameObject.transform.position);
 	}
 
 	public override void MoveEnemy() {
@@ -167,7 +154,6 @@ public class EnemyEye : EnemyController {
 		EnemyEye newEye = Instantiate(this) as EnemyEye;
 		newEye.SetOriginalPos (this.originalPos);
 		newEye.SetSpawned (spawned);
-
 	}
 
     private void Blink()

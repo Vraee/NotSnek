@@ -35,4 +35,14 @@ public class EnemyGryphon : EnemyController {
 			gameObject.GetComponent<SpriteRenderer> ().sprite = newSprite;
 		}
 	}
+
+	public override void DisableAttacking ()
+	{
+		if (attacking) {
+			attacking = false;
+			retreating = true;
+			AttackPlayer (speed, this.gameObject);
+			RotateToPlayer ();
+		}		
+	}
 }

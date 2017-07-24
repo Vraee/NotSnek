@@ -32,6 +32,11 @@ public class EnemySkeletonSnake : EnemyController
     public Color32 bodyPartColor = new Color32(112, 131, 163, 255);
 	public float magnitude = 2f;
 
+
+    private Camera cam;
+    private float viewHeight;
+    private float viewWidth;
+
     public float GetBodyPartHP()
     {
         return bodyPartHP;
@@ -41,7 +46,11 @@ public class EnemySkeletonSnake : EnemyController
     new void Start()
     {
         base.Start();
-     //   InvokeRepeating("Shoot", 2, shootDelay);
+
+        cam = Camera.main;
+        viewHeight = 2f * cam.orthographicSize;
+        viewWidth = viewHeight * cam.aspect;
+        InvokeRepeating("Shoot", 1.5f, shootDelay);
         takingDamage = false;
         bodyParts = new List<GameObject>();
         tailParts = new List<GameObject>();
@@ -179,7 +188,7 @@ public class EnemySkeletonSnake : EnemyController
 
         if (HP <= 0)
         {
-            Die();
+            Die(head.transform.position);
         }
     }
 
@@ -223,7 +232,23 @@ public class EnemySkeletonSnake : EnemyController
 
     private void Shoot()
     {
-        if (!shooting) return;
+        if (head.transform.position.y >= viewHeight / 2)
+        {
+            return;
+        }
+        if (head.transform.position.y <= -viewHeight / 2)
+        {
+            return;
+        }
+        if (head.transform.position.x >= viewWidth / 2)
+        {
+            return;
+        }
+        if (head.transform.position.x <= -viewWidth / 2)
+        {
+            return;
+        }
+
         Vector3 playerPos = head.transform.position;
         Vector3 playerDirection = head.transform.up;
         Quaternion playerRotation = head.transform.rotation;

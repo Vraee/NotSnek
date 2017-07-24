@@ -565,4 +565,33 @@ public class CharacterController : MonoBehaviour {
 			}
 		}
 	}
+
+    IEnumerator EnemyFireballDamage(float damage)
+    {
+        if (!berserk)
+        {
+            ReduceHP(damage);
+            if (!takingDamage && !berserk)
+            {
+                takingDamage = true;
+                for (int i = 0; i < 2; i++)
+                {
+                    foreach (GameObject bodyPart in bodyParts)
+                    {
+                        bodyPart.GetComponent<SpriteRenderer>().color = Color.red;
+                    }
+                    yield return new WaitForSeconds(0.1f);
+                    for (int j = 0; j < bodyParts.Count; j++)
+                    {
+                        if (j == 0)
+                            bodyParts[j].GetComponent<SpriteRenderer>().color = Color.white;
+                        else
+                            bodyParts[j].GetComponent<SpriteRenderer>().color = bodyPartColor;
+                    }
+                    yield return new WaitForSeconds(0.1f);
+                }
+                takingDamage = false;
+            }
+        }
+    }
 }

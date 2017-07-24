@@ -6,29 +6,36 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
-	public float[] timeToNextSpawn = new float[999];
-    public GameObject[] spawnObjects;
-	[HideInInspector]
-    public CharacterController player;
-    public int id;
     public float multiplier;
     public float gameTime;
-
     public float timer;
+	public float score;
+	public Text scoreText;
+	public Text multiplierText;
+	public Text greetingsText;
+	public GameObject[] timeOfDayComponents;
 
-    public float score;
-    public Text scoreText;
-    public Text multiplierText;
-    public Text greetingsText;
-    
+	[HideInInspector]
+	public CharacterController player;
+	[HideInInspector]
+	public enum TimeOfDay { Morning, Day, Evening, Night };
+	[HideInInspector]
+	public TimeOfDay timeOfDay;
+	[HideInInspector]
+	public float visibleAreaWidth;
+	[HideInInspector]
+	public float visibleAreaHeight;
 
 	// Use this for initialization
 	void Start () {
         player = GameObject.Find("Player").GetComponent<CharacterController>();
         multiplier = player.GetBodyPartsAmount();
-		gameTime = timeToNextSpawn[0];
+		//gameTime = timeToNextSpawn[0];
         greetingsText.enabled = false;
-    
+		timeOfDay = TimeOfDay.Morning;
+
+		visibleAreaHeight = Camera.main.orthographicSize * 2;
+		visibleAreaWidth = visibleAreaHeight * Screen.width / Screen.height;
     }
 
     // Update is called once per frame
@@ -36,12 +43,6 @@ public class GameManager : MonoBehaviour {
     {
         timer += Time.deltaTime;
         gameTime -= Time.deltaTime;
-        if(gameTime <= 0 && id != spawnObjects.Length )
-        {
-            Instantiate(spawnObjects[id], new Vector3(0,0,0), Quaternion.identity);
-            gameTime = timeToNextSpawn[id];
-            id++;
-        }
     }
 
     void OnGUI()
