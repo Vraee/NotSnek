@@ -51,10 +51,17 @@ public class EnemyEarlyBird : EnemyController {
 	public override void DisableAttacking ()
 	{
 		if (attacking) {
+			ChangeSprite (normalSprite);
 			attacking = false;
 			retreating = true;
 			AttackPlayer (speed, this.gameObject);
 			RotateToPlayer ();
 		}		
+	}
+
+	public override void Die (Vector3 spawnPos)
+	{
+		Destroy (transform.parent.gameObject);
+		base.Die (spawnPos);
 	}
 }
