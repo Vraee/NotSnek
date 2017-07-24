@@ -15,6 +15,8 @@ public class EnemyController : MonoBehaviour
     public int minPowerUpAmount;
     private int powerUpAmount;
 	public GameObject targetPlayerPart;
+
+    public GameObject deathPrefab;
     
     private GameManager gameManager;
     private SpriteRenderer sprite;
