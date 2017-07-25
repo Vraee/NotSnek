@@ -106,8 +106,6 @@ public class EnemyController : MonoBehaviour
 		}
 		moving = false;
 		vulnerable = true;
-
-		CheckSpawnPos ();
 	}
 
 	// Update is called once per frame
@@ -206,11 +204,11 @@ public class EnemyController : MonoBehaviour
 
 	private void InflictDamage(float damage)
     {
-		//Debug.Log ("stamina: " + stamina + " damage " + damage);
-		stamina = stamina - damage;
-		//Debug.Log ("stamina: " + stamina + " damage " + damage);
+		if (CheckInArea()) {
+			stamina = stamina - damage;
+			sprite.color = hitColor;
+		}
 
-        sprite.color = hitColor;
         if (stamina <= 0)
         {
 			Die (gameObject.transform.position);
@@ -256,21 +254,15 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-	public bool CheckSpawnPos() {
-		bool inAreaX = false;
-		bool inAreaY = false;
+	public bool CheckInArea() {
+		bool inArea = false;
 
-		if (transform.position.x >= gameManager.visibleAreaWidth / 2f * (-1f) && transform.position.x <= gameManager.visibleAreaWidth / 2f) {
-			inAreaX = true;
+		if (transform.position.x >= gameManager.visibleAreaWidth / 2f * (-1f) && transform.position.x <= gameManager.visibleAreaWidth / 2f 
+			&& transform.position.y >= gameManager.visibleAreaHeight / 2f * (-1f) && transform.position.y <= gameManager.visibleAreaHeight / 2f) {
+			inArea = true;
 		}
-
-		if (transform.position.y >= gameManager.visibleAreaHeight / 2f * (-1f) && transform.position.y <= gameManager.visibleAreaHeight / 2f) {
-			inAreaY = true;
-		}
-
-		Debug.Log ("inX: " + inAreaX + " inY: " + inAreaY);
-
-		return true;
+			
+		return inArea;
 	}
 }
 
