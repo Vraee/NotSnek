@@ -15,6 +15,9 @@ public class EnemyController : MonoBehaviour
     public int minPowerUpAmount;
     private int powerUpAmount;
 	public GameObject targetPlayerPart;
+    public GameObject deathPrefab;
+	public float screenShakeDuration;
+	public float screenShakeAmount;
     
     private GameManager gameManager;
     private SpriteRenderer sprite;
@@ -201,11 +204,11 @@ public class EnemyController : MonoBehaviour
 
 	private void InflictDamage(float damage)
     {
-		//Debug.Log ("stamina: " + stamina + " damage " + damage);
-		stamina = stamina - damage;
-		//Debug.Log ("stamina: " + stamina + " damage " + damage);
+		if (CheckInArea()) {
+			stamina = stamina - damage;
+			sprite.color = hitColor;
+		}
 
-        sprite.color = hitColor;
         if (stamina <= 0)
         {
 			Die (gameObject.transform.position);
@@ -214,6 +217,12 @@ public class EnemyController : MonoBehaviour
 
 	public virtual void Die(Vector3 spawnPos)
     {
+		Camera.main.GetComponent<CameraShake>().Shake(screenShakeDuration, screenShakeAmount);
+
+		if (deathPrefab != null) {
+			GameObject death = Instantiate (deathPrefab, transform.position, transform.rotation);
+		}
+
         for (int i = 0; i < powerUpAmount; i++)
         {
             RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate, spawnPos);
@@ -244,6 +253,17 @@ public class EnemyController : MonoBehaviour
 
         }
     }
+
+	public bool CheckInArea() {
+		bool inArea = false;
+
+		if (transform.position.x >= gameManager.visibleAreaWidth / 2f * (-1f) && transform.position.x <= gameManager.visibleAreaWidth / 2f 
+			&& transform.position.y >= gameManager.visibleAreaHeight / 2f * (-1f) && transform.position.y <= gameManager.visibleAreaHeight / 2f) {
+			inArea = true;
+		}
+			
+		return inArea;
+	}
 }
 
 

@@ -79,6 +79,13 @@ public class EnemyDarkSpirit : EnemyController {
 		StartCoroutine(Scale ());
 	}
 
+    /*public override void Die()
+    {
+        base.Die();
+        GameObject death = Instantiate(deathPrefab, transform.position, transform.rotation);
+        //death.GetComponent<Explosion>().ChangeParameters(gameObject.transform);
+    }*/
+
 	IEnumerator Scale()
 	{
 		Vector3 startSize = transform.localScale;
@@ -92,5 +99,13 @@ public class EnemyDarkSpirit : EnemyController {
 			gameObject.GetComponent<MoveOnPath> ().speedOnPath += Time.deltaTime;
 			yield return null;
 		}
+	}
+
+	public override void Die (Vector3 spawnPos)
+	{
+		//If all the dark spirits on path have been destroyed, destroys also the DarkSpiritComponents gameobject (and therefore the path)
+		if (transform.parent.transform.childCount == 1)
+			Destroy (transform.parent.transform.parent.gameObject);
+		base.Die (spawnPos);
 	}
 }

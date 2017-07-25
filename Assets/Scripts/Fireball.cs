@@ -82,8 +82,10 @@ public class Fireball : MonoBehaviour
 
 	public void RemoveFireball()
 	{
-		var emission = particlesystem.emission;
-		emission.enabled = false;
+		if (particlesystem != null) {
+			var emission = particlesystem.emission;
+			emission.enabled = false;
+		} 
 		Invoke("Destroy", 2f);
 
 	}

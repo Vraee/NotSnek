@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour {
 
+    public float invokeTime = 1;
+
 	// Use this for initialization
 	void Start () {
-        Invoke("Die", 1);
-	}
+        Invoke("Die", invokeTime);
+    }
 	
 	// Update is called once per frame
 	void Update () {

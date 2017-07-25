@@ -63,9 +63,9 @@ public class BackgroundScroller : MonoBehaviour
 		else
 		{
             bossAppear = true;
-			if (!bossDead && enemyHolder.transform.position.y > -(Camera.main.orthographicSize * 2))
+			if (bossAppear && enemyHolder.transform.position.y > -(Camera.main.orthographicSize * 2))
 			{
-				Vector3 enemiesPos = new Vector3(0, enemyHolder.transform.position.y - scrollSpeed * 2, 0);
+				Vector3 enemiesPos = new Vector3(0, enemyHolder.transform.position.y - scrollSpeed * 10f, 0);
 				enemyHolder.transform.position = enemiesPos;
 			}
 
@@ -102,10 +102,9 @@ public class BackgroundScroller : MonoBehaviour
 
 	private void SpawnEnemies()
 	{
-		GameObject wave = new GameObject();
 		if (offset.y >= nextEyeSpawn && eyeId < eyeWaves.Length)
 		{
-			wave = Instantiate(eyeWaves[eyeId], new Vector3(0, 0, 0), Quaternion.identity);
+			GameObject wave = Instantiate(eyeWaves[eyeId], new Vector3(0, 0, 0), Quaternion.identity);
 			wave.transform.SetParent(enemyHolder.transform);
 			eyeId++;
 			nextEyeSpawn += eyeSpawnDist;
@@ -114,15 +113,13 @@ public class BackgroundScroller : MonoBehaviour
 			{
 				foreach (EnemyController enemy in wave.GetComponentsInChildren<EnemyController>()) {
 					enemy.speed += enemy.speed * offset.y;
-					Debug.Log(enemy.speed);
-
 				}
 			}
 		}
 
 		if (offset.y >= nextOtherEnemySpawn && otherEnemyId < otherEnemyWaves.Length)
 		{
-			wave = Instantiate(otherEnemyWaves[otherEnemyId], new Vector3(0, 0, 0), Quaternion.identity);
+			GameObject wave = Instantiate(otherEnemyWaves[otherEnemyId], new Vector3(0, 0, 0), Quaternion.identity);
 			wave.transform.SetParent(enemyHolder.transform);
 			otherEnemyId++;
 			nextOtherEnemySpawn += otherEnemySpawnDist;
@@ -131,7 +128,6 @@ public class BackgroundScroller : MonoBehaviour
 			{
 				foreach (EnemyController enemy in wave.GetComponentsInChildren<EnemyController>()) {
 					enemy.speed += enemy.speed * offset.y;
-					Debug.Log(enemy.speed);
 				}
 			}
 		}
