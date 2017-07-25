@@ -9,7 +9,6 @@ public class Explosion : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         Invoke("Die", invokeTime);
-        Camera.main.GetComponent<CameraShake>().Shake(0.5f, 0.4f);
     }
 	
 	// Update is called once per frame

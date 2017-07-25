@@ -106,7 +106,6 @@ public class EnemyDarkSpirit : EnemyController {
 		//If all the dark spirits on path have been destroyed, destroys also the DarkSpiritComponents gameobject (and therefore the path)
 		if (transform.parent.transform.childCount == 1)
 			Destroy (transform.parent.transform.parent.gameObject);
-		GameObject death = Instantiate(deathPrefab, transform.position, transform.rotation);
 		base.Die (spawnPos);
 	}
 }

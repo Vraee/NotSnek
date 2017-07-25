@@ -15,8 +15,9 @@ public class EnemyController : MonoBehaviour
     public int minPowerUpAmount;
     private int powerUpAmount;
 	public GameObject targetPlayerPart;
-
     public GameObject deathPrefab;
+	public float screenShakeDuration;
+	public float screenShakeAmount;
     
     private GameManager gameManager;
     private SpriteRenderer sprite;
@@ -105,6 +106,8 @@ public class EnemyController : MonoBehaviour
 		}
 		moving = false;
 		vulnerable = true;
+
+		CheckSpawnPos ();
 	}
 
 	// Update is called once per frame
@@ -216,6 +219,12 @@ public class EnemyController : MonoBehaviour
 
 	public virtual void Die(Vector3 spawnPos)
     {
+		Camera.main.GetComponent<CameraShake>().Shake(screenShakeDuration, screenShakeAmount);
+
+		if (deathPrefab != null) {
+			GameObject death = Instantiate (deathPrefab, transform.position, transform.rotation);
+		}
+
         for (int i = 0; i < powerUpAmount; i++)
         {
             RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate, spawnPos);
@@ -246,6 +255,23 @@ public class EnemyController : MonoBehaviour
 
         }
     }
+
+	public bool CheckSpawnPos() {
+		bool inAreaX = false;
+		bool inAreaY = false;
+
+		if (transform.position.x >= gameManager.visibleAreaWidth / 2f * (-1f) && transform.position.x <= gameManager.visibleAreaWidth / 2f) {
+			inAreaX = true;
+		}
+
+		if (transform.position.y >= gameManager.visibleAreaHeight / 2f * (-1f) && transform.position.y <= gameManager.visibleAreaHeight / 2f) {
+			inAreaY = true;
+		}
+
+		Debug.Log ("inX: " + inAreaX + " inY: " + inAreaY);
+
+		return true;
+	}
 }
 
 
