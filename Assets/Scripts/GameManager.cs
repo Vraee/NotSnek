@@ -89,7 +89,6 @@ public class GameManager : MonoBehaviour {
     {
 		PreservableValues.SetScore(score);
 		PreservableValues.SetTimeOFDay((int)timeOfDay);
-		Debug.Log(preservableValues.GetComponent<PreservableValues>().GetScore() + " " + preservableValues.GetComponent<PreservableValues>().GetTimeOfDay());
         yield return new WaitForSeconds(delay);
 		DontDestroyOnLoad(preservableValues);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);

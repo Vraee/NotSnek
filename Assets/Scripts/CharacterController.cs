@@ -52,6 +52,7 @@ public class CharacterController : MonoBehaviour {
     private float viewWidth;
 	//The colour for all the bodyparts besides head; since only the head takes damage, the other parts are a bit darker
 	private Color32 bodyPartColor = new Color32 (112, 131, 163, 255);
+	private bool currentlyBlinking;
     
     public float bulletsPerSecond = 14.0f;
     private bool shooting = false;
@@ -176,6 +177,8 @@ public class CharacterController : MonoBehaviour {
 			StopCoroutine ("Berserk");
 			StopBerserk ();
 		}
+
+		CheckBlinking();
 	}
 		
 	private void RotateToMouse()
@@ -441,10 +444,6 @@ public class CharacterController : MonoBehaviour {
         fireball.GetComponent<Fireball>().damage = fireballDamage;
     }
 
-
-    
-
-
     private void Fire3()
     {
         if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("Fire1"))
@@ -597,4 +596,47 @@ public class CharacterController : MonoBehaviour {
             }
         }
     }
+
+	private void CheckBlinking()
+	{
+		if (bodyPartsAmount < 3 && !currentlyBlinking) {
+			StartCoroutine(BlinkRed());
+		}
+	}
+
+	IEnumerator BlinkRed()
+	{
+		currentlyBlinking = true;
+		float progress = 0;
+
+		while (progress <= 1)
+		{
+			foreach (GameObject bodyPart in bodyParts)
+			{
+				bodyPart.GetComponent<SpriteRenderer>().color = Color.Lerp(bodyPart.GetComponent<SpriteRenderer>().color, Color.red, progress);
+			}
+			progress += Time.deltaTime;
+			yield return null;
+		}
+
+		progress = 0;
+		while (progress <= 1)
+		{
+			for (int i = 0; i < bodyParts.Count; i++)
+			{
+				if (i == 0)
+				{
+					bodyParts[i].GetComponent<SpriteRenderer>().color = Color.Lerp(Color.red, Color.white, progress);
+				}
+				else
+				{
+					bodyParts[i].GetComponent<SpriteRenderer>().color = Color.Lerp(Color.red, bodyPartColor, progress);
+				}
+			}
+			progress += Time.deltaTime;
+			yield return null;
+		}
+
+		currentlyBlinking = false;
+	}
 }
