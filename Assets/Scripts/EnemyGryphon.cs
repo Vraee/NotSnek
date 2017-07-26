@@ -45,4 +45,10 @@ public class EnemyGryphon : EnemyController {
 			RotateToPlayer ();
 		}		
 	}
+
+	public override void Die (Vector3 spawnPos)
+	{
+		Destroy (transform.parent.gameObject);
+		base.Die (spawnPos);
+	}
 }

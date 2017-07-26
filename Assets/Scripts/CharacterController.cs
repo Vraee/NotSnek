@@ -154,6 +154,7 @@ public class CharacterController : MonoBehaviour {
 		takingDamage = false;
 
 		berserk = false;
+		//Debug.Log (bodyPartsAmount);
 	}
 
 	void Update() {
@@ -405,14 +406,16 @@ public class CharacterController : MonoBehaviour {
 
             bodyPartsAmount--;
         }
-        gameManager.UpdateMultiplier();
         if(HP <= 0)
         {
             shooting = false;
             gameObject.SetActive(false);
             gameManager.Restart();
+			bodyPartsAmount = 0;
         }
-        //Debug.Log ("bodyparts left " + bodyPartsAmount + " " + (bodyParts.Count - 1 - tailParts.Count));
+
+		gameManager.UpdateMultiplier();
+		//Debug.Log ("bodyparts left " + bodyPartsAmount + " HP: " + HP);
     }
 
 
@@ -538,7 +541,7 @@ public class CharacterController : MonoBehaviour {
 		Debug.Log ("ReduceHP: comparableHP" + comparableHP);*/
 	}
 
-	IEnumerator EnemyDamage(BodyPart hitPart) //USED TO BE "TakeDamage"
+	IEnumerator EnemyDamage(BodyPart hitPart)
 	{
 		if (!berserk) {
 			//Gets the enemy's damage output and subtracts it form player's HP

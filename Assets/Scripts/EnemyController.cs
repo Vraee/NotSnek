@@ -18,8 +18,10 @@ public class EnemyController : MonoBehaviour
     public GameObject deathPrefab;
 	public float screenShakeDuration;
 	public float screenShakeAmount;
+	public float score = 1;
     
-    private GameManager gameManager;
+	[HideInInspector]
+	public GameManager gameManager;
     private SpriteRenderer sprite;
     private Color hitColor = Color.red;
     private bool inflictDamage;
@@ -27,7 +29,7 @@ public class EnemyController : MonoBehaviour
     protected bool retreating;
 	public Vector3 destinationPoint;
     private Vector3 attackTarget;
-    private Vector3 enemyStartPos;
+	private Vector3 attackStartPos;
 	private float timer;
 	private bool moving;
 	private bool vulnerable;
@@ -91,7 +93,7 @@ public class EnemyController : MonoBehaviour
 		sprite = GetComponent<SpriteRenderer>();
 		attacking = false;
 		retreating = false;
-		enemyStartPos = gameObject.transform.position;
+		attackStartPos = gameObject.transform.position;
 
 		if (this is EnemyEarlyBird) {
 			childAttackDelay = this.GetComponent<EnemyEarlyBird> ().attackDelay;
@@ -141,17 +143,17 @@ public class EnemyController : MonoBehaviour
 
     public void AttackPlayer (float attackSpeed, GameObject enemy) {
         Vector3 tempAttackTarget = attackTarget;
-		Vector3 retreatPosition = enemyStartPos;
+		Vector3 retreatPosition = attackStartPos;
 
 		if (!attacking && !retreating) {
             attackTarget = targetPlayerPart.transform.position;
-            enemyStartPos = gameObject.transform.position;
+            attackStartPos = gameObject.transform.position;
 			attacking = true;
 			gameObject.GetComponent<MoveOnPath> ().SetOnPath (false);
         } else if (retreating) {
-			gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, enemyStartPos, childRetreatSpeed * Time.deltaTime);
+			gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, attackStartPos, childRetreatSpeed * Time.deltaTime);
 
-            if (gameObject.transform.position == enemyStartPos) {
+            if (gameObject.transform.position == attackStartPos) {
                 retreating = false;
 				moving = false;
 				gameObject.GetComponent<MoveOnPath> ().SetOnPath (true);
@@ -166,7 +168,7 @@ public class EnemyController : MonoBehaviour
             {
                 attacking = false;
                 retreating = true;
-                enemyStartPos = retreatPosition;
+                attackStartPos = retreatPosition;
             }
         }
 	}
@@ -227,7 +229,7 @@ public class EnemyController : MonoBehaviour
         {
             RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate, spawnPos);
         }
-        gameManager.IncreaseScore(1);
+		gameManager.IncreaseScore(score);
 	    Destroy (gameObject);
     }
 

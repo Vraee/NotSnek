@@ -29,13 +29,14 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         player = GameObject.Find("Player").GetComponent<CharacterController>();
-        multiplier = player.GetBodyPartsAmount();
+        multiplier = player.GetBodyPartsAmount() + 1;
 		//gameTime = timeToNextSpawn[0];
         greetingsText.enabled = false;
 		timeOfDay = TimeOfDay.Morning;
 
 		visibleAreaHeight = Camera.main.orthographicSize * 2;
 		visibleAreaWidth = visibleAreaHeight * Screen.width / Screen.height;
+		UpdateMultiplier ();
     }
 
     // Update is called once per frame
@@ -63,7 +64,7 @@ public class GameManager : MonoBehaviour {
     public void UpdateMultiplier()
     {
         if(player != null) {
-            multiplier = player.GetBodyPartsAmount();
+            multiplier = player.GetBodyPartsAmount() + 1;
         }
 
         multiplierText.text = "x" + multiplier;

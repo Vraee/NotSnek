@@ -11,7 +11,6 @@ public class EnemyEye : EnemyController {
 	public int spawnAmount;
 	public float movementAmount;
 	public float amplitude;
-	public bool destroyAfterTime;
 	//Should enemies move in a queue or together as a wall
 	public bool moveAsWall;
 	public bool switchStartDirection;
@@ -29,9 +28,11 @@ public class EnemyEye : EnemyController {
 	//The amount of spawned enemies so far; couldn't use a static variable, since it would cause problems when there are more than one enemy at the start of the game
 	private int spawned = 0;
 	private Vector3 originalPos;
+	private Vector3 startPos;
 	private Vector3 pos;
 	private float index;
 	private GameObject originalPowerUp;
+
 
 	private int GetSpawned() {
 		return spawned;
@@ -70,6 +71,7 @@ public class EnemyEye : EnemyController {
 			this.transform.position = originalPos;
 			pos = originalPos;
 		}
+		startPos = this.transform.position;
 
 		/*If enemy moves from right to left or down up at the start, flips turning points; 
 		this just makes checking when the enemy should turn back later in the code simpler.*/
@@ -80,13 +82,6 @@ public class EnemyEye : EnemyController {
 		}	
 
 		base.Start ();
-	}
-
-	new void Update() {
-		base.Update ();
-
-		if (Time.time >= destroyTimer && destroyAfterTime)
-			Die (this.gameObject.transform.position);
 	}
 
 	public override void MoveEnemy() {
@@ -128,6 +123,8 @@ public class EnemyEye : EnemyController {
 
 		if (moveBackAndForth)
 			CheckTurning();
+
+		CheckAreaCrossed ();
 	}
 
 	private void CheckTurning() {
@@ -161,4 +158,11 @@ public class EnemyEye : EnemyController {
         anime.Play("Blink");
     }
 
+	private void CheckAreaCrossed() {
+		bool areaCrossed;
+
+		if (!CheckInArea() && (Mathf.Abs(startPos.x - transform.position.x) > gameManager.visibleAreaWidth || Mathf.Abs(startPos.y - transform.position.y) > gameManager.visibleAreaHeight)) {
+			Destroy (gameObject);
+		}
+	}
 }

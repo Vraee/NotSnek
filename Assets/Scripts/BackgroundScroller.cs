@@ -41,7 +41,7 @@ public class BackgroundScroller : MonoBehaviour
 		nextOtherEnemySpawn = 0;
 
 		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-		bossDead = false;
+		bossDead = true;
     }
 	
 	// Update is called once per frame
@@ -94,7 +94,13 @@ public class BackgroundScroller : MonoBehaviour
 				rend.material.mainTextureOffset = offset;
 				ScaleToCamera();
 				eyeWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().eyesToSpawn;
+				otherEnemyWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().timeSpecificEnemiesToSpawn;
+
 				nextEyeSpawn = 0;
+				nextOtherEnemySpawn = 0;
+				eyeId = 0;
+				otherEnemyId = 0;
+
 				enemyHolder.transform.position = new Vector3(0, 0, 0);
 			}
 		}
