@@ -30,18 +30,21 @@ public class BackgroundScroller : MonoBehaviour
     void Start () {
         rend = GetComponent<Renderer>();
 		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-		ScaleToCamera();
+		//ScaleToCamera();
+		timeOfDay = gameManager.timeOfDay;
 		allTimeOfDayComponents = gameManager.timeOfDayComponents;
-		eyeWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().eyesToSpawn;
-		otherEnemyWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().timeSpecificEnemiesToSpawn;
+		//eyeWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().eyesToSpawn;
+		//otherEnemyWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().timeSpecificEnemiesToSpawn;
 
-		eyeSpawnDist = endOffset / eyeWaves.Length;
-		otherEnemySpawnDist = endOffset / otherEnemyWaves.Length;
-		nextEyeSpawn = 0;
-		nextOtherEnemySpawn = 0;
+		//eyeSpawnDist = endOffset / eyeWaves.Length;
+		//otherEnemySpawnDist = endOffset / otherEnemyWaves.Length;
+		//nextEyeSpawn = 0;
+		//nextOtherEnemySpawn = 0;
 
-		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+		SetTimeOfDayValues();
+
 		bossDead = true;
+
     }
 	
 	// Update is called once per frame
@@ -87,21 +90,9 @@ public class BackgroundScroller : MonoBehaviour
 				{
 					timeOfDay = 0;
 				}
+				gameManager.timeOfDay = timeOfDay;
 
-				rend.material.mainTexture = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().backgroundTexture;
-				offset.y = 0;
-				offsetTimer = 0;
-				rend.material.mainTextureOffset = offset;
-				ScaleToCamera();
-				eyeWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().eyesToSpawn;
-				otherEnemyWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().timeSpecificEnemiesToSpawn;
-
-				nextEyeSpawn = 0;
-				nextOtherEnemySpawn = 0;
-				eyeId = 0;
-				otherEnemyId = 0;
-
-				enemyHolder.transform.position = new Vector3(0, 0, 0);
+				SetTimeOfDayValues();
 			}
 		}
 	}
@@ -155,6 +146,26 @@ public class BackgroundScroller : MonoBehaviour
 		{
 			Destroy(enemySpawner.gameObject);
 		}
+	}
+
+	private void SetTimeOfDayValues()
+	{
+		rend.material.mainTexture = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().backgroundTexture;
+		offset.y = 0;
+		offsetTimer = 0;
+		rend.material.mainTextureOffset = offset;
+		ScaleToCamera();
+		eyeWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().eyesToSpawn;
+		otherEnemyWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().timeSpecificEnemiesToSpawn;
+		eyeSpawnDist = endOffset / eyeWaves.Length;
+		otherEnemySpawnDist = endOffset / otherEnemyWaves.Length;
+
+		nextEyeSpawn = 0;
+		nextOtherEnemySpawn = 0;
+		eyeId = 0;
+		otherEnemyId = 0;
+
+		enemyHolder.transform.position = new Vector3(0, 0, 0);
 	}
 
 	private void ScaleToCamera() {

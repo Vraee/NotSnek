@@ -159,8 +159,6 @@ public class EnemyEye : EnemyController {
     }
 
 	private void CheckAreaCrossed() {
-		bool areaCrossed;
-
 		if (!CheckInArea() && (Mathf.Abs(startPos.x - transform.position.x) > gameManager.visibleAreaWidth || Mathf.Abs(startPos.y - transform.position.y) > gameManager.visibleAreaHeight)) {
 			Destroy (gameObject);
 		}
