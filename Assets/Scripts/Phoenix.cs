@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Phoenix : EnemyController {
+    public float startSpeed;
     public GameObject pointA;
     public GameObject pointB;
     public float shootDelay;
@@ -13,8 +14,10 @@ public class Phoenix : EnemyController {
     private bool changePos = true;
     private float cameraWidth;
     private float cameraHeight;
+    private float hp;
     private float time;
     private float time2;
+    private BulletEmitter emitter;
 
     public override void MoveEnemy()
     {
@@ -24,28 +27,34 @@ public class Phoenix : EnemyController {
     new void Start()
     {
         base.Start();
-        StartCoroutine(MoveToPoint());
+        StartCoroutine(MoveToPoint(startSpeed));
+        Camera.main.GetComponent<CameraShake>().Shake(4, 0.1f);
         cameraHeight = Camera.main.orthographicSize * 2;
         cameraWidth = cameraHeight * Screen.width / Screen.height;
+        hp = stamina;
+        emitter = GetComponentInChildren<BulletEmitter>();
         time = shootDelay;
     }
 
     new void Update()
     {
+        base.Update();
         if (attack)
         {
             WideAttack();
+        }
+        if(stamina <= hp/2)
+        {
+            emitter.MakeAngry();
         }
     }
 
     private void WideAttack()
     {
         time2 += Time.deltaTime;
-        Debug.Log(time2);
         if (time2 <= shootTime)
         {
             time += Time.deltaTime;
-            Debug.Log(time);
             if (time >= shootDelay)
             {
                 float unit = (cameraWidth / 2) / fireBallAmount;
@@ -66,11 +75,11 @@ public class Phoenix : EnemyController {
         else
         {
             time2 = 0;
-            StartCoroutine(MoveToPoint());
+            StartCoroutine(MoveToPoint(speed));
         }
     }
 
-    IEnumerator MoveToPoint()
+    IEnumerator MoveToPoint(float movementSpeed)
     {
         attack = false;
         Vector3 point = new Vector3();
@@ -87,7 +96,7 @@ public class Phoenix : EnemyController {
 
         while (Vector3.Distance(transform.position, point) > 0.1f)
         {
-            transform.position = Vector3.MoveTowards(gameObject.transform.position, point, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(gameObject.transform.position, point, movementSpeed * Time.deltaTime);
             yield return null;
         }
         attack = true;

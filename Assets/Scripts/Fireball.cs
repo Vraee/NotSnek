@@ -7,14 +7,12 @@ public class Fireball : MonoBehaviour
     public float speed;
     public float amplitude;
     public bool shoot;
-    public bool sideToSide;
     public float damage;
     public GameObject explosion;
 	public GameObject player;
 	public float damageIncrease;
 	private ParticleSystem particlesystem;
-
-    private float lifeTime;
+    
     private Camera cam;
     private float viewHeight;
     private float viewWidth;
@@ -36,11 +34,10 @@ public class Fireball : MonoBehaviour
     {
         CheckLocation();
         gameObject.transform.Translate(gameObject.transform.up * speed * Time.deltaTime, Space.World);
-        if (sideToSide)
-        {
-            lifeTime += Time.deltaTime;
-            gameObject.transform.localPosition = new Vector2(transform.localPosition.x + Mathf.Sin(lifeTime) * amplitude * Time.deltaTime, transform.localPosition.y);
-        }
+
+            //lifeTime += Time.deltaTime;
+           // gameObject.transform.localPosition = new Vector2(transform.localPosition.x + Mathf.Sin(lifeTime) * amplitude * Time.deltaTime, transform.localPosition.y);
+            //gameObject.transform.Translate(gameObject.transform.right * Mathf.Sin(lifeTime) * amplitude * Time.deltaTime, Space.Self);
     }
 
 	//This is called in the enemy's OnTriggerEnter2D; Destroy() is called in the enemy's OnTriggerExit2D

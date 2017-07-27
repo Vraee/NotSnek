@@ -5,18 +5,37 @@ using UnityEngine;
 public class BulletEmitter : MonoBehaviour {
 
     public GameObject fireBall;
-    public float shootDelay;
     public float shootEvery;
+    private float shootTime;
+    private bool angry = false;
     private GameObject targetPlayerPart;
+
+    public void MakeAngry()
+    {
+        angry = true;
+    }
 
     private void Start()
     {
         targetPlayerPart = GameObject.Find("Head");
-        InvokeRepeating("Instantiate", shootDelay, shootEvery);
     }
 
     private void Update()
     {
+        if (angry)
+        {
+            shootTime += (Time.deltaTime * 2);
+        }
+        else
+        {
+            shootTime += Time.deltaTime;
+        }
+
+        if(shootTime >= shootEvery)
+        {
+            Instantiate();
+            shootTime = 0;
+        }
         RotateToPlayer();
     }
 
@@ -30,6 +49,10 @@ public class BulletEmitter : MonoBehaviour {
 
     private void Instantiate()
     {
-        Instantiate(fireBall, transform.position, transform.rotation);
+        if (gameObject.transform.position.y <= (2f * Camera.main.orthographicSize) / 2) {
+            Vector3 pos = transform.position;
+            pos.y += Mathf.Sin(Time.time * 180) * 0.5f;
+            Instantiate(fireBall, pos, transform.rotation);
+        }
     }
 }

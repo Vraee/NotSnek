@@ -6,6 +6,7 @@ public class BodyPart : MonoBehaviour {
     private int listIndex;
 	private float bodyPartHP;
 	private bool isHit;
+    private bool takeDamage;
 	private GameObject enemy;
 
 	void Start () {
@@ -48,9 +49,38 @@ public class BodyPart : MonoBehaviour {
             parentScript.StartCoroutine("EnemyFireballDamage", damage);
             collider.gameObject.GetComponent<Fireball>().Explode();
             collider.gameObject.GetComponent<Fireball>().RemoveFireball();
+        }else if(this.gameObject.tag == "Head" && collider.gameObject.tag == "Phoenix")
+        {
+            enemy = collider.gameObject;
+            takeDamage = true;
+            StartCoroutine(DealDamageToSelf());
         }
 	}
+
+    public void OnTriggerExit2D(Collider2D collider)
+    {
+        if (this.gameObject.tag == "Head" && collider.gameObject.tag == "Phoenix")
+        {
+            takeDamage = false;
+        }
+    }
+
+    IEnumerator DealDamageToSelf()
+    {
+        float progress = 0;
+        while (takeDamage)
+        {
+            progress += Time.deltaTime;
+            if (progress >= 0.5)
+            {
+                parentScript.StartCoroutine("EnemyDamage", this);
+                progress = 0;
+            }
+            yield return null;
+        }
+    }
 		
+
     IEnumerator Scale()
     {
         float progress = 0;

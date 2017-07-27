@@ -23,7 +23,7 @@ public class ChangePosition : MonoBehaviour {
     {
         if(StartSide == Sides.left)
         {
-            gameObject.transform.position = new Vector2(-cameraWidth / 4 , transform.position.y);
+            this.gameObject.transform.position = new Vector2(-cameraWidth / 4 , transform.position.y);
         }else if (StartSide == Sides.right)
         {
             gameObject.transform.position = new Vector2(cameraWidth / 4, transform.position.y);

@@ -25,6 +25,7 @@ public class BackgroundScroller : MonoBehaviour
 	private Vector2 offset;
     private bool bossAppear = false;
 	private bool bossDead;
+    private GameObject boss;
 
     // Use this for initialization
     void Start () {
@@ -63,14 +64,16 @@ public class BackgroundScroller : MonoBehaviour
 			rend.material.mainTextureOffset = offset;
 		}
 
-		else
+		else if(!bossAppear)
 		{
             bossAppear = true;
+            Instantiate(boss);
 			if (bossAppear && enemyHolder.transform.position.y > -(Camera.main.orthographicSize * 2))
 			{
 				Vector3 enemiesPos = new Vector3(0, enemyHolder.transform.position.y - scrollSpeed * 10f, 0);
 				enemyHolder.transform.position = enemiesPos;
 			}
+            
 
 			DisableEnemyMovement ();
 
@@ -79,8 +82,9 @@ public class BackgroundScroller : MonoBehaviour
 				DestroyEnemies();
 			}
 
-			if (bossDead)
+			if (CheckBossDead())
 			{
+                bossAppear = false;
 				//if ((int)timeOfDay < System.Enum.GetValues(typeof(GameManager.TimeOfDay)).Length)
 				if ((int)timeOfDay < 2)
 				{
@@ -96,6 +100,19 @@ public class BackgroundScroller : MonoBehaviour
 			}
 		}
 	}
+
+    private bool CheckBossDead()
+    {
+        if (boss == null)
+        {
+            Debug.Log("moi");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 	private void SpawnEnemies()
 	{
@@ -166,7 +183,8 @@ public class BackgroundScroller : MonoBehaviour
 		otherEnemyId = 0;
 
 		enemyHolder.transform.position = new Vector3(0, 0, 0);
-	}
+        boss = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().boss;
+    }
 
 	private void ScaleToCamera() {
 		Texture background = rend.material.mainTexture;
