@@ -532,10 +532,6 @@ public class CharacterController : MonoBehaviour {
 			}
 		}
 
-		/*if (HP <= 0) {
-			SceneManager.LoadScene (SceneManager.GetActiveScene().name); //Probably should reaload the scene from the start in finished versiom
-		}*/
-
 		/*Debug.Log ("ReduceHP: HP " + HP);
 		Debug.Log ("ReduceHP: comparableHP" + comparableHP);*/
 	}
@@ -599,7 +595,7 @@ public class CharacterController : MonoBehaviour {
 
 	private void CheckBlinking()
 	{
-		if (bodyPartsAmount < 3 && !currentlyBlinking) {
+		if (HP < 10 && !currentlyBlinking) {
 			StartCoroutine(BlinkRed());
 		}
 	}

@@ -27,6 +27,10 @@ public class BackgroundScroller : MonoBehaviour
 	private bool bossDead;
     private GameObject boss;
 
+	public void SetBossDead(bool bossDead) {
+		this.bossDead = bossDead;
+	}
+
     // Use this for initialization
     void Start () {
         rend = GetComponent<Renderer>();
@@ -44,8 +48,7 @@ public class BackgroundScroller : MonoBehaviour
 
 		SetTimeOfDayValues();
 
-		bossDead = true;
-
+		bossDead = false;
     }
 	
 	// Update is called once per frame
@@ -81,38 +84,26 @@ public class BackgroundScroller : MonoBehaviour
 			{
 				DestroyEnemies();
 			}
+		}
 
-			if (CheckBossDead())
+		if (bossDead && bossAppear)
+		{
+			bossAppear = false;
+			bossDead = false;
+			//if ((int)timeOfDay < System.Enum.GetValues(typeof(GameManager.TimeOfDay)).Length)
+			if ((int)timeOfDay < 2)
 			{
-                bossAppear = false;
-				//if ((int)timeOfDay < System.Enum.GetValues(typeof(GameManager.TimeOfDay)).Length)
-				if ((int)timeOfDay < 2)
-				{
-					timeOfDay++;
-				}
-				else
-				{
-					timeOfDay = 0;
-				}
-				gameManager.timeOfDay = timeOfDay;
-
-				SetTimeOfDayValues();
+				timeOfDay++;
 			}
+			else
+			{
+				timeOfDay = 0;
+			}
+			gameManager.timeOfDay = timeOfDay;
+
+			SetTimeOfDayValues();
 		}
 	}
-
-    private bool CheckBossDead()
-    {
-        if (boss == null)
-        {
-            Debug.Log("moi");
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 
 	private void SpawnEnemies()
 	{
@@ -167,6 +158,7 @@ public class BackgroundScroller : MonoBehaviour
 
 	private void SetTimeOfDayValues()
 	{
+		gameManager.SetScoreAtEndOfPhase (gameManager.GetScore());
 		rend.material.mainTexture = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().backgroundTexture;
 		offset.y = 0;
 		offsetTimer = 0;
