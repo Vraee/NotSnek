@@ -37,8 +37,11 @@ public class GameManager : MonoBehaviour {
 
 		visibleAreaHeight = Camera.main.orthographicSize * 2;
 		visibleAreaWidth = visibleAreaHeight * Screen.width / Screen.height;
-		score = preservableValues.GetComponent<PreservableValues>().GetScore();
-		timeOfDay = (TimeOfDay)preservableValues.GetComponent<PreservableValues>().GetTimeOfDay();
+
+		score = PreservableValues.GetScore ();
+		timeOfDay = (TimeOfDay)PreservableValues.GetTimeOfDay ();
+		timer = PreservableValues.GetTimer ();
+
 		UpdateScore();
         UpdateMultiplier(true);
     }
@@ -73,8 +76,8 @@ public class GameManager : MonoBehaviour {
 
     void OnGUI()
     {
-        minutes = Mathf.FloorToInt(timer / 60F);
-        seconds = Mathf.FloorToInt(timer - minutes * 60);
+        int minutes = Mathf.FloorToInt(timer / 60F);
+        int seconds = Mathf.FloorToInt(timer - minutes * 60);
         string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
 
         GUI.Label(new Rect(10, 10, 250, 100), niceTime);

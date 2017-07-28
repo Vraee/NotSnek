@@ -37,11 +37,10 @@ public class EnemyDarkSpirit : EnemyController {
 		baseScore = score;
 		//Debug.Log ("stamina: " + stamina + " damage: " + damageOutput + " score: " + score);
 		//gameObject.GetComponent<MoveOnPath> ().SetStartIndex(startWayPointID);
-		Debug.Log ("start: " + gameObject.GetComponent<MoveOnPath> ().currentWayPointID );
+		//Debug.Log ("start: " + gameObject.GetComponent<MoveOnPath> ().currentWayPointID );
 	}
 
 	new void Update() {
-		Debug.Log (gameObject.GetComponent<MoveOnPath> ().currentWayPointID);
 		base.Update ();
 		if (Time.time >= divisionTimer && divisionsAmount < 3 && !divided && gameObject.GetComponent<MoveOnPath>().GetOnPath()) {
 			divisionsAmount++;
