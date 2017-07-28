@@ -5,11 +5,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
-
-    public float multiplier;
-    public float gameTime;
-    public float timer;
-	public float score;
 	public Text scoreText;
 	public Text multiplierText;
 	public Text greetingsText;
@@ -27,6 +22,12 @@ public class GameManager : MonoBehaviour {
 	[HideInInspector]
 	public float visibleAreaHeight;
 
+	private float multiplier;
+	private float gameTime;
+	private float timer;
+	private float score;
+	private float scoreAtEndOfPhase;
+
 	// Use this for initialization
 	void Start () {
         player = GameObject.Find("Player").GetComponent<CharacterController>();
@@ -42,6 +43,22 @@ public class GameManager : MonoBehaviour {
 		UpdateMultiplier();
 		UpdateScore();
     }
+
+	public float GetScore() {
+		return score;
+	}
+
+	public void SetScore(float score) {
+		this.score = score;
+	}
+
+	public float GetScoreAtEndOfPhase() {
+		return scoreAtEndOfPhase;
+	}
+
+	public void SetScoreAtEndOfPhase(float scoreAtEndOfPhase) {
+		this.scoreAtEndOfPhase = scoreAtEndOfPhase;
+	}
 
     // Update is called once per frame
     void Update()
@@ -87,10 +104,9 @@ public class GameManager : MonoBehaviour {
 
     IEnumerator LoadLevelAfterDelay(float delay)
     {
-		PreservableValues.SetScore(score);
+		PreservableValues.SetScore(scoreAtEndOfPhase);
 		PreservableValues.SetTimeOFDay((int)timeOfDay);
         yield return new WaitForSeconds(delay);
-		DontDestroyOnLoad(preservableValues);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

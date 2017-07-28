@@ -10,6 +10,9 @@ public class Phoenix : EnemyController {
     public float shootTime;
     public GameObject fireBall;
     public float fireBallAmount;
+
+	private BackgroundScroller backgroundScroller;
+
     private bool attack = false;
     private bool changePos = true;
     private float cameraWidth;
@@ -34,6 +37,7 @@ public class Phoenix : EnemyController {
         hp = stamina;
         emitter = GetComponentInChildren<BulletEmitter>();
         time = shootDelay;
+		backgroundScroller = GameObject.Find("BackgroundController").GetComponent<BackgroundScroller>();
     }
 
     new void Update()
@@ -102,4 +106,8 @@ public class Phoenix : EnemyController {
         attack = true;
     }
 
+	public override void Die (Vector3 spawnPos) {
+		backgroundScroller.GetComponent<BackgroundScroller> ().SetBossDead (true);
+		base.Die(spawnPos);
+	}
 }
