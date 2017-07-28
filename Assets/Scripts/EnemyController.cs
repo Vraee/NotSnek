@@ -231,7 +231,7 @@ public class EnemyController : MonoBehaviour
         {
             RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate, spawnPos);
         }
-        canvas.GetComponent<PopupController>().CreateFloathingText((score * gameManager.multiplier).ToString(), gameObject.transform);
+        canvas.GetComponent<PopupController>().CreateFloathingText((score * gameManager.GetMultiplier()).ToString(), gameObject.transform);
         gameManager.IncreaseScore(score);
 	    Destroy (gameObject);
     }

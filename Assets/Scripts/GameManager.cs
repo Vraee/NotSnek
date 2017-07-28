@@ -60,6 +60,11 @@ public class GameManager : MonoBehaviour {
 		this.scoreAtEndOfPhase = scoreAtEndOfPhase;
 	}
 
+    public float GetMultiplier()
+    {
+        return multiplier;
+    }
+
     // Update is called once per frame
     void Update()
     {
