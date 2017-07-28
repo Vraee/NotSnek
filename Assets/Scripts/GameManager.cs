@@ -40,8 +40,8 @@ public class GameManager : MonoBehaviour {
 		visibleAreaWidth = visibleAreaHeight * Screen.width / Screen.height;
 		score = preservableValues.GetComponent<PreservableValues>().GetScore();
 		timeOfDay = (TimeOfDay)preservableValues.GetComponent<PreservableValues>().GetTimeOfDay();
-		UpdateMultiplier();
 		UpdateScore();
+        UpdateMultiplier();
     }
 
 	public float GetScore() {
@@ -90,10 +90,22 @@ public class GameManager : MonoBehaviour {
     public void UpdateMultiplier()
     {
         if(player != null) {
-            multiplier = player.GetBodyPartsAmount() + 1;
+            if(player.GetBodyPartsAmount() > 0) {
+                multiplier = player.GetBodyPartsAmount();
+            }
+            else
+            {
+                multiplier = 1;
+            }
         }
-
         multiplierText.text = "x" + multiplier;
+        
+        AnimateMultiplier();
+    }
+
+    public void AnimateMultiplier()
+    {
+        multiplierText.GetComponent<PlayBounce>().Bounce();
     }
 
     void UpdateScore()

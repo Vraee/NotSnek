@@ -16,7 +16,7 @@ public class PopupText : MonoBehaviour {
 
     public void SetText(string texti)
     {
-        GetComponentInChildren<Text>().text = texti;
+        GetComponentInChildren<Text>().text = "+" + texti;
     }
 	
 }
