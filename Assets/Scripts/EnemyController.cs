@@ -28,6 +28,7 @@ public class EnemyController : MonoBehaviour
 	protected bool attacking;
     protected bool retreating;
 	public Vector3 destinationPoint;
+    private GameObject canvas;
     private Vector3 attackTarget;
 	private Vector3 attackStartPos;
 	private float timer;
@@ -87,6 +88,7 @@ public class EnemyController : MonoBehaviour
 	// Use this for initialization
 	protected void Start()
 	{
+        canvas = GameObject.Find("Canvas");
         powerUpAmount = Random.Range(minPowerUpAmount, maxPowerUpAmount + 1);
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         targetPlayerPart = GameObject.Find ("Head");
@@ -229,7 +231,8 @@ public class EnemyController : MonoBehaviour
         {
             RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate, spawnPos);
         }
-		gameManager.IncreaseScore(score);
+        canvas.GetComponent<PopupController>().CreateFloathingText((score * gameManager.multiplier).ToString(), gameObject.transform);
+        gameManager.IncreaseScore(score);
 	    Destroy (gameObject);
     }
 
