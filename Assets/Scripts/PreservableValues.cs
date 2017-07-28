@@ -5,8 +5,9 @@ using UnityEngine;
 public class PreservableValues : MonoBehaviour {
 	static int timeOfDay;
 	static float score;
+	static float timer;
 
-	public int GetTimeOfDay()
+	public static int GetTimeOfDay()
 	{
 		return timeOfDay;
 	}
@@ -16,7 +17,7 @@ public class PreservableValues : MonoBehaviour {
 		timeOfDay = newTimeOfDay;
 	}
 
-	public float GetScore()
+	public static float GetScore()
 	{
 		return score;
 	}
@@ -24,6 +25,14 @@ public class PreservableValues : MonoBehaviour {
 	public static void SetScore(float newScore)
 	{
 		score = newScore;
+	}
+
+	public static float GetTimer() {
+		return timer;
+	}
+
+	public static void SetTimer(float newTimer) {
+		timer = newTimer;
 	}
 
 	void Awake()

@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour {
 	public Text multiplierText;
 	public Text greetingsText;
 	public GameObject[] timeOfDayComponents;
-	public GameObject preservableValues;
 
 	[HideInInspector]
 	public CharacterController player;
@@ -27,19 +26,23 @@ public class GameManager : MonoBehaviour {
 	private float timer;
 	private float score;
 	private float scoreAtEndOfPhase;
+	private int minutes;
+	private int seconds;
 
 	// Use this for initialization
 	void Start () {
         player = GameObject.Find("Player").GetComponent<CharacterController>();
         multiplier = player.GetBodyPartsAmount() + 1;
-		//gameTime = timeToNextSpawn[0];
         greetingsText.enabled = false;
 		timeOfDay = TimeOfDay.Morning;
 
 		visibleAreaHeight = Camera.main.orthographicSize * 2;
 		visibleAreaWidth = visibleAreaHeight * Screen.width / Screen.height;
-		score = preservableValues.GetComponent<PreservableValues>().GetScore();
-		timeOfDay = (TimeOfDay)preservableValues.GetComponent<PreservableValues>().GetTimeOfDay();
+
+		score = PreservableValues.GetScore();
+		timeOfDay = (TimeOfDay)PreservableValues.GetTimeOfDay();
+		timer = PreservableValues.GetTimer ();
+
 		UpdateMultiplier();
 		UpdateScore();
     }
@@ -69,8 +72,8 @@ public class GameManager : MonoBehaviour {
 
     void OnGUI()
     {
-        int minutes = Mathf.FloorToInt(timer / 60F);
-        int seconds = Mathf.FloorToInt(timer - minutes * 60);
+        minutes = Mathf.FloorToInt(timer / 60F);
+        seconds = Mathf.FloorToInt(timer - minutes * 60);
         string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
 
         GUI.Label(new Rect(10, 10, 250, 100), niceTime);
@@ -107,6 +110,7 @@ public class GameManager : MonoBehaviour {
 		PreservableValues.SetScore(scoreAtEndOfPhase);
 		PreservableValues.SetTimeOFDay((int)timeOfDay);
         yield return new WaitForSeconds(delay);
+		PreservableValues.SetTimer (timer);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

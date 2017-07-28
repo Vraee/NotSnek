@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class EnemyDarkSpirit : EnemyController {
 	public float divisionDelay = 5f;
-	public GameObject secondPowerUp;
-	public GameObject thirdPowerUp;
 
 	private float baseStamina;
+	private float baseDamageOutput;
+	private float baseScore;
 	private float divisionTimer;
 	private bool divided = false;
 	private int divisionsAmount = 0;
-
-	//static int ID;
+	private int startWayPointID;
 
 	public int GetDivisionsAmount() {
 		return divisionsAmount;
@@ -22,15 +21,27 @@ public class EnemyDarkSpirit : EnemyController {
 		this.divisionsAmount = divisionsAmount;
 	}
 
+	public int GetStartWayPointID() {
+		return startWayPointID;
+	}
+
+	public void SetStartWayPointID(int startWayPointID) {
+		this.startWayPointID = startWayPointID;
+	}
+
 	new void Start() {	
-		//ID++;
 		base.Start ();
 		divisionTimer = Time.time + divisionDelay;
 		baseStamina = stamina;
-		//Debug.Log ("ID: " + ID + " stamina: " + stamina + " baseStamina " + baseStamina);
+		baseDamageOutput = damageOutput;
+		baseScore = score;
+		//Debug.Log ("stamina: " + stamina + " damage: " + damageOutput + " score: " + score);
+		//gameObject.GetComponent<MoveOnPath> ().SetStartIndex(startWayPointID);
+		Debug.Log ("start: " + gameObject.GetComponent<MoveOnPath> ().currentWayPointID );
 	}
 
 	new void Update() {
+		Debug.Log (gameObject.GetComponent<MoveOnPath> ().currentWayPointID);
 		base.Update ();
 		if (Time.time >= divisionTimer && divisionsAmount < 3 && !divided && gameObject.GetComponent<MoveOnPath>().GetOnPath()) {
 			divisionsAmount++;
@@ -63,28 +74,36 @@ public class EnemyDarkSpirit : EnemyController {
             smallDropRate = 95;
             largeDropRate = 0;
         }
+
+		maxPowerUpAmount = 3;
         StartCoroutine(Scale ());
 		EnemyDarkSpirit currentDarkSpirit = this;
 		baseStamina = baseStamina / 2;
 		stamina = baseStamina;
+		baseDamageOutput = baseDamageOutput / 2;
+		damageOutput = baseDamageOutput;
+		baseScore = baseScore / 2;
+		score = baseScore;
+
+		/*if (gameObject.GetComponent<MoveOnPath> ().pathToFollow.pathObjects.Count > this.gameObject.GetComponent<MoveOnPath> ().currentWayPointID + 2) {
+			startWayPointID = this.gameObject.GetComponent<MoveOnPath> ().currentWayPointID + 2;
+		} else {
+			startWayPointID = this.gameObject.GetComponent<MoveOnPath> ().currentWayPointID - 2;
+		}*/
+
+		Debug.Log (startWayPointID);
 
 		EnemyDarkSpirit newDarkSpirit = Instantiate(currentDarkSpirit) as EnemyDarkSpirit;
 		newDarkSpirit.StartScaling ();
 		newDarkSpirit.SetDivisionsAmount (divisionsAmount);
 		newDarkSpirit.transform.parent = this.transform.parent;
 		newDarkSpirit.transform.position = transform.position;
+		//newDarkSpirit.SetStartWayPointID (startWayPointID);
 	}
 
 	public void StartScaling() {
 		StartCoroutine(Scale ());
 	}
-
-    /*public override void Die()
-    {
-        base.Die();
-        GameObject death = Instantiate(deathPrefab, transform.position, transform.rotation);
-        //death.GetComponent<Explosion>().ChangeParameters(gameObject.transform);
-    }*/
 
 	IEnumerator Scale()
 	{

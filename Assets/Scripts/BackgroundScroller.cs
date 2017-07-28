@@ -71,18 +71,14 @@ public class BackgroundScroller : MonoBehaviour
 		{
             bossAppear = true;
             Instantiate(boss);
-			if (bossAppear && enemyHolder.transform.position.y > -(Camera.main.orthographicSize * 2))
-			{
-				Vector3 enemiesPos = new Vector3(0, enemyHolder.transform.position.y - scrollSpeed * 10f, 0);
-				enemyHolder.transform.position = enemiesPos;
-			}
-            
+		}
 
+		if (bossAppear)
+		{
 			DisableEnemyMovement ();
 
-			if (enemyHolder.transform.position.y <= -(Camera.main.orthographicSize * 2))
-			{
-				DestroyEnemies();
+			if (enemyHolder.transform.position.y > -(Camera.main.orthographicSize * 2)) {
+				MoveEnemiesOffscreen ();
 			}
 		}
 
@@ -148,6 +144,16 @@ public class BackgroundScroller : MonoBehaviour
 		}
 	}
 
+	private void MoveEnemiesOffscreen() {
+		Vector3 enemiesPos = new Vector3(0, enemyHolder.transform.position.y - scrollSpeed * 10f, 0);
+		enemyHolder.transform.position = enemiesPos;
+
+		if (enemyHolder.transform.position.y <= -(Camera.main.orthographicSize * 2))
+		{
+			DestroyEnemies();
+		}
+	}
+
 	private void DestroyEnemies()
 	{
 		foreach (Transform enemySpawner in enemyHolder.transform)
@@ -164,6 +170,10 @@ public class BackgroundScroller : MonoBehaviour
 		offsetTimer = 0;
 		rend.material.mainTextureOffset = offset;
 		ScaleToCamera();
+
+		enemyHolder.transform.position = new Vector3(0, 0, 0);
+		DestroyEnemies ();
+        boss = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().boss;
 		eyeWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().eyesToSpawn;
 		otherEnemyWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().timeSpecificEnemiesToSpawn;
 		eyeSpawnDist = endOffset / eyeWaves.Length;
@@ -173,9 +183,6 @@ public class BackgroundScroller : MonoBehaviour
 		nextOtherEnemySpawn = 0;
 		eyeId = 0;
 		otherEnemyId = 0;
-
-		enemyHolder.transform.position = new Vector3(0, 0, 0);
-        boss = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().boss;
     }
 
 	private void ScaleToCamera() {
