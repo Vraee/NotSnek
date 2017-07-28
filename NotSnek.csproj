@@ -104,6 +104,7 @@
     <Compile Include="Assets\Scripts\Movement.cs" />
     <Compile Include="Assets\Scripts\Phoenix.cs" />
     <Compile Include="Assets\Scripts\PlayBounce.cs" />
+    <Compile Include="Assets\Scripts\PlayShake.cs" />
     <Compile Include="Assets\Scripts\PopupController.cs" />
     <Compile Include="Assets\Scripts\PopupText.cs" />
     <Compile Include="Assets\Scripts\PowerUp.cs" />

@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour {
 		score = preservableValues.GetComponent<PreservableValues>().GetScore();
 		timeOfDay = (TimeOfDay)preservableValues.GetComponent<PreservableValues>().GetTimeOfDay();
 		UpdateScore();
-        UpdateMultiplier();
+        UpdateMultiplier(true);
     }
 
 	public float GetScore() {
@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour {
         UpdateScore();
     }
 
-    public void UpdateMultiplier()
+    public void UpdateMultiplier(bool increase)
     {
         if(player != null) {
             if(player.GetBodyPartsAmount() > 0) {
@@ -99,15 +99,15 @@ public class GameManager : MonoBehaviour {
             }
         }
         multiplierText.text = "x" + multiplier;
-        
-        AnimateMultiplier();
+        if (increase) { 
+            multiplierText.GetComponent<PlayBounce>().Bounce();
+        }
+        else
+        {
+            multiplierText.GetComponent<PlayShake>().Shake();
+        }
     }
-
-    public void AnimateMultiplier()
-    {
-        multiplierText.GetComponent<PlayBounce>().Bounce();
-    }
-
+    
     void UpdateScore()
     {
         scoreText.text = "super duper highscore: " + score;
