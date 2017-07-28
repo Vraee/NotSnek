@@ -26,25 +26,21 @@ public class GameManager : MonoBehaviour {
 	private float timer;
 	private float score;
 	private float scoreAtEndOfPhase;
-	private int minutes;
-	private int seconds;
 
 	// Use this for initialization
 	void Start () {
         player = GameObject.Find("Player").GetComponent<CharacterController>();
         multiplier = player.GetBodyPartsAmount() + 1;
+		//gameTime = timeToNextSpawn[0];
         greetingsText.enabled = false;
 		timeOfDay = TimeOfDay.Morning;
 
 		visibleAreaHeight = Camera.main.orthographicSize * 2;
 		visibleAreaWidth = visibleAreaHeight * Screen.width / Screen.height;
-
-		score = PreservableValues.GetScore();
-		timeOfDay = (TimeOfDay)PreservableValues.GetTimeOfDay();
-		timer = PreservableValues.GetTimer ();
-
-		UpdateMultiplier();
+		score = preservableValues.GetComponent<PreservableValues>().GetScore();
+		timeOfDay = (TimeOfDay)preservableValues.GetComponent<PreservableValues>().GetTimeOfDay();
 		UpdateScore();
+        UpdateMultiplier(true);
     }
 
 	public float GetScore() {
@@ -62,6 +58,11 @@ public class GameManager : MonoBehaviour {
 	public void SetScoreAtEndOfPhase(float scoreAtEndOfPhase) {
 		this.scoreAtEndOfPhase = scoreAtEndOfPhase;
 	}
+
+    public float GetMultiplier()
+    {
+        return multiplier;
+    }
 
     // Update is called once per frame
     void Update()
@@ -85,15 +86,27 @@ public class GameManager : MonoBehaviour {
         UpdateScore();
     }
 
-    public void UpdateMultiplier()
+    public void UpdateMultiplier(bool increase)
     {
         if(player != null) {
-            multiplier = player.GetBodyPartsAmount() + 1;
+            if(player.GetBodyPartsAmount() > 0) {
+                multiplier = player.GetBodyPartsAmount();
+            }
+            else
+            {
+                multiplier = 1;
+            }
         }
-
         multiplierText.text = "x" + multiplier;
+        if (increase) { 
+            multiplierText.GetComponent<PlayBounce>().Bounce();
+        }
+        else
+        {
+            multiplierText.GetComponent<PlayShake>().Shake();
+        }
     }
-
+    
     void UpdateScore()
     {
         scoreText.text = "super duper highscore: " + score;

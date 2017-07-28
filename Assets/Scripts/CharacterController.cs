@@ -395,7 +395,7 @@ public class CharacterController : MonoBehaviour {
 		bodyPartsAmount++;
 		HP += bodyPartHP;
 		comparableHP += bodyPartHP;
-        gameManager.UpdateMultiplier();
+        gameManager.UpdateMultiplier(true);
         //Debug.Log (bodyPartsAmount);
     }
 
@@ -417,7 +417,7 @@ public class CharacterController : MonoBehaviour {
 			bodyPartsAmount = 0;
         }
 
-		gameManager.UpdateMultiplier();
+		gameManager.UpdateMultiplier(false);
 		//Debug.Log ("bodyparts left " + bodyPartsAmount + " HP: " + HP);
     }
 
