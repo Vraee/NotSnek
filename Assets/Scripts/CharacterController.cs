@@ -14,6 +14,7 @@ public class CharacterController : MonoBehaviour {
     public float speed;
 	public float bodyPartSpeed; 
 	public float minDistance;
+    public float damageInBerserk;
 	public float bodyPartDistance;
 	public float bodyPartHP;
 	public int takeDamageDelay = 1;
@@ -114,6 +115,11 @@ public class CharacterController : MonoBehaviour {
 	{
 		berserk = newBerserk;
 	}
+
+    public float GetBerserkDamage()
+    {
+        return damageInBerserk;
+    }
 
 	public float GetDamageSum()
 	{
@@ -485,7 +491,7 @@ public class CharacterController : MonoBehaviour {
 			//Removes each bodypart (excluding head and tail) starting from the last one after 1 second delay
 			for (int i = bodyParts.Count - tailParts.Count - 1; i > 0; i--)
 			{
-				yield return new WaitForSeconds(1);
+				yield return new WaitForSeconds(0.5f);
 				RemoveBodyPart(i);
 
 				//Reduces HP if there is too much of it in relation to amount of bodyparts
