@@ -31,6 +31,7 @@ public class EnemyController : MonoBehaviour
     private GameObject canvas;
     private Vector3 attackTarget;
 	private Vector3 attackStartPos;
+    private float berserkDamage;
 	private float timer;
 	private bool moving;
 	private bool vulnerable;
@@ -110,6 +111,7 @@ public class EnemyController : MonoBehaviour
 		}
 		moving = false;
 		vulnerable = true;
+        berserkDamage = GameObject.Find("Player").GetComponent<CharacterController>().GetBerserkDamage();
 	}
 
 	// Update is called once per frame
@@ -203,7 +205,7 @@ public class EnemyController : MonoBehaviour
     }
 
 	private void InflictDamage() {
-		InflictDamage (Time.deltaTime);
+		InflictDamage (Time.deltaTime * berserkDamage);
 	}
 
 	private void InflictDamage(float damage)
@@ -225,6 +227,7 @@ public class EnemyController : MonoBehaviour
 
 		if (deathPrefab != null) {
 			GameObject death = Instantiate (deathPrefab, transform.position, transform.rotation);
+			death.GetComponent<Explosion> ().ChangeParameters (gameObject.transform);
 		}
 
         for (int i = 0; i < powerUpAmount; i++)

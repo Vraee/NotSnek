@@ -14,18 +14,24 @@ public class BackgroundScroller : MonoBehaviour
 	private float nextEyeSpawn;
 	private float otherEnemySpawnDist;
 	private float nextOtherEnemySpawn;
+	private float bonusEnemySpawnDist;
+	private float nextBonusEnemySpawn;
 	private GameManager gameManager;
 	private GameObject[] eyeWaves;
 	private GameObject[] otherEnemyWaves;
+	private GameObject[] bonusEnemyWaves;
 	private GameObject[] allTimeOfDayComponents;
 	private int eyeId;
 	private int otherEnemyId;
+	private int bonusEnemyId;
 	private GameManager.TimeOfDay timeOfDay;
 	private float offsetTimer;
 	private Vector2 offset;
     private bool bossAppear = false;
 	private bool bossDead;
     private GameObject boss;
+	private float scaledTexWidth;
+	private float scaledTexHeight;
 
 	public void SetBossDead(bool bossDead) {
 		this.bossDead = bossDead;
@@ -133,6 +139,20 @@ public class BackgroundScroller : MonoBehaviour
 			}
 		}
 
+		if (offset.y >= nextBonusEnemySpawn && bonusEnemyId < bonusEnemyWaves.Length)
+		{
+			GameObject wave = Instantiate(bonusEnemyWaves[bonusEnemyId], new Vector3(0, 0, 0), Quaternion.identity);
+			wave.transform.SetParent(enemyHolder.transform);
+			bonusEnemyId++;
+			nextBonusEnemySpawn += bonusEnemySpawnDist;
+
+			if (allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().increaseSpecificEnemySpeed)
+			{
+				foreach (EnemyController enemy in wave.GetComponentsInChildren<EnemyController>()) {
+					enemy.speed += enemy.speed * offset.y;
+				}
+			}
+		}
 	}
 
 	private void DisableEnemyMovement() {
@@ -176,20 +196,42 @@ public class BackgroundScroller : MonoBehaviour
         boss = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().boss;
 		eyeWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().eyesToSpawn;
 		otherEnemyWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().timeSpecificEnemiesToSpawn;
-		eyeSpawnDist = endOffset / eyeWaves.Length;
-		otherEnemySpawnDist = endOffset / otherEnemyWaves.Length;
+		bonusEnemyWaves = allTimeOfDayComponents [(int)timeOfDay].GetComponent<TimeOfDayComponents> ().bonusEnemiesToSpawn;
 
-		nextEyeSpawn = 0;
-		nextOtherEnemySpawn = 0;
+		if (allTimeOfDayComponents [(int)timeOfDay].GetComponent<TimeOfDayComponents> ().immediatelySpawnEyes) {
+			eyeSpawnDist = endOffset / eyeWaves.Length;
+			nextEyeSpawn = 0;
+		} else {
+			eyeSpawnDist = (1 / scaledTexHeight * (scaledTexHeight - Camera.main.orthographicSize * 4) / eyeWaves.Length);
+			nextEyeSpawn = eyeSpawnDist;
+		}
+
+		if (allTimeOfDayComponents [(int)timeOfDay].GetComponent<TimeOfDayComponents> ().immediatelySpawnSpecificEnemies) {
+			otherEnemySpawnDist = endOffset / otherEnemyWaves.Length;
+			nextOtherEnemySpawn = 0;
+		} else {
+			otherEnemySpawnDist = (1 / scaledTexHeight * (scaledTexHeight - Camera.main.orthographicSize * 4) / otherEnemyWaves.Length);
+			nextOtherEnemySpawn = otherEnemySpawnDist;
+		}
+
+		if (allTimeOfDayComponents [(int)timeOfDay].GetComponent<TimeOfDayComponents> ().immediatelySpawnBonusEnemies) {
+			bonusEnemySpawnDist = endOffset / bonusEnemyWaves.Length;
+			nextBonusEnemySpawn = 0;
+		} else {
+			bonusEnemySpawnDist = (1 / scaledTexHeight * (scaledTexHeight - Camera.main.orthographicSize * 4) / bonusEnemyWaves.Length);
+			nextBonusEnemySpawn = bonusEnemySpawnDist;
+		}
+
 		eyeId = 0;
 		otherEnemyId = 0;
+		bonusEnemyId = 0;
     }
 
 	private void ScaleToCamera() {
 		Texture background = rend.material.mainTexture;
 
-		float scaledTexWidth = gameManager.visibleAreaWidth;
-		float scaledTexHeight = background.height * (scaledTexWidth / background.width);
+		scaledTexWidth = gameManager.visibleAreaWidth;
+		scaledTexHeight = background.height * (scaledTexWidth / background.width);
 
 		transform.localScale = new Vector3 (scaledTexWidth, scaledTexHeight, 1);
 		transform.position = new Vector3 (0, scaledTexHeight / 2 - Camera.main.orthographicSize, 1);
