@@ -1,14 +1,13 @@
-﻿<Properties StartupItem="NotSnek.csproj">
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\BackgroundScroller.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\EnemyDarkSpirit.cs">
     <Files>
-      <File FileName="Assets\Scripts\PreservableValues.cs" Line="34" Column="1" />
-      <File FileName="Assets\Scripts\GameManager.cs" Line="57" Column="3" />
-      <File FileName="Assets\Scripts\BackgroundScroller.cs" Line="124" Column="28" />
-      <File FileName="Assets\Scripts\EnemyController.cs" Line="260" Column="23" />
-      <File FileName="Assets\Scripts\TimeOfDayComponents.cs" Line="9" Column="34" />
-      <File FileName="Assets\Scripts\Fireball.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\CharacterController.cs" Line="597" Column="3" />
+      <File FileName="Assets\Scripts\PreservableValues.cs" Line="34" Column="44" />
+      <File FileName="Assets\Scripts\GameManager.cs" Line="65" Column="2" />
+      <File FileName="Assets\Scripts\BackgroundScroller.cs" Line="79" Column="4" />
+      <File FileName="Assets\Scripts\EnemyController.cs" Line="95" Column="22" />
+      <File FileName="Assets\Scripts\EnemyDarkSpirit.cs" Line="39" Column="5" />
+      <File FileName="Assets\Scripts\MoveOnPath.cs" Line="34" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

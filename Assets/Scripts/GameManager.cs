@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour {
 	public Text multiplierText;
 	public Text greetingsText;
 	public GameObject[] timeOfDayComponents;
-	public GameObject preservableValues;
 
 	[HideInInspector]
 	public CharacterController player;
@@ -38,8 +37,11 @@ public class GameManager : MonoBehaviour {
 
 		visibleAreaHeight = Camera.main.orthographicSize * 2;
 		visibleAreaWidth = visibleAreaHeight * Screen.width / Screen.height;
-		score = preservableValues.GetComponent<PreservableValues>().GetScore();
-		timeOfDay = (TimeOfDay)preservableValues.GetComponent<PreservableValues>().GetTimeOfDay();
+
+		score = PreservableValues.GetScore ();
+		timeOfDay = (TimeOfDay)PreservableValues.GetTimeOfDay ();
+		timer = PreservableValues.GetTimer ();
+
 		UpdateScore();
         UpdateMultiplier(true);
     }
@@ -124,6 +126,7 @@ public class GameManager : MonoBehaviour {
 		PreservableValues.SetScore(scoreAtEndOfPhase);
 		PreservableValues.SetTimeOFDay((int)timeOfDay);
         yield return new WaitForSeconds(delay);
+		PreservableValues.SetTimer (timer);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

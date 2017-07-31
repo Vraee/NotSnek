@@ -22,7 +22,7 @@ public class MoveOnPath : MonoBehaviour {
     private Vector3 lastPosition;
     private Vector3 currentPosition;
 	private bool goingBack;
-	private int startIndex;
+	private int startIndex = 0;
 	private int endIndex;
 	private bool onPath;
 	private bool pathReached;
@@ -41,6 +41,14 @@ public class MoveOnPath : MonoBehaviour {
 		return pathReached;
 	}
 
+	public int GetStartIndex () {
+		return startIndex;
+	}
+
+	public void SetStartIndex(int startIndex) {
+		this.startIndex = startIndex;
+	}
+
 	// Use this for initialization
 	void Start () {
         lastPosition = transform.position;
@@ -49,9 +57,9 @@ public class MoveOnPath : MonoBehaviour {
 		if (startClockwise) {
 			endIndex = 0;
 			goingBack = true;
-		} else {
+		} /*else {
 			startIndex = 0;
-		}
+		}*/
 
 		currentWayPointID = startIndex;
 		onPath = false;

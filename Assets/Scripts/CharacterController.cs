@@ -601,7 +601,7 @@ public class CharacterController : MonoBehaviour {
 
 	private void CheckBlinking()
 	{
-		if (HP < 10 && !currentlyBlinking) {
+		if (HP < 20 && !currentlyBlinking) {
 			StartCoroutine(BlinkRed());
 		}
 	}
