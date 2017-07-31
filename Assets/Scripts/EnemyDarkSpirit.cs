@@ -107,7 +107,7 @@ public class EnemyDarkSpirit : EnemyController {
 	IEnumerator Scale()
 	{
 		Vector3 startSize = transform.localScale;
-		Vector3 targetSize = transform.localScale / 2;
+		Vector3 targetSize = transform.localScale * 0.75f;
 		float progress = 0;
 
 		while (progress <= 1)
