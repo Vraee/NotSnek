@@ -90,7 +90,7 @@ public class EnemyDarkSpirit : EnemyController {
 			startWayPointID = this.gameObject.GetComponent<MoveOnPath> ().currentWayPointID - 2;
 		}*/
 
-		Debug.Log (startWayPointID);
+		//Debug.Log (startWayPointID);
 
 		EnemyDarkSpirit newDarkSpirit = Instantiate(currentDarkSpirit) as EnemyDarkSpirit;
 		newDarkSpirit.StartScaling ();
