@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class Pause : MonoBehaviour {
 
-    public GameObject pauseBackground;
-    private bool pause = false;
+    private GameObject pauseBackground;
+    private bool paused = false;
     private bool showGUI = false;
 
 	// Use this for initialization
 	void Start () {
-        
+        pauseBackground = GameObject.Find("PauseMenu");
+        pauseBackground.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -24,8 +25,8 @@ public class Pause : MonoBehaviour {
 
     public void PauseGame()
     {
-        pause = !pause;
-        if (pause)
+        paused = !paused;
+        if (paused)
         {
             Time.timeScale = 0;
             showGUI = true;
@@ -37,7 +38,7 @@ public class Pause : MonoBehaviour {
             
         }
 
-        if (pause)
+        if (paused)
         {
             pauseBackground.SetActive(true);
         }
