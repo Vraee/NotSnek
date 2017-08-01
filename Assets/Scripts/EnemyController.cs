@@ -227,6 +227,7 @@ public class EnemyController : MonoBehaviour
 
 		if (deathPrefab != null) {
 			GameObject death = Instantiate (deathPrefab, transform.position, transform.rotation);
+			death.GetComponent<Explosion> ().ChangeParameters (gameObject.transform);
 		}
 
         for (int i = 0; i < powerUpAmount; i++)
