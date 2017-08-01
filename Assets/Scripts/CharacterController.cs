@@ -402,7 +402,7 @@ public class CharacterController : MonoBehaviour {
 		HP += bodyPartHP;
 		comparableHP += bodyPartHP;
         gameManager.UpdateMultiplier(true);
-        //Debug.Log (bodyPartsAmount);
+        //Debug.Log ("AddBodyPart: bodyPartsAMount: " + bodyPartsAmount);
     }
 
 	public void RemoveBodyPart(int removableIndex) {
@@ -424,7 +424,7 @@ public class CharacterController : MonoBehaviour {
         }
 
 		gameManager.UpdateMultiplier(false);
-		//Debug.Log ("bodyparts left " + bodyPartsAmount + " HP: " + HP);
+		//Debug.Log ("RemoveBodyPart: bodyPartsAMount: " + bodyPartsAmount);
     }
 
 
@@ -528,18 +528,27 @@ public class CharacterController : MonoBehaviour {
 	}
 
 	public void ReduceHP (float lostHP) {
-		HP = HP - lostHP;
+		float startHP = HP;
+		//Debug.Log ("ReduceHP: bodyPartsAmount (start): " + bodyPartsAmount);
 
-		if (HP <= comparableHP) {
-			comparableHP = comparableHP - bodyPartHP;
+		while (HP > startHP - lostHP) {
+			HP--;
 
-			if (!berserk) {
-				RemoveBodyPart (bodyPartsAmount);
+			if (HP <= comparableHP) {
+				comparableHP = comparableHP - bodyPartHP;
+
+				if (!berserk) {
+					RemoveBodyPart (bodyPartsAmount);
+				}
 			}
 		}
 
-		/*Debug.Log ("ReduceHP: HP " + HP);
-		Debug.Log ("ReduceHP: comparableHP" + comparableHP);*/
+		/*Debug.Log ("ReduceHP: startHP: " + startHP);
+		Debug.Log ("ReduceHP: lostHP: " + lostHP);
+		Debug.Log ("ReduceHP: HP " + HP);
+		Debug.Log ("ReduceHP: comparableHP: " + comparableHP);
+		Debug.Log ("ReduceHP: bodyPartsAmount: " + bodyPartsAmount);*/
+
 	}
 
 	IEnumerator EnemyDamage(BodyPart hitPart)
