@@ -27,7 +27,7 @@ public class CharacterController : MonoBehaviour {
     public float damageIncrease;
     public float fireballDamage;
 
-    public bool controllerInput;
+    private bool controllerInput;
 
     private GameManager gameManager;
 	//Contains ALL the bodyparts, including head and tail parts
@@ -140,7 +140,9 @@ public class CharacterController : MonoBehaviour {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         bodyParts = new List<GameObject> ();
 		tailParts = new List<GameObject>();
-		bodyParts.Add (head);
+        
+        
+        bodyParts.Add (head);
 
 		for (int i = 0; i < tail.transform.childCount; i++)
 		{
@@ -170,7 +172,6 @@ public class CharacterController : MonoBehaviour {
         if (!controllerInput) {
             RotateToMouse();
         }
-
         Movement();
         Fire();
 
