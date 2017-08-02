@@ -27,7 +27,7 @@ public class CharacterController : MonoBehaviour {
     public float damageIncrease;
     public float fireballDamage;
 
-    private bool controllerInput;
+	public bool controllerInput;
 
     private GameManager gameManager;
 	//Contains ALL the bodyparts, including head and tail parts

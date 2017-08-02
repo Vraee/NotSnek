@@ -120,7 +120,7 @@ public class EnemyController : MonoBehaviour
 		MoveEnemy();
 		if (inflictDamage && vulnerable)
 		{
-			InflictDamage();
+			InflicBerserktDamage ();
 		}
 		else
 		{
@@ -179,12 +179,12 @@ public class EnemyController : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collider)
     {
-		if (vulnerable && (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11 || collider.gameObject.tag == "Fireball"))
+		if (vulnerable && (collider.gameObject.layer == 11 || collider.gameObject.tag == "Fireball") && !(this is EnemySkeletonSnake))
         {
 			inflictDamage = true;
 
-			if (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11) {
-				InflictDamage ();
+			if (collider.gameObject.layer == 11) {
+				InflicBerserktDamage ();
 			} else {
 				InflictDamage (collider.GetComponent<Fireball>().damage);
 				collider.gameObject.GetComponent<Fireball> ().Explode ();
@@ -194,7 +194,7 @@ public class EnemyController : MonoBehaviour
 
     public void OnTriggerExit2D(Collider2D collider)
     {
-		if (collider.gameObject.tag == "Fire" || collider.gameObject.layer == 11 || collider.gameObject.layer == 8 ||collider.gameObject.tag == "Fireball")//Hope adding Player layer here didn't break anything.
+		if (collider.gameObject.layer == 11 || collider.gameObject.layer == 8 ||collider.gameObject.tag == "Fireball" && !(this is EnemySkeletonSnake))
         {
 			if (collider.gameObject.tag == "Fireball") {
 				collider.gameObject.GetComponent<Fireball> ().RemoveFireball(); //this is now smart
@@ -204,7 +204,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-	private void InflictDamage() {
+	private void InflicBerserktDamage() {
 		InflictDamage (Time.deltaTime * berserkDamage);
 	}
 

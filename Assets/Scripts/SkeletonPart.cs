@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkeletonPart : EnemyController {
+public class SkeletonPart : MonoBehaviour {
 
-    private EnemySkeletonSnake parentScript;
+    /*private EnemySkeletonSnake parentScript;
     private int listIndex;
     public float bodyPartHP;
     private bool isHit;
-    private GameObject enemy;
+    private GameObject enemy;*/
 
-    public override void MoveEnemy()
-    {
-        base.MoveEnemy();
-    }
+	private EnemySkeletonSnake parentScript;
+	private int listIndex;
+	private float bodyPartHP;
+	private bool isHit;
+	private bool takeDamage;
+	private GameObject playerFire;
 
     public bool GetIsHit()
     {
@@ -27,12 +29,12 @@ public class SkeletonPart : EnemyController {
 
     public GameObject GetEnemy()
     {
-        return enemy;
+		return playerFire;
     }
 
-    public void SetEnemy(GameObject newEnemy)
+	public void SetEnemy(GameObject playerFire)
     {
-        enemy = newEnemy;
+		this.playerFire = playerFire;
     }
 
     // Use this for initialization
@@ -44,18 +46,12 @@ public class SkeletonPart : EnemyController {
         StartCoroutine(Scale());
     }
 
-
-    // Update is called once per frame
-    new void Update () {
-   
-	}
-
-    new void OnTriggerEnter2D(Collider2D collider)
+    void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.tag == "Fireball")
         {
-            enemy = collider.gameObject;
-            parentScript.StartCoroutine("EnemyDamage", this);
+			playerFire = collider.gameObject;
+            parentScript.StartCoroutine("PlayerDamage", this);
         }
     }
 

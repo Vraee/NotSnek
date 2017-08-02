@@ -92,8 +92,7 @@ public class BackgroundScroller : MonoBehaviour
 		{
 			bossAppear = false;
 			bossDead = false;
-			//if ((int)timeOfDay < System.Enum.GetValues(typeof(GameManager.TimeOfDay)).Length)
-			if ((int)timeOfDay < 2)
+			if ((int)timeOfDay < System.Enum.GetValues(typeof(GameManager.TimeOfDay)).Length)
 			{
 				timeOfDay++;
 			}
