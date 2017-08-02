@@ -8,8 +8,9 @@ public class Phoenix : EnemyController {
     public GameObject pointB;
     public float shootDelay;
     public float shootTime;
-    public GameObject fireBall;
-    public float fireBallAmount;
+
+	public GameObject FlameWLeft;
+	public GameObject FlameWRight;
 
 	private BackgroundScroller backgroundScroller;
 
@@ -22,7 +23,21 @@ public class Phoenix : EnemyController {
     private float time2;
     private BulletEmitter emitter;
 
-    public override void MoveEnemy()
+	private Component[] children;
+
+	private ParticleSystem GetSystem(string systemName)
+	{
+		foreach (ParticleSystem childParticleSystem in children)
+		{
+			if (childParticleSystem.name == systemName)
+			{
+				return childParticleSystem;
+			}
+		}
+		return null;
+	}
+
+	public override void MoveEnemy()
     {
 
     }
@@ -38,7 +53,9 @@ public class Phoenix : EnemyController {
         emitter = GetComponentInChildren<BulletEmitter>();
         time = shootDelay;
 		backgroundScroller = GameObject.Find("BackgroundController").GetComponent<BackgroundScroller>();
-    }
+
+		children = GetComponentsInChildren<ParticleSystem>();
+	}
 
     new void Update()
     {
@@ -49,19 +66,27 @@ public class Phoenix : EnemyController {
         }
         if(stamina <= hp/2)
         {
-            emitter.MakeAngry();
+			Enrage();
         }
     }
 
     private void WideAttack()
     {
-        time2 += Time.deltaTime;
+		var right_wing = GetSystem("Right").main;
+		var left_wing = GetSystem("Left").main;
+
+		time2 += Time.deltaTime;
         if (time2 <= shootTime)
         {
-            time += Time.deltaTime;
+			right_wing.gravityModifier = -1 + shootTime *2-time2*2;
+			left_wing.gravityModifier = -1 + shootTime *2-time2*2;
+			Debug.Log(-1+shootTime * 2 - time2 * 2);
+
+			time += Time.deltaTime;
             if (time >= shootDelay)
             {
-                float unit = (cameraWidth / 2) / fireBallAmount;
+				/* antti's stuff. Most likely not used anymore
+				float unit = (cameraWidth / 2) / fireBallAmount;
                 for (int i = 0; i < fireBallAmount; i++)
                 {
                     if (transform.position.x > 0)
@@ -73,15 +98,51 @@ public class Phoenix : EnemyController {
                         Instantiate(fireBall, new Vector3((-cameraWidth / 2) + (unit * i), transform.position.y, transform.position.z), Quaternion.Euler(new Vector3(0, 0, 180)));
                     }
                 }
+				New and improved stuff by maximillian*/
+
+
+				
+				if (transform.position.x > 0)
+				{
+					Instantiate(FlameWLeft, new Vector3(cameraWidth / 4, transform.position.y, transform.position.z), Quaternion.Euler(new Vector3(0, 0, 180)));
+					Instantiate(FlameWRight, new Vector3((cameraWidth / 4), transform.position.y, transform.position.z), Quaternion.Euler(new Vector3(0, 0, 180)));
+				}
+				else if (transform.position.x < 0)
+				{
+					Instantiate(FlameWLeft, new Vector3((-cameraWidth / 4), transform.position.y, transform.position.z), Quaternion.Euler(new Vector3(0, 0, 180)));
+					Instantiate(FlameWRight, new Vector3((-cameraWidth / 4), transform.position.y, transform.position.z), Quaternion.Euler(new Vector3(0, 0, 180)));
+				}
                 time = 0;
             }
-        }
+			
+
+		}
         else
         {
             time2 = 0;
             StartCoroutine(MoveToPoint(speed));
         }
-    }
+	}
+
+	private void Enrage()
+	{
+		emitter.MakeAngry();
+		
+
+		//Intensify boss!
+		var right_eye = GetSystem("Eye_right").main;
+		var left_eye = GetSystem("Eye_left").main;
+		var right_wing = GetSystem("Right").main;
+		var left_wing = GetSystem("Left").main;
+		
+		right_eye.startLifetime = 1.2f;
+		left_eye.startLifetime = 1.2f;
+		right_wing.startLifetime = 1.2f;
+		left_wing.startLifetime = 1.2f;
+
+
+	}
+
 
     IEnumerator MoveToPoint(float movementSpeed)
     {
