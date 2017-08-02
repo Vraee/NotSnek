@@ -104,7 +104,6 @@
     <Compile Include="Assets\Scripts\MenuScript.cs" />
     <Compile Include="Assets\Scripts\MoveOnPath.cs" />
     <Compile Include="Assets\Scripts\Movement.cs" />
-    <Compile Include="Assets\Scripts\Pause.cs" />
     <Compile Include="Assets\Scripts\Phoenix.cs" />
     <Compile Include="Assets\Scripts\PlayBounce.cs" />
     <Compile Include="Assets\Scripts\PlayShake.cs" />
