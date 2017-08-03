@@ -274,14 +274,9 @@ public class CharacterController : MonoBehaviour {
             if (direction.magnitude > deadzone)
             {
                 direction.Normalize();
+                Vector3 velocity = direction * speed * Time.deltaTime;
+                head.transform.Translate(velocity, Space.World);
             }
-            else
-            {
-                return;
-            }
-            
-            Vector3 velocity = direction * speed * Time.deltaTime;
-            head.transform.Translate(velocity, Space.World);
             
         }
         else
@@ -295,14 +290,10 @@ public class CharacterController : MonoBehaviour {
             if (direction.magnitude > 0.001)
             {
                 direction.Normalize();
- }
-            else
-            {
-                return;
-            }
+                Vector3 velocity = direction * speed * Time.deltaTime;
+                head.transform.Translate(velocity, Space.World);
 
-            Vector3 velocity = direction * speed * Time.deltaTime;
-            head.transform.Translate(velocity, Space.World);
+            }
 
         }
 
