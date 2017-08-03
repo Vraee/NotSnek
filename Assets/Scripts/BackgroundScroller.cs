@@ -33,6 +33,10 @@ public class BackgroundScroller : MonoBehaviour
 	private float scaledTexWidth;
 	private float scaledTexHeight;
 
+	public bool GetBossDead() {
+		return bossDead;
+	}
+
 	public void SetBossDead(bool bossDead) {
 		this.bossDead = bossDead;
 	}

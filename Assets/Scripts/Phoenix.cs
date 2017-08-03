@@ -12,7 +12,8 @@ public class Phoenix : EnemyController {
 	public GameObject FlameWLeft;
 	public GameObject FlameWRight;
 
-	private BackgroundScroller backgroundScroller;
+	[HideInInspector]
+	public BackgroundScroller backgroundScroller;
 
     private bool attack = false;
     private bool changePos = true;
@@ -36,11 +37,6 @@ public class Phoenix : EnemyController {
 		}
 		return null;
 	}
-
-	public override void MoveEnemy()
-    {
-
-    }
 
     new void Start()
     {
@@ -68,6 +64,8 @@ public class Phoenix : EnemyController {
         {
 			Enrage();
         }
+
+		//Debug.Log (stamina);
     }
 
     private void WideAttack()
@@ -80,7 +78,7 @@ public class Phoenix : EnemyController {
         {
 			right_wing.gravityModifier = -1 + shootTime *2-time2*2;
 			left_wing.gravityModifier = -1 + shootTime *2-time2*2;
-			Debug.Log(-1+shootTime * 2 - time2 * 2);
+			//Debug.Log(-1+shootTime * 2 - time2 * 2);
 
 			time += Time.deltaTime;
             if (time >= shootDelay)
@@ -169,6 +167,7 @@ public class Phoenix : EnemyController {
 
 	public override void Die (Vector3 spawnPos) {
 		backgroundScroller.GetComponent<BackgroundScroller> ().SetBossDead (true);
+		Destroy (this.transform.parent.gameObject);
 		base.Die(spawnPos);
 	}
 }

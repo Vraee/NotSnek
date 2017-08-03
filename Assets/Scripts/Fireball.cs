@@ -11,8 +11,9 @@ public class Fireball : MonoBehaviour
     public GameObject explosion;
 	public GameObject player;
 	public float damageIncrease;
+	public bool ownMovingMethod = false;
+
 	private ParticleSystem particlesystem;
-    
     private Camera cam;
     private float viewHeight;
     private float viewWidth;
@@ -26,14 +27,15 @@ public class Fireball : MonoBehaviour
         cam = Camera.main;
         viewHeight = 2f * cam.orthographicSize;
         viewWidth = viewHeight * cam.aspect;
-
     }
 
     // Update is called once per frame
     void Update()
     {
         CheckLocation();
-        gameObject.transform.Translate(gameObject.transform.up * speed * Time.deltaTime, Space.World);
+
+		if (!ownMovingMethod)
+        	gameObject.transform.Translate(gameObject.transform.up * speed * Time.deltaTime, Space.World);
 
             //lifeTime += Time.deltaTime;
            // gameObject.transform.localPosition = new Vector2(transform.localPosition.x + Mathf.Sin(lifeTime) * amplitude * Time.deltaTime, transform.localPosition.y);
