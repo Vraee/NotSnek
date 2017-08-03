@@ -27,6 +27,7 @@ public class EnemySkeletonSnake : EnemyController
     private bool takingDamage;
     private bool shooting;
     private float HP;
+	private float baseHP;
     private float comparableHP;
 
     public Color32 bodyPartColor = new Color32(112, 131, 163, 255);
@@ -48,8 +49,8 @@ public class EnemySkeletonSnake : EnemyController
         base.Start();
 
         cam = Camera.main;
-        viewHeight = 2f * cam.orthographicSize;
-        viewWidth = viewHeight * cam.aspect;
+		viewHeight = Camera.main.orthographicSize * 2;
+		viewWidth = viewHeight * Screen.width / Screen.height;
         InvokeRepeating("Shoot", 1.5f, shootDelay);
         takingDamage = false;
         bodyParts = new List<GameObject>();
@@ -64,6 +65,13 @@ public class EnemySkeletonSnake : EnemyController
         {
             AddBodyPart();
         }
+
+		baseHP = bodyPartHP;
+		HP = HP + baseHP;
+		comparableHP = HP - bodyPartHP;
+		/*Debug.Log ("Start: HP: " + HP);
+		Debug.Log ("Start: bodyPartsAmount: " + bodyPartsAmount);
+		Debug.Log ("Start: comparableHP: " + comparableHP);*/
     }
 
 
@@ -73,6 +81,7 @@ public class EnemySkeletonSnake : EnemyController
 		Rotate();
 		MoveHead ();
 		MoveEnemy ();
+		//Debug.Log (bodyPartsAmount);
     }
 
 	public override void MoveEnemy()
@@ -108,7 +117,7 @@ public class EnemySkeletonSnake : EnemyController
 
 	void MoveHead() {
 		Vector3 axis = new Vector3 (0.5f, 0.0f, 0.0f);
-		head.transform.localPosition = axis * Mathf.Sin (Time.time* speed) * magnitude;
+		head.transform.localPosition = axis * Mathf.Sin (Time.time * speed) * magnitude;
 	}
 
     void Rotate()
@@ -170,7 +179,7 @@ public class EnemySkeletonSnake : EnemyController
         bodyPartsAmount++;
         HP += bodyPartHP;
         comparableHP += bodyPartHP;
-        //Debug.Log (bodyPartsAmount);
+		//Debug.Log ("AddBodyPart: bodyPartsAMount: " + bodyPartsAmount);
     }
 
     public void RemoveBodyPart(int removableIndex)
@@ -190,12 +199,14 @@ public class EnemySkeletonSnake : EnemyController
         {
             Die(head.transform.position);
         }
+
+		//Debug.Log ("RemoveBodyPart: bodyPartsAMount: " + bodyPartsAmount);
     }
 
-    IEnumerator EnemyDamage(SkeletonPart hitPart)
+    IEnumerator PlayerDamage(SkeletonPart hitPart)
     {
-            float enemyDamage = hitPart.GetEnemy().GetComponent<Fireball>().damage;
-            ReduceHP(enemyDamage);
+            float playerDamage = hitPart.GetEnemy().GetComponent<Fireball>().damage;
+            ReduceHP(playerDamage);
         
             if (!takingDamage)
             {
@@ -222,12 +233,23 @@ public class EnemySkeletonSnake : EnemyController
 
     public void ReduceHP(float lostHP)
     {
-        HP = HP - lostHP;
-        if (HP <= comparableHP)
-        {
-            comparableHP = comparableHP - bodyPartHP;
-            RemoveBodyPart(bodyPartsAmount);
-        }
+		//Debug.Log ("ReduceHP: bodyPartsAmount (start): " + bodyPartsAmount);
+		float startHP = HP;
+
+		while (HP > startHP - lostHP) {
+			HP--;
+
+			if (HP <= comparableHP) {
+				comparableHP = comparableHP - bodyPartHP;
+				RemoveBodyPart (bodyPartsAmount);
+			}
+		}
+
+		/*Debug.Log ("ReduceHP: startHP: " + startHP);
+		Debug.Log ("ReduceHP: lostHP: " + lostHP);
+		Debug.Log ("ReduceHP: HP " + HP);
+		Debug.Log ("ReduceHP: comparableHP: " + comparableHP);
+		Debug.Log ("ReduceHP: bodyPartsAmount: " + bodyPartsAmount);*/
     }
 
     private void Shoot()
@@ -257,5 +279,4 @@ public class EnemySkeletonSnake : EnemyController
         fireball = Instantiate(fireBall, spawnPos, head.transform.rotation);
         fireball.GetComponent<Fireball>().damage = fireballDamage;
     }
-
 }

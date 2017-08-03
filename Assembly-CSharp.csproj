@@ -54,6 +54,7 @@
      <Compile Include="Assets\Scripts\CharacterController.cs" />
      <Compile Include="Assets\Scripts\CheckSpawnWithinArea.cs" />
      <Compile Include="Assets\Scripts\CirclePathCreator.cs" />
+     <Compile Include="Assets\Scripts\ControllerCheck.cs" />
      <Compile Include="Assets\Scripts\EditorPath.cs" />
      <Compile Include="Assets\Scripts\EnemyController.cs" />
      <Compile Include="Assets\Scripts\EnemyDarkSpirit.cs" />
@@ -68,8 +69,10 @@
      <Compile Include="Assets\Scripts\Fireball.cs" />
      <Compile Include="Assets\Scripts\Float.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\MenuScript.cs" />
      <Compile Include="Assets\Scripts\MoveOnPath.cs" />
      <Compile Include="Assets\Scripts\Movement.cs" />
+     <Compile Include="Assets\Scripts\Pause.cs" />
      <Compile Include="Assets\Scripts\Phoenix.cs" />
      <Compile Include="Assets\Scripts\PlayBounce.cs" />
      <Compile Include="Assets\Scripts\PlayShake.cs" />

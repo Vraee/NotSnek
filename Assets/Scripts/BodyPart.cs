@@ -38,18 +38,22 @@ public class BodyPart : MonoBehaviour {
             Destroy(collider.gameObject);
 
 		} else if (this.gameObject.tag == "Head" && collider.gameObject.tag == "Enemy") {
-			if (!(gameObject.tag == "Fire")) {
+			/*Checks if the hit object is a part of skeleton or other enemy; if it's skeleton, 
+			the parent object is used instead, since it has the damage output value*/
+			if (collider.gameObject.GetComponent<SkeletonPart> () as SkeletonPart == null) {
 				enemy = collider.gameObject;
-				parentScript.StartCoroutine ("EnemyDamage", this);
+			} else {
+				enemy = collider.transform.parent.gameObject;
 			}
+			parentScript.StartCoroutine ("EnemyDamage", this);
             
-		}else if(this.gameObject.tag == "Head" && collider.gameObject.tag == "EnemyFireball")
+		} else if (this.gameObject.tag == "Head" && collider.gameObject.tag == "EnemyFireball")
         {
             float damage = collider.gameObject.GetComponent<Fireball>().damage;
             parentScript.StartCoroutine("EnemyFireballDamage", damage);
             collider.gameObject.GetComponent<Fireball>().Explode();
             collider.gameObject.GetComponent<Fireball>().RemoveFireball();
-        }else if(this.gameObject.tag == "Head" && collider.gameObject.tag == "Phoenix")
+        } else if (this.gameObject.tag == "Head" && collider.gameObject.tag == "Phoenix")
         {
             enemy = collider.gameObject;
             takeDamage = true;
