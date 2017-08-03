@@ -12,6 +12,7 @@ public class CharacterController : MonoBehaviour {
 	public GameObject fire;
     public GameObject fireBall;
     public float speed;
+    public float speedWhileShooting;
 	public float bodyPartSpeed; 
 	public float minDistance;
     public float damageInBerserk;
@@ -250,66 +251,50 @@ public class CharacterController : MonoBehaviour {
 		}
 	}
 
-    private void ControllerMovement()
-    {
-        float horizontal = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
-        float vertical = Input.GetAxis("Vertical") * Time.deltaTime * speed;
-        float angle = Mathf.Atan2(horizontal, vertical) * Mathf.Rad2Deg;
-        
-        head.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -angle));
-
-        if (Input.GetButton("Move"))
-        {
-            head.transform.Translate(head.transform.up * speed * Time.deltaTime, Space.World);
-        }
-
-        for (int i = 1; i < bodyParts.Count; i++)
-        {
-            distance = Vector3.Distance(bodyParts[i - 1].transform.position, bodyParts[i].transform.position);
-            Vector3 newPosition = bodyParts[i - 1].transform.position;
-            float T = Time.deltaTime * distance * minDistance * bodyPartSpeed;
-
-            if (T > 0.5f)
-            {
-                T = 0.5f;
-            }
-
-            if (distance > bodyPartDistance)
-            {
-                bodyParts[i].transform.position = Vector3.Lerp(bodyParts[i].transform.position, newPosition, T);
-                bodyParts[i].transform.rotation = Quaternion.Lerp(bodyParts[i].transform.rotation, bodyParts[i - 1].transform.rotation, T);
-            }
-        }
-    }
 
     private void Movement()
     {
+
         if (controllerInput)
         {
-            Vector2 stickInput = new Vector2(Input.GetAxis("HorizontalStick1"), Input.GetAxis("VerticalStick1"));
-            if (stickInput.magnitude < deadzone) {
-                stickInput = Vector2.zero;
-            }
-            else
-            {
-                stickInput = stickInput.normalized * ((stickInput.magnitude - deadzone) / (1 - deadzone));
-            }
 
-            head.transform.Translate(stickInput * Time.deltaTime * speed, Space.World);
-            
+            float hor = Input.GetAxis("HorizontalStick1");
+            float vert = Input.GetAxis("VerticalStick1");
+            Vector3 direction = new Vector3(hor, vert, 0f);
 
+            //Calculating the angle of 2nd stick
             float _angle = Mathf.Atan2(-Input.GetAxis("HorizontalStick2"), -Input.GetAxis("VerticalStick2")) * Mathf.Rad2Deg;
-        
-            if (new Vector2(Input.GetAxis("HorizontalStick2"), Input.GetAxis("VerticalStick2")) != Vector2.zero) {
+
+            if (new Vector2(Input.GetAxisRaw("HorizontalStick2"), Input.GetAxisRaw("VerticalStick2")) != Vector2.zero)
+            {
                 var rotation = Quaternion.AngleAxis(_angle, new Vector3(0, 0, 1));
                 head.transform.rotation = Quaternion.Lerp(head.transform.rotation, rotation, 10 * Time.deltaTime);
             }
+
+            if (direction.magnitude > deadzone)
+            {
+                direction.Normalize();
+                Vector3 velocity = direction * speed * Time.deltaTime;
+                head.transform.Translate(velocity, Space.World);
+            }
+            
         }
         else
         {
 
-            head.transform.Translate(Input.GetAxis("Horizontal") * Time.deltaTime * speed, Input.GetAxis("Vertical") * Time.deltaTime * speed, 0, Space.World);
-            
+            float hor = Input.GetAxisRaw("Horizontal");
+            float vert = Input.GetAxisRaw("Vertical");
+
+            Vector3 direction = new Vector3(hor, vert, 0f);
+
+            if (direction.magnitude > 0.001)
+            {
+                direction.Normalize();
+                Vector3 velocity = direction * speed * Time.deltaTime;
+                head.transform.Translate(velocity, Space.World);
+
+            }
+
         }
 
         //checking if the player is going off screen
