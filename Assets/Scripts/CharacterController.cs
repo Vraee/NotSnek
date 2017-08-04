@@ -55,7 +55,8 @@ public class CharacterController : MonoBehaviour {
 	//The colour for all the bodyparts besides head; since only the head takes damage, the other parts are a bit darker
 	private Color32 bodyPartColor = new Color32 (112, 131, 163, 255);
 	private bool currentlyBlinking;
-    
+    private Pause pause;
+
     public float bulletsPerSecond = 14.0f;
     private bool shooting = false;
 
@@ -139,6 +140,7 @@ public class CharacterController : MonoBehaviour {
         viewWidth = viewHeight * cam.aspect;
         InvokeRepeating("Shoot", 1.0f, 1.0f / bulletsPerSecond);
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        pause = gameManager.GetComponent<Pause>();
         bodyParts = new List<GameObject> ();
 		tailParts = new List<GameObject>();
         
@@ -169,14 +171,13 @@ public class CharacterController : MonoBehaviour {
 
 	void Update() {
 		destinationPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-        
         if (!controllerInput) {
             RotateToMouse();
         }
         Movement();
         Fire();
 
-		if (!berserk && bodyPartsAmount > 0 && (Input.GetKeyDown(KeyCode.Space) || (Input.GetButtonDown("Berserk"))))
+		if (!berserk && bodyPartsAmount > 0 && (Input.GetKeyDown(KeyCode.Space) || (Input.GetButtonDown("Berserk"))) && !pause.GetPause())
 		{
 			berserk = true;
 			StartCoroutine("Berserk");
@@ -257,7 +258,6 @@ public class CharacterController : MonoBehaviour {
 
         if (controllerInput)
         {
-
             float hor = Input.GetAxis("HorizontalStick1");
             float vert = Input.GetAxis("VerticalStick1");
             Vector3 direction = new Vector3(hor, vert, 0f);

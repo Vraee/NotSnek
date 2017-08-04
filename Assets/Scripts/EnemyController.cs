@@ -111,8 +111,10 @@ public class EnemyController : MonoBehaviour
 		}
 		moving = false;
 		vulnerable = true;
-        berserkDamage = GameObject.Find("Player").GetComponent<CharacterController>().GetBerserkDamage();
-	}
+        if(GameObject.Find("Player")!= null) {
+            berserkDamage = GameObject.Find("Player").GetComponent<CharacterController>().GetBerserkDamage();
+        }
+    }
 
 	// Update is called once per frame
 	protected void Update()

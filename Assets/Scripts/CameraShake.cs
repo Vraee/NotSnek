@@ -10,7 +10,7 @@ public class CameraShake : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        shaking = false;
+        shaking = true;
         originalPos = this.transform.localPosition;
         _instance = this;
     }
