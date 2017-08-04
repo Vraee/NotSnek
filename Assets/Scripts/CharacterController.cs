@@ -93,7 +93,8 @@ public class CharacterController : MonoBehaviour {
 	}
 
 	public int GetPowerUpLimit() {
-		return powerUpLimit;
+        Debug.Log(powerUpLimit + ((int)GetBodyPartsAmount() / 3));
+        return powerUpLimit + ((int)GetBodyPartsAmount()/3);
 	}
 
 	public void SetPowerUpLimit(int newPowerUpLimit) {
@@ -469,8 +470,10 @@ public class CharacterController : MonoBehaviour {
 			foreach (GameObject bodyPart in bodyParts)
 			{
 				yield return new WaitForSeconds (0.05f);
-				var emni = bodyPart.GetComponent<ParticleSystem>().emission;
-				emni.enabled = true;
+                if (bodyPart.GetComponent<ParticleSystem>()!=null) {
+                    var emni = bodyPart.GetComponent<ParticleSystem>().emission;
+                    emni.enabled = true;
+                }
 				bodyPart.GetComponent<SpriteRenderer>().color = new Vector4 (0.9f,0.9f,0.9f,0.9f);
 			}
 
@@ -508,8 +511,11 @@ public class CharacterController : MonoBehaviour {
 			else
 				bodyParts[i].GetComponent<SpriteRenderer>().color = bodyPartColor;
 			bodyParts [i].layer = 8;
-			var emni = bodyParts[i].GetComponent<ParticleSystem>().emission;
-			emni.enabled = false;
+            if (bodyParts[i].GetComponent<ParticleSystem>() != null)
+            {
+                var emni = bodyParts[i].GetComponent<ParticleSystem>().emission;
+                emni.enabled = false;
+            }
 		}
 	}
 
