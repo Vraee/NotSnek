@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class BackgroundScroller : MonoBehaviour
 {
     public float scrollSpeed;
 	public GameObject enemyHolder;
+    public GameObject endText;
 
     private Renderer rend;
 	//The offset where the entire texture has been shown
@@ -16,6 +18,7 @@ public class BackgroundScroller : MonoBehaviour
 	private float nextOtherEnemySpawn;
 	private float bonusEnemySpawnDist;
 	private float nextBonusEnemySpawn;
+    private GameObject canvas;
 	private GameManager gameManager;
 	private GameObject[] eyeWaves;
 	private GameObject[] otherEnemyWaves;
@@ -44,7 +47,8 @@ public class BackgroundScroller : MonoBehaviour
     // Use this for initialization
     void Start () {
         rend = GetComponent<Renderer>();
-		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        canvas = GameObject.Find("Canvas");
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		//ScaleToCamera();
 		timeOfDay = gameManager.timeOfDay;
 		allTimeOfDayComponents = gameManager.timeOfDayComponents;
@@ -103,6 +107,7 @@ public class BackgroundScroller : MonoBehaviour
 			else
 			{
 				timeOfDay = 0;
+                EndGame();
 			}
 			gameManager.timeOfDay = timeOfDay;
 
@@ -241,4 +246,16 @@ public class BackgroundScroller : MonoBehaviour
 
 		endOffset = 1 / scaledTexHeight * (scaledTexHeight - Camera.main.orthographicSize * 2);
 	}
+
+    private void EndGame()
+    {
+        float score = GameObject.Find("GameManager").GetComponent<GameManager>().GetScore();
+        canvas.GetComponent<EndTextController>().Instantiate();
+        Invoke("ChangeScene", 20);
+    }
+
+    private void ChangeScene()
+    {
+        SceneManager.LoadScene(0);
+    }
 }

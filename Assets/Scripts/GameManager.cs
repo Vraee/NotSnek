@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour {
     
     void UpdateScore()
     {
-        scoreText.text = "super duper highscore: " + score;
+        scoreText.text = "HighScore: " + score;
     }
 
     public void Restart()
