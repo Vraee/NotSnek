@@ -7,6 +7,7 @@ public class BackgroundScroller : MonoBehaviour
 {
     public float scrollSpeed;
 	public GameObject enemyHolder;
+	public GameObject cloudScroller;
     public GameObject endText;
 
     private Renderer rend;
@@ -85,6 +86,7 @@ public class BackgroundScroller : MonoBehaviour
 		{
             bossAppear = true;
             Instantiate(boss);
+			cloudScroller.GetComponent<CloudScroller>().moveClouds = false;
 		}
 
 		if (bossAppear)
@@ -192,6 +194,7 @@ public class BackgroundScroller : MonoBehaviour
 
 	private void SetTimeOfDayValues()
 	{
+		cloudScroller.GetComponent<CloudScroller>().moveClouds = true;
 		gameManager.SetScoreAtEndOfPhase (gameManager.GetScore());
 		rend.material.mainTexture = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().backgroundTexture;
 		offset.y = 0;
