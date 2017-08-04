@@ -29,6 +29,8 @@ public class Fireball : MonoBehaviour
         viewHeight = 2f * cam.orthographicSize;
         viewWidth = viewHeight * cam.aspect;
 		startPos = transform.position;
+        var rotation = this.transform.rotation;
+        rotation.z += 45f;
     }
 
     // Update is called once per frame

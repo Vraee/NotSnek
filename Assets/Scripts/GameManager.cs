@@ -112,20 +112,42 @@ public class GameManager : MonoBehaviour {
     
     void UpdateScore()
     {
-        scoreText.text = "HighScore: " + score;
+        scoreText.text = "Score: " + score;
     }
 
     public void Restart()
     {
-        greetingsText.enabled = true;
+		StartCoroutine(CountDown());
         StartCoroutine(LoadLevelAfterDelay(3));
     }
+
+	IEnumerator CountDown()
+	{
+		greetingsText.enabled = true;
+		int seconds = 3;
+
+		while (seconds > 0)
+		{
+			greetingsText.text = "Restarting in " + seconds;
+			seconds--;
+			yield return new WaitForSeconds(1f);
+		}
+
+	}
 
     IEnumerator LoadLevelAfterDelay(float delay)
     {
 		PreservableValues.SetScore(scoreAtEndOfPhase);
 		PreservableValues.SetTimeOFDay((int)timeOfDay);
-        yield return new WaitForSeconds(delay);
+		greetingsText.enabled = true;
+
+		while (delay > 0)
+		{
+			greetingsText.text = "Restarting in " + delay;
+			delay--;
+			yield return new WaitForSeconds(1f);
+		}
+
 		PreservableValues.SetTimer (timer);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
