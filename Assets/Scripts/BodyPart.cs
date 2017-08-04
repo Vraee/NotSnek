@@ -51,8 +51,11 @@ public class BodyPart : MonoBehaviour {
         {
             float damage = collider.gameObject.GetComponent<Fireball>().damage;
             parentScript.StartCoroutine("EnemyFireballDamage", damage);
-            collider.gameObject.GetComponent<Fireball>().Explode();
-            collider.gameObject.GetComponent<Fireball>().RemoveFireball();
+
+			if (collider.gameObject.GetComponent<Fireball> ().explosion != null) {
+				collider.gameObject.GetComponent<Fireball> ().Explode ();
+				Destroy (collider.gameObject);
+			}
         } else if (this.gameObject.tag == "Head" && collider.gameObject.tag == "Phoenix")
         {
             enemy = collider.gameObject;

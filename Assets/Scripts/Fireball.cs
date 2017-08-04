@@ -17,6 +17,7 @@ public class Fireball : MonoBehaviour
     private Camera cam;
     private float viewHeight;
     private float viewWidth;
+	private Vector3 startPos;
 
     // Use this for initialization
     void Start()
@@ -27,12 +28,13 @@ public class Fireball : MonoBehaviour
         cam = Camera.main;
         viewHeight = 2f * cam.orthographicSize;
         viewWidth = viewHeight * cam.aspect;
+		startPos = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        CheckLocation();
+		CheckLocation ();
 
 		if (!ownMovingMethod)
         	gameObject.transform.Translate(gameObject.transform.up * speed * Time.deltaTime, Space.World);
@@ -55,24 +57,21 @@ public class Fireball : MonoBehaviour
 
     private void CheckLocation()
     {
-        if (gameObject.transform.position.y >= viewHeight / 2)
-        {
-            RemoveFireball();
-        }
-        if (gameObject.transform.position.y <= -viewHeight / 2)
-        {
-            RemoveFireball();
-        }
-        if (gameObject.transform.position.x >= viewWidth / 2)
-        {
-            RemoveFireball();
-        }
-        if (gameObject.transform.position.x <= -viewWidth / 2)
-        {
-            RemoveFireball();
-        }
-
+		if (!CheckInArea() && (Mathf.Abs (startPos.x - transform.position.x) > viewWidth || Mathf.Abs (startPos.y - transform.position.y) > viewHeight)) {
+			RemoveFireball ();
+		}
     }
+
+	public bool CheckInArea() {
+		bool inArea = false;
+
+		if (transform.position.x >= viewWidth / 2f * (-1f) && transform.position.x <= viewWidth / 2f 
+			&& transform.position.y >= viewHeight / 2f * (-1f) && transform.position.y <= viewHeight / 2f) {
+			inArea = true;
+		}
+
+		return inArea;
+	}
 
     public void Shoot()
     {
@@ -85,7 +84,7 @@ public class Fireball : MonoBehaviour
 			var emission = particlesystem.emission;
 			emission.enabled = false;
 		} 
-		Invoke("Destroy", 2f);
+		Invoke("Destroy", 1f);
 
 	}
 	private void Destroy()

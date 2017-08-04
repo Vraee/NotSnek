@@ -167,6 +167,7 @@ public class Phoenix : EnemyController {
 
 	public override void Die (Vector3 spawnPos) {
 		backgroundScroller.GetComponent<BackgroundScroller> ().SetBossDead (true);
+		GetComponentInChildren<BulletEmitter> ().DestroyAllFirballs ();
 		Destroy (this.transform.parent.gameObject);
 		base.Die(spawnPos);
 	}

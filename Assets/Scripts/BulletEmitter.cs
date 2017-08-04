@@ -9,12 +9,15 @@ public class BulletEmitter : MonoBehaviour {
 	public bool circleWaves;
     public float shootEvery;
 	public float circleWavesEvery;
+	public int amountOfBulletsCircle;
+	public bool increaseCircleSpawnSpeed;
 
     private float shootTime;
 	private float circleWaveTime;
     private bool angry = false;
     private GameObject targetPlayerPart;
 	private Phoenix phoenix;
+	private Color32 fireballAltColor = new Color32(255, 182, 103, 255);
 
 	private List<GameObject> fireballsAll;
 	private List<GameObject> fireballsCircle;
@@ -37,7 +40,12 @@ public class BulletEmitter : MonoBehaviour {
 		if (phoenix.CheckInArea ()) {
 			if (angry) {
 				shootTime += (Time.deltaTime * 2);
-				circleWaveTime += (Time.deltaTime * 2);
+
+				if (increaseCircleSpawnSpeed) {
+					circleWaveTime += (Time.deltaTime * 2);
+				} else {
+					circleWaveTime += Time.deltaTime;
+				}
 			} else {
 				shootTime += Time.deltaTime;
 				circleWaveTime += Time.deltaTime;
@@ -82,15 +90,15 @@ public class BulletEmitter : MonoBehaviour {
     }
 
 	private void ShootFireballsWave() {
-		float radius = 0f;
+		float radius = 0.5f;
 		Vector3 pos = transform.position;
 		float startAngle = 0;
 		float endAngle = 360;
 
-		for (var i = 0; i < 30; i++) {
+		for (var i = 0; i < amountOfBulletsCircle; i++) {
 			GameObject newFireball;
 			//.~.*~*majig*~*.~.
-			float angle = i * Mathf.PI * 2 / 30;
+			float angle = i * Mathf.PI * 2 / amountOfBulletsCircle;
 			//Vector3 position = new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * radius;
 			pos.x += Mathf.Cos (angle) * radius;
 			pos.y += Mathf.Sin (angle) * radius;
@@ -98,6 +106,10 @@ public class BulletEmitter : MonoBehaviour {
 			if (angle * (180 / Mathf.PI) >= startAngle && angle * (180 / Mathf.PI) <= endAngle) {
 				newFireball = Instantiate (fireBall);
 				newFireball.GetComponent<Fireball> ().ownMovingMethod = true;
+				newFireball.GetComponent<SpriteRenderer> ().color = fireballAltColor;
+				newFireball.GetComponent<SpriteRenderer> ().sortingOrder = -1;
+				newFireball.GetComponent<ParticleSystemRenderer> ().sortingOrder = -1;
+				newFireball.GetComponent<Fireball> ().damage = newFireball.GetComponent<Fireball> ().damage / 2f;
 				newFireball.transform.localPosition = pos;
 				newFireball.transform.rotation = transform.rotation;
 				fireballsCircle.Add (newFireball);
@@ -108,10 +120,9 @@ public class BulletEmitter : MonoBehaviour {
 
 
 	private void MoveFireballs() {
-		float radius = 0.5f;
 		for (int i = 0; i < fireballsCircle.Count; i++) {
 			if (fireballsCircle [i] != null) { 
-				float angle = i * Mathf.PI * 2 / 30;
+				float angle = i * Mathf.PI * 2 / amountOfBulletsCircle;
 				//Vector3 position = new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * radius;
 
 				Vector3 pos = fireballsCircle [i].transform.position;
@@ -119,6 +130,15 @@ public class BulletEmitter : MonoBehaviour {
 				pos.y += Mathf.Sin (angle) * Time.deltaTime * 5f;
 
 				fireballsCircle [i].transform.localPosition = pos;
+			}
+		}
+	}
+
+	public void DestroyAllFirballs() {
+		foreach (GameObject listFireball in fireballsAll) {
+			if (listFireball != null) {
+				listFireball.GetComponent<Fireball> ().Explode ();
+				Destroy (listFireball);
 			}
 		}
 	}
