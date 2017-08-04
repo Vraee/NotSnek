@@ -3,27 +3,78 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CheckSpawnWithinArea : MonoBehaviour {
-	private GameManager gameManager;
+	public enum SpawnSide {Left, Right, Up, Down};
+	public SpawnSide spawnSide;
+
+	private bool inAreaX;
+	private bool inAreaY;
+	private Renderer rend;
+	private float visibleAreaWidth;
+	private float visibleAreaHeight;
 
 	// Use this for initialization
 	void Start () {
-		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+		visibleAreaHeight = Camera.main.orthographicSize * 2;
+		visibleAreaWidth = visibleAreaHeight * Screen.width / Screen.height; 
+
 		CheckSpawnPos ();
+
+		if (inAreaX) {
+			if (spawnSide == SpawnSide.Right) {
+				MoveRight ();
+			}
+
+			if (spawnSide == SpawnSide.Left) {
+				MoveLeft ();
+			}
+		}
+
+		if (inAreaY) {
+			if (spawnSide == SpawnSide.Up) {
+				MoveUp ();
+			}
+
+			if (spawnSide == SpawnSide.Down) {
+				MoveDown ();
+			}
+		}
+
 	}
 	
-	// Update is called once per frame
-	public void CheckSpawnPos() {
-		bool inAreaX = false;
-		bool inAreaY = false;
+	private void CheckSpawnPos() {
+		inAreaX = false;
+		inAreaY = false;
 
-		if (transform.position.x >= gameManager.visibleAreaWidth / 2f * (-1f) && transform.position.x <= gameManager.visibleAreaWidth / 2f) {
+		if (transform.position.x >= visibleAreaWidth / 2f * (-1f) && transform.position.x <= visibleAreaWidth / 2f) {
 			inAreaX = true;
 		}
 
-		if (transform.position.y >= gameManager.visibleAreaHeight / 2f * (-1f) && transform.position.y <= gameManager.visibleAreaHeight / 2f) {
+		if (transform.position.y >= visibleAreaHeight / 2f * (-1f) && transform.position.y <= visibleAreaHeight / 2f) {
 			inAreaY = true;
 		}
+	}
 
-		Debug.Log ("inX: " + inAreaX + " inY: " + inAreaY);
+	private void MoveLeft() {
+		Vector3 newPos = transform.position;
+		newPos.x = -(visibleAreaWidth / 2);
+		transform.position = newPos;
+	}
+
+	private void MoveRight() {
+		Vector3 newPos = transform.position;
+		newPos.x = + visibleAreaWidth / 2;
+		transform.position = newPos;
+	}
+
+	private void MoveUp() {
+		Vector3 newPos = transform.position;
+		newPos.y = visibleAreaHeight / 2;
+		transform.position = newPos;
+	}
+
+	private void MoveDown() {
+		Vector3 newPos = transform.position;
+		newPos.y = -(visibleAreaHeight) / 2;
+		transform.position = newPos;
 	}
 }
