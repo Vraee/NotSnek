@@ -51,17 +51,8 @@ public class BackgroundScroller : MonoBehaviour
         rend = GetComponent<Renderer>();
         canvas = GameObject.Find("Canvas");
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-		//ScaleToCamera();
 		timeOfDay = gameManager.timeOfDay;
 		allTimeOfDayComponents = gameManager.timeOfDayComponents;
-		//eyeWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().eyesToSpawn;
-		//otherEnemyWaves = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().timeSpecificEnemiesToSpawn;
-
-		//eyeSpawnDist = endOffset / eyeWaves.Length;
-		//otherEnemySpawnDist = endOffset / otherEnemyWaves.Length;
-		//nextEyeSpawn = 0;
-		//nextOtherEnemySpawn = 0;
-
 		SetTimeOfDayValues();
 
 		bossDead = false;
@@ -270,6 +261,7 @@ public class BackgroundScroller : MonoBehaviour
 
     private void EndGame()
     {
+		cloudScroller.GetComponent<CloudScroller>().moveClouds = true;
 		endGame = true;
         float score = GameObject.Find("GameManager").GetComponent<GameManager>().GetScore();
         canvas.GetComponent<EndTextController>().Instantiate();

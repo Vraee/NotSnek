@@ -16,6 +16,6 @@ public class GetScore : MonoBehaviour
 
     public void SetText()
     {
-        GetComponentInChildren<Text>().text = "Score:" + score;
+        GetComponentInChildren<Text>().text = "Score: " + score;
     }
 }
