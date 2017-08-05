@@ -34,7 +34,6 @@ public class CloudScroller : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log(moveClouds);
 		if (moveClouds)
 		{
 			MoveClouds();

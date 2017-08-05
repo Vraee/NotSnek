@@ -165,10 +165,10 @@ public class Phoenix : EnemyController {
         attack = true;
     }
 
-	public override void Die (Vector3 spawnPos) {
+	public override void Die (Transform deadTransform) {
 		backgroundScroller.GetComponent<BackgroundScroller> ().SetBossDead (true);
 		GetComponentInChildren<BulletEmitter> ().DestroyAllFirballs ();
 		Destroy (this.transform.parent.gameObject);
-		base.Die(spawnPos);
+		base.Die(deadTransform);
 	}
 }

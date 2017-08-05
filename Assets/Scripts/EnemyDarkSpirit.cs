@@ -119,11 +119,11 @@ public class EnemyDarkSpirit : EnemyController {
 		}
 	}
 
-	public override void Die (Vector3 spawnPos)
+	public override void Die (Transform deadTransform)
 	{
 		//If all the dark spirits on path have been destroyed, destroys also the DarkSpiritComponents gameobject (and therefore the path)
 		if (transform.parent.transform.childCount == 1)
 			Destroy (transform.parent.transform.parent.gameObject);
-		base.Die (spawnPos);
+		base.Die (deadTransform);
 	}
 }

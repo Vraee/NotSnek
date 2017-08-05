@@ -219,16 +219,17 @@ public class EnemyController : MonoBehaviour
 
         if (stamina <= 0)
         {
-			Die (gameObject.transform.position);
+			Die (gameObject.transform);
         }
     }
 
-	public virtual void Die(Vector3 spawnPos)
+	public virtual void Die(Transform deadTransform)
     {
+		Vector3 spawnPos = deadTransform.position;
 		Camera.main.GetComponent<CameraShake>().Shake(screenShakeDuration, screenShakeAmount);
 
 		if (deathPrefab != null) {
-			GameObject death = Instantiate (deathPrefab, transform.position, transform.rotation);
+			GameObject death = Instantiate (deathPrefab, spawnPos, transform.rotation);
 
 			if (this is EnemyDarkSpirit) {
 				death.GetComponent<Explosion> ().ChangeParameters (gameObject.transform);
@@ -239,7 +240,7 @@ public class EnemyController : MonoBehaviour
         {
             RandomisePowerUps(smallDropRate, mediumDropRate, largeDropRate, spawnPos);
         }
-        canvas.GetComponent<PopupController>().CreateFloathingText((score * gameManager.GetMultiplier()).ToString(), gameObject.transform);
+        canvas.GetComponent<PopupController>().CreateFloathingText((score * gameManager.GetMultiplier()).ToString(), deadTransform);
         gameManager.IncreaseScore(score);
 	    Destroy (gameObject);
     }

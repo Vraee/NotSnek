@@ -15,9 +15,13 @@ public class CheckSpawnWithinArea : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		visibleAreaHeight = Camera.main.orthographicSize * 2;
-		visibleAreaWidth = visibleAreaHeight * Screen.width / Screen.height; 
+		visibleAreaWidth = visibleAreaHeight * Screen.width / Screen.height;
 
-		CheckSpawnPos ();
+		//Checks that divided dark spirits' spawn position aren't moved offscreen
+		if (gameObject.GetComponent<EnemyDarkSpirit>() == null || (gameObject.GetComponent<EnemyDarkSpirit>() != null && gameObject.GetComponent<EnemyDarkSpirit>().GetDivisionsAmount() == 0))
+		{
+			CheckSpawnPos();
+		}
 
 		if (inAreaX) {
 			if (spawnSide == SpawnSide.Right) {

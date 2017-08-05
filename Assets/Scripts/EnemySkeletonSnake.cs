@@ -197,7 +197,7 @@ public class EnemySkeletonSnake : EnemyController
 
         if (HP <= 0)
         {
-            Die(head.transform.position);
+            Die(head.transform);
         }
 
 		//Debug.Log ("RemoveBodyPart: bodyPartsAMount: " + bodyPartsAmount);

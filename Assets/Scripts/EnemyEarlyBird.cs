@@ -59,9 +59,9 @@ public class EnemyEarlyBird : EnemyController {
 		}		
 	}
 
-	public override void Die (Vector3 spawnPos)
+	public override void Die (Transform deadTransform)
 	{
 		Destroy (transform.parent.gameObject);
-		base.Die (spawnPos);
+		base.Die (deadTransform);
 	}
 }
