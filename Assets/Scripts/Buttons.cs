@@ -20,26 +20,11 @@ public class Buttons : MonoBehaviour {
         GameObject gameManager = GameObject.Find("GameManager");
         gameManager.GetComponent<Pause>().Continue();
     }
-
-    public void ExitButton()
-    {
-        GameObject gameManager = GameObject.Find("GameManager");
-        gameManager.GetComponent<Pause>().EnableVerification();
-    }
+    
 
     public void VerifyYes()
     {
-        GameObject gameManager = GameObject.Find("GameManager");
-        gameManager.GetComponent<Pause>().DisableVerification();
-        gameManager.GetComponent<Pause>().Continue();
         ChangeScene(0);
     }
-
-    public void VerifyNo()
-    {
-        GameObject gameManager = GameObject.Find("GameManager");
-        gameManager.GetComponent<Pause>().DisableVerification();
-    }
-
-
+    
 }

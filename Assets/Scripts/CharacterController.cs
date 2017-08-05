@@ -93,7 +93,6 @@ public class CharacterController : MonoBehaviour {
 	}
 
 	public int GetPowerUpLimit() {
-        Debug.Log(powerUpLimit + ((int)GetBodyPartsAmount() / 2));
         return powerUpLimit + ((int)GetBodyPartsAmount()/2);
 	}
 

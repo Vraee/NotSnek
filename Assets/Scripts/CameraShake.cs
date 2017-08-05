@@ -22,7 +22,7 @@ public class CameraShake : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
     public void Shake(float duration, float amount)
@@ -46,6 +46,6 @@ public class CameraShake : MonoBehaviour {
         }
 
         transform.localPosition = originalPos;
-        shaking = false;
+        shaking = true;
     }
 }

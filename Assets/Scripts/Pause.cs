@@ -5,18 +5,19 @@ using UnityEngine;
 
 public class Pause : MonoBehaviour {
 
-    private GameObject verificationPanel;
-    private GameObject gameManager;
-    private GameObject pauseBackground;
+    public GameObject verificationPanel;
+    public GameObject verificationSelected;
+    public GameObject pauseBackground;
+    public GameObject pauseSelected;
+    
     private Camera cam;
     private bool paused;
     
     // Use this for initialization
     void Start () {
         cam = Camera.main;
-        pauseBackground = GameObject.Find("PauseMenu");
+        GameObject.Find("EventSystem").GetComponent<EventSystem>().SetSelectedGameObject(pauseSelected, null);
         pauseBackground.SetActive(false);
-        verificationPanel = GameObject.Find("VerificationPanel");
         verificationPanel.SetActive(false);
     }
     public bool GetPause()
@@ -27,62 +28,83 @@ public class Pause : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Pause"))
+        if (Input.GetButtonDown("Pause") )
         {
             if (pauseBackground.activeSelf == false)
             {
-                PauseGame();
-                HighlightFirstButton();
-            }
-        }
-        if (Input.GetButtonDown("Cancel"))
-        {
-            if (pauseBackground.activeSelf == true && verificationPanel.activeSelf == false)
+                if(verificationPanel.activeSelf == true)
+                {
+                    DisableVerification();
+                }
+                else
+                {
+                    PauseGame();
+                }
+            }else if(pauseBackground.activeSelf == true)
             {
                 Continue();
-            }
-            else if (pauseBackground.activeSelf == true && verificationPanel.activeSelf == true)
+            }else if(verificationPanel.activeSelf == true)
             {
                 DisableVerification();
+
+            }
+
+        }
+        else if (Input.GetButtonDown("Cancel"))
+        {
+            if (pauseBackground.activeSelf == true)
+            {
+                Continue();
+
+            }
+            else if (verificationPanel.activeSelf == true)
+            {
+               DisableVerification();
             }
         }
     }
 
     public void PauseGame()
     {
-        paused = true;
-        cam.GetComponent<CameraShake>().SetShake(false);
         pauseBackground.SetActive(true);
+        cam.GetComponent<CameraShake>().SetShake(false);
         Time.timeScale = 0;
+        paused = true;
     }
 
     public void Continue()
     {
-        Invoke("SetPauseToFalse", 0.2f);
-        cam.GetComponent<CameraShake>().SetShake(true);
         pauseBackground.SetActive(false);
+        cam.GetComponent<CameraShake>().SetShake(true);
+        Invoke("SetPauseToFalse", 0.2f);
         Time.timeScale = 1;
+    }
+
+
+    public void ExitGame()
+    {
+        pauseBackground.SetActive(false);
+        verificationPanel.SetActive(true);
+        GameObject.Find("EventSystem").GetComponent<EventSystem>().SetSelectedGameObject(verificationSelected, null);
     }
 
     public void EnableVerification()
     {
-        verificationPanel.SetActive(true);
-        
+        //
     }
 
     public void DisableVerification()
     {
         verificationPanel.SetActive(false);
+        pauseBackground.SetActive(true);
+        GameObject.Find("EventSystem").GetComponent<EventSystem>().SetSelectedGameObject(pauseSelected, null);
     }
-    private void SetPauseToFalse()
+
+    public void SetPauseToFalse()
     {
         paused = false;
     }
+    
 
-    private void HighlightFirstButton()
-    {
-        EventSystem es = GameObject.Find("EventSystem").GetComponent<EventSystem>();
-        es.SetSelectedGameObject(null);
-        es.SetSelectedGameObject(es.firstSelectedGameObject);
-    }
+
 }

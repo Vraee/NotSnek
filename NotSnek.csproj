@@ -76,6 +76,12 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\EndTextController.cs" />
@@ -88,6 +94,7 @@
     <Compile Include="Assets\Scripts\CharacterController.cs" />
     <Compile Include="Assets\Scripts\CheckSpawnWithinArea.cs" />
     <Compile Include="Assets\Scripts\CirclePathCreator.cs" />
+    <Compile Include="Assets\Scripts\CloudScroller.cs" />
     <Compile Include="Assets\Scripts\ControllerCheck.cs" />
     <Compile Include="Assets\Scripts\EditorPath.cs" />
     <Compile Include="Assets\Scripts\EnemyController.cs" />
@@ -104,6 +111,7 @@
     <Compile Include="Assets\Scripts\Float.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GetScore.cs" />
+    <Compile Include="Assets\Scripts\HighlightOnMouseOver.cs" />
     <Compile Include="Assets\Scripts\MoveOnPath.cs" />
     <Compile Include="Assets\Scripts\Pause.cs" />
     <Compile Include="Assets\Scripts\Phoenix.cs" />
