@@ -70,6 +70,10 @@ public class BackgroundScroller : MonoBehaviour
 	void Update () {
 		Scroll();
 		SpawnEnemies();
+
+		//FOR DEBUGGING. PLZ REMOVE PLZ.
+		if (Input.GetKeyDown(KeyCode.N))
+			MoveToNext();
     }
 
 	private void Scroll()
@@ -102,18 +106,15 @@ public class BackgroundScroller : MonoBehaviour
 		{
 			bossAppear = false;
 			bossDead = false;
-			if ((int)timeOfDay < System.Enum.GetValues(typeof(GameManager.TimeOfDay)).Length)
+			if ((int)timeOfDay < System.Enum.GetValues(typeof(GameManager.TimeOfDay)).Length - 1)
 			{
-				timeOfDay++;
+				MoveToNext();
 			}
 			else
 			{
 				timeOfDay = 0;
                 EndGame();
 			}
-			gameManager.timeOfDay = timeOfDay;
-
-			SetTimeOfDayValues();
 		}
 	}
 
@@ -261,4 +262,10 @@ public class BackgroundScroller : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+	private void MoveToNext()
+	{
+		timeOfDay++;
+		SetTimeOfDayValues();
+		gameManager.timeOfDay = timeOfDay;
+	}
 }

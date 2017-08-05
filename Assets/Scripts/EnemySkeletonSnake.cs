@@ -48,6 +48,7 @@ public class EnemySkeletonSnake : EnemyController
     {
         base.Start();
 
+		attacking = true;
         cam = Camera.main;
 		viewHeight = Camera.main.orthographicSize * 2;
 		viewWidth = viewHeight * Screen.width / Screen.height;
@@ -254,6 +255,10 @@ public class EnemySkeletonSnake : EnemyController
 
     private void Shoot()
     {
+		if (!attacking)
+		{
+			return;
+		}
         if (head.transform.position.y >= viewHeight / 2)
         {
             return;
@@ -279,4 +284,9 @@ public class EnemySkeletonSnake : EnemyController
         fireball = Instantiate(fireBall, spawnPos, head.transform.rotation);
         fireball.GetComponent<Fireball>().damage = fireballDamage;
     }
+
+	public override void DisableAttacking()
+	{
+		attacking = false;
+	}
 }

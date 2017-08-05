@@ -166,6 +166,9 @@ public class Phoenix : EnemyController {
     }
 
 	public override void Die (Transform deadTransform) {
+		deathPrefab.GetComponent<PhoenixExplosion>().phoenixPosition = deadTransform.position;
+		deathPrefab.GetComponent<PhoenixExplosion>().phoenixWidth = gameObject.GetComponent<SpriteRenderer>().bounds.size.x;
+		deathPrefab.GetComponent<PhoenixExplosion>().phoenixHeight = gameObject.GetComponent<SpriteRenderer>().bounds.size.y;
 		backgroundScroller.GetComponent<BackgroundScroller> ().SetBossDead (true);
 		GetComponentInChildren<BulletEmitter> ().DestroyAllFirballs ();
 		Destroy (this.transform.parent.gameObject);
