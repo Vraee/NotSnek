@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour {
 	public Text multiplierText;
 	public Text greetingsText;
 	public GameObject[] timeOfDayComponents;
+	public Font font;
 
 	[HideInInspector]
 	public CharacterController player;
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour {
 	private float timer;
 	private float score;
 	private float scoreAtEndOfPhase;
+	private GUIStyle timerStyle;
 
 	// Use this for initialization
 	void Start () {
@@ -44,6 +46,10 @@ public class GameManager : MonoBehaviour {
 
 		UpdateScore();
         UpdateMultiplier(true);
+
+		timerStyle = new GUIStyle();
+		timerStyle.font = font;
+		timerStyle.normal.textColor = new Color32(122, 125, 154, 180);
     }
 
 	public float GetScore() {
@@ -79,8 +85,7 @@ public class GameManager : MonoBehaviour {
         int minutes = Mathf.FloorToInt(timer / 60F);
         int seconds = Mathf.FloorToInt(timer - minutes * 60);
         string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
-
-        GUI.Label(new Rect(10, 10, 250, 100), niceTime);
+        GUI.Label(new Rect(10, 10, 250, 100), niceTime, timerStyle);
     }
 
     public void IncreaseScore(float amount)
