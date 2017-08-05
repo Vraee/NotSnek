@@ -36,6 +36,7 @@ public class BackgroundScroller : MonoBehaviour
     private GameObject boss;
 	private float scaledTexWidth;
 	private float scaledTexHeight;
+	private bool endGame;
 
 	public bool GetBossDead() {
 		return bossDead;
@@ -64,6 +65,7 @@ public class BackgroundScroller : MonoBehaviour
 		SetTimeOfDayValues();
 
 		bossDead = false;
+		endGame = false;
     }
 	
 	// Update is called once per frame
@@ -86,7 +88,7 @@ public class BackgroundScroller : MonoBehaviour
 			rend.material.mainTextureOffset = offset;
 		}
 
-		else if(!bossAppear)
+		else if (!bossAppear && !endGame)
 		{
             bossAppear = true;
             Instantiate(boss);
@@ -100,9 +102,24 @@ public class BackgroundScroller : MonoBehaviour
 			if (enemyHolder.transform.position.y > -(Camera.main.orthographicSize * 2)) {
 				MoveEnemiesOffscreen ();
 			}
+
+			if (bossDead)
+			{
+				bossAppear = false;
+				bossDead = false;
+				if ((int)timeOfDay < System.Enum.GetValues(typeof(GameManager.TimeOfDay)).Length - 1)
+				{
+					MoveToNext();
+				}
+				else
+				{
+					timeOfDay = 0;
+					EndGame();
+				}
+			}
 		}
 
-		if (bossDead && bossAppear)
+		/*if (bossDead && bossAppear)
 		{
 			bossAppear = false;
 			bossDead = false;
@@ -115,7 +132,7 @@ public class BackgroundScroller : MonoBehaviour
 				timeOfDay = 0;
                 EndGame();
 			}
-		}
+		}*/
 	}
 
 	private void SpawnEnemies()
@@ -253,6 +270,7 @@ public class BackgroundScroller : MonoBehaviour
 
     private void EndGame()
     {
+		endGame = true;
         float score = GameObject.Find("GameManager").GetComponent<GameManager>().GetScore();
         canvas.GetComponent<EndTextController>().Instantiate();
         Invoke("ChangeScene", 20);

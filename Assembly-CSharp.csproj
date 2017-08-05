@@ -73,6 +73,7 @@
      <Compile Include="Assets\Scripts\Float.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\GetScore.cs" />
+     <Compile Include="Assets\Scripts\HighlightOnMouseOver.cs" />
      <Compile Include="Assets\Scripts\MoveOnPath.cs" />
      <Compile Include="Assets\Scripts\Pause.cs" />
      <Compile Include="Assets\Scripts\Phoenix.cs" />
