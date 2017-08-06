@@ -19,6 +19,8 @@ public class Pause : MonoBehaviour {
         GameObject.Find("EventSystem").GetComponent<EventSystem>().SetSelectedGameObject(pauseSelected, null);
         pauseBackground.SetActive(false);
         verificationPanel.SetActive(false);
+        Time.timeScale = 1;
+        paused = false;
     }
     public bool GetPause()
     {
@@ -86,11 +88,6 @@ public class Pause : MonoBehaviour {
         pauseBackground.SetActive(false);
         verificationPanel.SetActive(true);
         GameObject.Find("EventSystem").GetComponent<EventSystem>().SetSelectedGameObject(verificationSelected, null);
-    }
-
-    public void EnableVerification()
-    {
-        //
     }
 
     public void DisableVerification()

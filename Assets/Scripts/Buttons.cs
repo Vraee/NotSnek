@@ -20,11 +20,4 @@ public class Buttons : MonoBehaviour {
         GameObject gameManager = GameObject.Find("GameManager");
         gameManager.GetComponent<Pause>().Continue();
     }
-    
-
-    public void VerifyYes()
-    {
-        ChangeScene(0);
-    }
-    
 }

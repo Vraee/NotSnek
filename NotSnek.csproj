@@ -115,6 +115,7 @@
     <Compile Include="Assets\Scripts\MoveOnPath.cs" />
     <Compile Include="Assets\Scripts\Pause.cs" />
     <Compile Include="Assets\Scripts\Phoenix.cs" />
+    <Compile Include="Assets\Scripts\PhoenixExplosion.cs" />
     <Compile Include="Assets\Scripts\PlayBounce.cs" />
     <Compile Include="Assets\Scripts\PlayShake.cs" />
     <Compile Include="Assets\Scripts\PopupController.cs" />
