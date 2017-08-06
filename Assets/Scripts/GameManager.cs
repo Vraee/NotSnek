@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour {
 	private float score;
 	private float scoreAtEndOfPhase;
 	private GUIStyle timerStyle;
+	private string niceTime;
 
 	// Use this for initialization
 	void Start () {
@@ -68,6 +69,16 @@ public class GameManager : MonoBehaviour {
 		this.scoreAtEndOfPhase = scoreAtEndOfPhase;
 	}
 
+	public string GetNiceTime()
+	{
+		return niceTime;
+	}
+
+	public void SetNiceTime(string niceTime)
+	{
+		this.niceTime = niceTime;
+	}
+
     public float GetMultiplier()
     {
         return multiplier;
@@ -84,7 +95,7 @@ public class GameManager : MonoBehaviour {
     {
         int minutes = Mathf.FloorToInt(timer / 60F);
         int seconds = Mathf.FloorToInt(timer - minutes * 60);
-        string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
+        niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
         GUI.Label(new Rect(10, 10, 250, 100), niceTime, timerStyle);
     }
 
