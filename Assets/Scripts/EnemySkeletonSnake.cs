@@ -34,7 +34,6 @@ public class EnemySkeletonSnake : EnemyController
 	public float magnitude = 2f;
 
 
-    private Camera cam;
     private float viewHeight;
     private float viewWidth;
 
@@ -49,7 +48,6 @@ public class EnemySkeletonSnake : EnemyController
         base.Start();
 
 		attacking = true;
-        cam = Camera.main;
 		viewHeight = Camera.main.orthographicSize * 2;
 		viewWidth = viewHeight * Screen.width / Screen.height;
         InvokeRepeating("Shoot", 1.5f, shootDelay);
@@ -123,9 +121,7 @@ public class EnemySkeletonSnake : EnemyController
 
     void Rotate()
     {
-        destinationPoint = targetPlayerPart.transform.position;
-        float camDis = Camera.main.transform.position.y - head.transform.position.y;
-        
+        destinationPoint = targetPlayerPart.transform.position;        
         float AngleRad = Mathf.Atan2(destinationPoint.y - head.transform.position.y, destinationPoint.x - head.transform.position.x);
         float angle = (180 / Mathf.PI) * AngleRad;
 

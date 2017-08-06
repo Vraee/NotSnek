@@ -26,7 +26,7 @@ public class PhoenixExplosion : MonoBehaviour {
 		int i = 0;
 		while (i < explosionsAmount)
 		{
-			GameObject death = Instantiate(RandomiseExplosion(), RandomisePosition(), transform.rotation);
+			Instantiate(RandomiseExplosion(), RandomisePosition(), transform.rotation);
 			i++;
 			yield return new WaitForSeconds(delay);
 		}
@@ -43,8 +43,8 @@ public class PhoenixExplosion : MonoBehaviour {
 
 	private Vector3 RandomisePosition()
 	{
-		float x = Random.RandomRange(phoenixPosition.x - phoenixWidth / 2f, phoenixPosition.x + phoenixWidth / 2f);
-		float y = Random.RandomRange(phoenixPosition.y - phoenixHeight / 2f, phoenixPosition.y + phoenixHeight / 2f);
+		float x = Random.Range(phoenixPosition.x - phoenixWidth / 2f, phoenixPosition.x + phoenixWidth / 2f);
+		float y = Random.Range(phoenixPosition.y - phoenixHeight / 2f, phoenixPosition.y + phoenixHeight / 2f);
 
 		return new Vector3(x, y, 0);
 	}

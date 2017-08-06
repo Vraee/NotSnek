@@ -12,7 +12,6 @@ public class SkeletonPart : MonoBehaviour {
 
 	private EnemySkeletonSnake parentScript;
 	private int listIndex;
-	private float bodyPartHP;
 	private bool isHit;
 	private bool takeDamage;
 	private GameObject playerFire;
@@ -38,10 +37,9 @@ public class SkeletonPart : MonoBehaviour {
     }
 
     // Use this for initialization
-    new void Start()
+    void Start()
     {
         parentScript = GetComponentInParent<EnemySkeletonSnake>();
-        bodyPartHP = parentScript.GetBodyPartHP();
         isHit = false;
         StartCoroutine(Scale());
     }

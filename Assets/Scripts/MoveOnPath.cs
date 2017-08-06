@@ -19,7 +19,6 @@ public class MoveOnPath : MonoBehaviour {
 	public bool looping;
 	public bool startClockwise;
 
-    private Vector3 lastPosition;
     private Vector3 currentPosition;
 	private bool goingBack;
 	private int startIndex = 0;
@@ -51,7 +50,6 @@ public class MoveOnPath : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        lastPosition = transform.position;
 		goingBack = false;
 
 		if (startClockwise) {

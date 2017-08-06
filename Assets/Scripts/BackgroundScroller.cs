@@ -278,7 +278,6 @@ public class BackgroundScroller : MonoBehaviour
 			cloudScrollerScript.GetComponent<CloudScroller>().moveClouds = true;
 		}
 		endGame = true;
-        float score = GameObject.Find("GameManager").GetComponent<GameManager>().GetScore();
         canvas.GetComponent<EndTextController>().Instantiate();
         Invoke("ChangeScene", 20);
     }

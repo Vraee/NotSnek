@@ -24,7 +24,6 @@ public class EnemyEye : EnemyController {
 	public enum Direction {LeftRight, RightLeft, UpDown, DownUp};
 	public Direction direction;
 
-	private float destroyTimer;
 	//The amount of spawned enemies so far; couldn't use a static variable, since it would cause problems when there are more than one enemy at the start of the game
 	private int spawned = 0;
 	private Vector3 originalPos;
@@ -55,7 +54,6 @@ public class EnemyEye : EnemyController {
 		//base.Start ();
         anime = GetComponent<Animator>();
         InvokeRepeating("Blink", Random.Range(0.1f, 3f), blinkDelay);
-        destroyTimer = Time.time + destroyDelay;
 		spawned++;
 
 		if (spawned == 1) {

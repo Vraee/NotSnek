@@ -4,14 +4,12 @@ using System.Collections;
 public class BodyPart : MonoBehaviour {
 	private CharacterController parentScript;
     private int listIndex;
-	private float bodyPartHP;
 	private bool isHit;
     private bool takeDamage;
 	private GameObject enemy;
 
 	void Start () {
 		parentScript = GameObject.Find ("Player").GetComponent<CharacterController> ();
-		bodyPartHP = parentScript.GetBodyPartHP ();
 		isHit = false;
 		StartCoroutine (Scale ());
 	}
