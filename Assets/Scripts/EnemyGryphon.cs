@@ -7,6 +7,13 @@ public class EnemyGryphon : EnemyController {
 	public Sprite stone;
 	public float attackDelay = 2;
 	public float retreatSpeed;
+	private Animator anime;
+
+	new void Start()
+	{
+		base.Start();
+		anime = GetComponent<Animator>();
+	}
 
 	public override void MoveEnemy() {
 		if (!GetAttacking()) {
@@ -24,8 +31,10 @@ public class EnemyGryphon : EnemyController {
 		if (gameObject.GetComponent<MoveOnPath>().GetOnPath()) {
 			SetVulnerable (false);
 			ChangeSprite (stone);
+			anime.SetBool("flyStone", true);
 		} else {
 			SetVulnerable (true);
+			anime.SetBool("flyStone", false);
 			ChangeSprite (normal);
 		}
 	}

@@ -9,6 +9,7 @@ public class CloudScroller : MonoBehaviour {
 	public float maxInterval;
 	public float minScale;
 	public float maxScale;
+	public int renderOrder;
 	//Different colors for different times of day
 	public Color32[] cloudColors = new Color32[4];
 
@@ -60,7 +61,7 @@ public class CloudScroller : MonoBehaviour {
 		GameObject newCloud = new GameObject();
 		newCloud.AddComponent<SpriteRenderer>();
 		newCloud.GetComponent<SpriteRenderer>().sprite = RandomiseSprite();
-		newCloud.GetComponent<SpriteRenderer>().sortingOrder = -501;
+		newCloud.GetComponent<SpriteRenderer>().sortingOrder = -500 - renderOrder;
 		newCloud.GetComponent<SpriteRenderer>().color = cloudColors[currentColorIndex];
 		float posX = Random.Range((0f - visibleAreaWidth / 2f), (0f + visibleAreaWidth / 2f));
 		float posY = visibleAreaHeight / 2f + 3f;
