@@ -65,10 +65,6 @@ public class BackgroundScroller : MonoBehaviour
 	void Update () {
 		Scroll();
 		SpawnEnemies();
-
-		//FOR DEBUGGING. PLZ REMOVE PLZ.
-		if (Input.GetKeyDown(KeyCode.N))
-			MoveToNext();
     }
 
 	private void Scroll()
@@ -115,21 +111,6 @@ public class BackgroundScroller : MonoBehaviour
 				}
 			}
 		}
-
-		/*if (bossDead && bossAppear)
-		{
-			bossAppear = false;
-			bossDead = false;
-			if ((int)timeOfDay < System.Enum.GetValues(typeof(GameManager.TimeOfDay)).Length - 1)
-			{
-				MoveToNext();
-			}
-			else
-			{
-				timeOfDay = 0;
-                EndGame();
-			}
-		}*/
 	}
 
 	private void SpawnEnemies()
@@ -271,11 +252,9 @@ public class BackgroundScroller : MonoBehaviour
 
     private void EndGame()
     {
-		CloudScroller[] cloudScrolleScripts = cloudScroller.GetComponents<CloudScroller>();
-
-		foreach (CloudScroller cloudScrollerScript in cloudScrolleScripts)
+		for (int i = 0; i < cloudScrolleScripts.Length; i++)
 		{
-			cloudScrollerScript.GetComponent<CloudScroller>().moveClouds = true;
+			cloudScrolleScripts[i].moveClouds = true;
 		}
 		endGame = true;
         canvas.GetComponent<EndTextController>().Instantiate();
