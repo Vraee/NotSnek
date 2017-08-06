@@ -25,12 +25,17 @@ public class BulletEmitter : MonoBehaviour {
 	private List<GameObject> fireballsCircle;
 
     public void MakeAngry()
-    {       
+    {
+		particlesystem.Stop();
         var shaper = particlesystem.shape;
         var lifetime = particlesystem.main;
-        shaper.radius = 9;
-        lifetime.duration = 0.35f;
-        lifetime.startLifetime = 0.4f;
+		if (particlesystem.isStopped)
+		{
+			shaper.radius = 9;
+			lifetime.duration = 0.35f;
+			lifetime.startLifetime = 0.4f;
+		}
+		particlesystem.Play();
         angry = true;
     }
 

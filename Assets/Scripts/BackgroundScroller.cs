@@ -37,6 +37,7 @@ public class BackgroundScroller : MonoBehaviour
 	private float scaledTexWidth;
 	private float scaledTexHeight;
 	private bool endGame;
+	private CloudScroller[] cloudScrolleScripts;
 
 	public bool GetBossDead() {
 		return bossDead;
@@ -53,6 +54,7 @@ public class BackgroundScroller : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		timeOfDay = gameManager.timeOfDay;
 		allTimeOfDayComponents = gameManager.timeOfDayComponents;
+		cloudScrolleScripts = cloudScroller.GetComponents<CloudScroller>();
 		SetTimeOfDayValues();
 
 		bossDead = false;
@@ -83,7 +85,11 @@ public class BackgroundScroller : MonoBehaviour
 		{
             bossAppear = true;
             Instantiate(boss);
-			cloudScroller.GetComponent<CloudScroller>().moveClouds = false;
+
+			for (int i = 0; i < cloudScrolleScripts.Length; i++)
+			{
+				cloudScrolleScripts[i].moveClouds = false;
+			}
 		}
 
 		if (bossAppear)
@@ -203,7 +209,11 @@ public class BackgroundScroller : MonoBehaviour
 
 	private void SetTimeOfDayValues()
 	{
-		cloudScroller.GetComponent<CloudScroller>().moveClouds = true;
+		for (int i = 0; i < cloudScrolleScripts.Length; i++)
+		{
+			cloudScrolleScripts[i].moveClouds = true;
+		}
+
 		gameManager.SetScoreAtEndOfPhase (gameManager.GetScore());
 		rend.material.mainTexture = allTimeOfDayComponents[(int)timeOfDay].GetComponent<TimeOfDayComponents>().backgroundTexture;
 		offset.y = 0;
@@ -261,7 +271,12 @@ public class BackgroundScroller : MonoBehaviour
 
     private void EndGame()
     {
-		cloudScroller.GetComponent<CloudScroller>().moveClouds = true;
+		CloudScroller[] cloudScrolleScripts = cloudScroller.GetComponents<CloudScroller>();
+
+		foreach (CloudScroller cloudScrollerScript in cloudScrolleScripts)
+		{
+			cloudScrollerScript.GetComponent<CloudScroller>().moveClouds = true;
+		}
 		endGame = true;
         float score = GameObject.Find("GameManager").GetComponent<GameManager>().GetScore();
         canvas.GetComponent<EndTextController>().Instantiate();

@@ -7,6 +7,8 @@ public class CloudScroller : MonoBehaviour {
 	public float speed;
 	public float minInterval;
 	public float maxInterval;
+	public float minScale;
+	public float maxScale;
 	//Different colors for different times of day
 	public Color32[] cloudColors = new Color32[4];
 
@@ -55,15 +57,18 @@ public class CloudScroller : MonoBehaviour {
 	private void CreateCloud()
 	{
 		timer += RandomiseSpawnTime();
-		GameObject newCloud = Instantiate(new GameObject());
+		GameObject newCloud = new GameObject();
 		newCloud.AddComponent<SpriteRenderer>();
 		newCloud.GetComponent<SpriteRenderer>().sprite = RandomiseSprite();
 		newCloud.GetComponent<SpriteRenderer>().sortingOrder = -501;
 		newCloud.GetComponent<SpriteRenderer>().color = cloudColors[currentColorIndex];
 		float posX = Random.Range((0f - visibleAreaWidth / 2f), (0f + visibleAreaWidth / 2f));
-		float posY = visibleAreaHeight / 2f + 1f;
+		float posY = visibleAreaHeight / 2f + 3f;
 
 		newCloud.transform.position = new Vector3(posX, posY, 0f);
+		float randomScale = RandomiseScale();
+		newCloud.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
+		newCloud.GetComponent<SpriteRenderer>().flipX = RandomiseFlip();
 
 		clouds.Add(newCloud);
 	}
@@ -80,6 +85,25 @@ public class CloudScroller : MonoBehaviour {
 	private float RandomiseSpawnTime()
 	{
 		return Random.Range(minInterval, maxInterval);
+	}
+
+	private float RandomiseScale()
+	{
+		return Random.Range(minScale, maxScale);
+	}
+
+	private bool RandomiseFlip()
+	{
+		int random = Random.Range(0, 2);
+
+		if (random == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	public void MoveClouds()
@@ -110,7 +134,7 @@ public class CloudScroller : MonoBehaviour {
 	{
 		bool inArea = false;
 
-		if (cloud != null && cloud.transform.position.y >= visibleAreaHeight / 2f * (-1f) - 2f)
+		if (cloud != null && cloud.transform.position.y >= visibleAreaHeight / 2f * (-1f) - 3f)
 		{
 			inArea = true;
 		}
