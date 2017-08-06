@@ -15,6 +15,8 @@ public class BulletEmitter : MonoBehaviour {
     private float shootTime;
 	private float circleWaveTime;
     private bool angry = false;
+    private bool firing = false;
+    private ParticleSystem particlesystem;
     private GameObject targetPlayerPart;
 	private Phoenix phoenix;
 	private Color32 fireballAltColor = new Color32(255, 182, 103, 255);
@@ -23,7 +25,12 @@ public class BulletEmitter : MonoBehaviour {
 	private List<GameObject> fireballsCircle;
 
     public void MakeAngry()
-    {
+    {       
+        var shaper = particlesystem.shape;
+        var lifetime = particlesystem.main;
+        shaper.radius = 9;
+        lifetime.duration = 0.35f;
+        lifetime.startLifetime = 0.4f;
         angry = true;
     }
 
@@ -33,12 +40,20 @@ public class BulletEmitter : MonoBehaviour {
 		fireballsCircle = new List<GameObject> ();
 		fireballsAll = new List<GameObject> ();
 		phoenix = transform.GetComponentInParent<Phoenix> ();
+        particlesystem = GetComponent<ParticleSystem>();
+        particlesystem.Stop();
     }
 
     private void Update()
     {
 		if (phoenix.CheckInArea ()) {
-			if (angry) {
+
+            if ((shootTime==0 && shootAtPlayer)&&!firing) {
+                particlesystem.Play();
+                firing = true;
+            }
+            
+            if (angry) {
 				shootTime += (Time.deltaTime * 2);
 
 				if (increaseCircleSpawnSpeed) {
