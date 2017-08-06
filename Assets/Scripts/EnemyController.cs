@@ -54,7 +54,7 @@ public class EnemyController : MonoBehaviour
 		this.attacking = attacking;
 	}
 
-	public bool SetRetreating() {
+	public bool GetRetreating() {
 		return retreating;
 	}
 

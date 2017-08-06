@@ -30,18 +30,22 @@ public class EnemyGryphon : EnemyController {
 
 		if (gameObject.GetComponent<MoveOnPath>().GetOnPath()) {
 			SetVulnerable (false);
-			ChangeSprite (stone);
+			anime.SetBool("flyNormal", false);
 			anime.SetBool("flyStone", true);
 		} else {
 			SetVulnerable (true);
+			anime.SetBool("flyNormal", true);
 			anime.SetBool("flyStone", false);
-			ChangeSprite (normal);
 		}
-	}
 
-	public void ChangeSprite(Sprite newSprite) {
-		if (newSprite != gameObject.GetComponent<SpriteRenderer> ().sprite) {
-			gameObject.GetComponent<SpriteRenderer> ().sprite = newSprite;
+		if (GetAttacking() && !anime.GetBool("attacking"))
+		{
+			anime.SetBool("attacking", true);
+		}
+
+		if (GetRetreating() && anime.GetBool("attacking"))
+		{
+			anime.SetBool("attacking", false);
 		}
 	}
 
