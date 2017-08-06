@@ -28,7 +28,7 @@ public class CharacterController : MonoBehaviour {
     public float damageIncrease;
     public float fireballDamage;
 
-	public bool controllerInput;
+	private bool controllerInput;
 
     private GameManager gameManager;
 	//Contains ALL the bodyparts, including head and tail parts
@@ -136,6 +136,7 @@ public class CharacterController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         cam = Camera.main;
+        controllerInput = GameObject.Find("ControllerInformation").GetComponent<ControllerCheck1>().GetControllerInput();
         viewHeight = 2f * cam.orthographicSize;
         viewWidth = viewHeight * cam.aspect;
         InvokeRepeating("Shoot", 1.0f, 1.0f / bulletsPerSecond);

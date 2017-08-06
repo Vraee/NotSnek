@@ -20,4 +20,6 @@ public class Buttons : MonoBehaviour {
         GameObject gameManager = GameObject.Find("GameManager");
         gameManager.GetComponent<Pause>().Continue();
     }
+
+
 }

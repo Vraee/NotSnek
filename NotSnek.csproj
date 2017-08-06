@@ -84,6 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ControllerToggle.cs" />
     <Compile Include="Assets\EndTextController.cs" />
     <Compile Include="Assets\Scripts\BackgroundScroller.cs" />
     <Compile Include="Assets\Scripts\BodyPart.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="Assets\Scripts\CheckSpawnWithinArea.cs" />
     <Compile Include="Assets\Scripts\CirclePathCreator.cs" />
     <Compile Include="Assets\Scripts\CloudScroller.cs" />
-    <Compile Include="Assets\Scripts\ControllerCheck.cs" />
+    <Compile Include="Assets\Scripts\ControllerCheck1.cs" />
     <Compile Include="Assets\Scripts\EditorPath.cs" />
     <Compile Include="Assets\Scripts\EnemyController.cs" />
     <Compile Include="Assets\Scripts\EnemyDarkSpirit.cs" />
